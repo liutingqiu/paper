@@ -1,0 +1,85 @@
+﻿\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{\textbf{Self-Referential Spectral Action:\\
+Existence and Nontriviality of Fixed Points}\\[4pt]
+\large 2-Page Summary}
+\author{Tianqi Liu\\Zhengzhou University of Light Industry}
+\date{}
+\maketitle
+
+\section*{Problem}
+
+In the standard Connes--Chamseddine framework, the Dirac operator $D_0$ encodes $25+$ Standard Model parameters---all externally given. We ask: \textbf{can $D$ depend on its own spectral action value?}
+
+\section*{Setup}
+
+Given a spectral triple $(\mathcal{A}, \mathcal{H}, D_0)$, define the spectral action
+\[
+S[D] = \mathrm{Tr}\, f(D/\Lambda) + \langle\psi, D\psi\rangle.
+\]
+The self-referential equation is
+\[
+D = D_0 + \Phi(S[D]), \qquad \Phi: \mathbb{R} \to \mathrm{End}(\mathcal{H}).
+\]
+
+\noindent\textbf{Scaling ansatz.}
+$\Phi(S) = (\kappa \ln(S/S_0) + \beta) D_0$, where $S_0 = S[D_0]$.
+Set $\lambda(S)=1+\kappa\ln(S/S_0)+\beta$, so $D=\lambda(S)D_0$.
+This satisfies all spectral triple axioms for $\lambda>0$.
+
+\section*{Heat Kernel Expansion}
+
+Under $D=\lambda D_0$, the composite map is
+\[
+F(S) = C_4\lambda^{-4} + C_2\lambda^{-2} + C_0 + \lambda E,
+\]
+where $C_4\sim\Lambda^4$, $C_2\sim\Lambda^2$, $C_0\sim\Lambda^0$.
+Coefficients verified against CCM06: $N=96$ fermion degrees of freedom,
+$a_0 = N\cdot\mathrm{vol}/(4\pi^2)$, the ``$24$'' factor confirmed.
+
+\section*{Main Results}
+
+\noindent\textbf{Theorem 1 (Compression).}
+For $|\kappa|<1/10$, $|\beta|<0.02$, $C_4>0$, the map $F$ maps the interval
+$I=[0.7S_0,\,1.3S_0]$ into itself with $|F'(S)|<1$ on $I$.
+By Banach's theorem, a \textbf{unique fixed point $S^*$} exists.
+
+\noindent\textbf{Theorem 2 (Nontriviality).}
+For $\beta\neq0$, $S^*\neq S_0$.
+First-order correction:
+$\displaystyle \frac{S^*-S_0}{S_0} \approx -\frac{4\beta}{1+4\kappa}$.
+With $\kappa=0.08$, $\beta=0.01$, this gives $S^*\approx 0.97\,S_0$ ($3\%$ correction).
+
+\section*{$\mathcal{R}$-Invariance (Core Prediction)}
+
+The self-consistent conformal factor $\lambda^*=1+\kappa\ln(S^*/S_0)+\beta$
+rescales all SM quantities by powers of $\lambda^*$.
+The dimensionless ratio
+\[
+\boxed{\;\mathcal{R} = \frac{\Lambda_{\mathrm{cc}}\cdot G_N^2}{g_{\mathrm{YM}}^4\cdot v^4}\;}
+\]
+is \textbf{independent of $\lambda^*$}, hence independent of $\kappa$ and $\beta$.
+This is the unique robust prediction surviving the scalar bottleneck
+(one equation $\to$ one constraint).
+
+\section*{Honest Limitations}
+
+\begin{itemize}
+\item \textbf{Scalar bottleneck:} one constraint, cannot predict all 25 SM parameters.
+\item $\kappa$ and $\beta$ are \textbf{free parameters}; no physical derivation exists.
+\item $\Phi(S)=g(S)D_0$ is a \textbf{mathematical ansatz}, not derived from physical principles.
+\item \textbf{Scheme~A} (inner fluctuation scaling) also works, with compression condition
+  relaxed by $\sim\Lambda^2$.
+\end{itemize}
+
+\section*{Literature Gap}
+
+Searched arXiv (8 keyword groups), INSPIRE (8 groups), Google Scholar (5 groups).
+No prior work on ``self-referential spectral action'' or ``spectral action fixed point'' found.
+Closest: Khalkhali--Pagliaroli (arXiv:2512.08694) on bootstrapping NCG with Dirac ensembles.
+\end{document}

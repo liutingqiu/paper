@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Self-Referential Spectral Action — Summary</title>
+<style>
+body { font-family: 'Latin Modern Roman', 'Times New Roman', serif; max-width: 700px; margin: 40px auto; line-height: 1.55; color: #111; }
+h1 { font-size: 18pt; text-align: center; margin-bottom: 2px; }
+h2 { font-size: 11pt; text-align: center; font-weight: normal; color: #555; margin-top: 0; margin-bottom: 20px; }
+h3 { font-size: 13pt; margin-top: 18px; margin-bottom: 4px; border-bottom: 0.5pt solid #ccc; padding-bottom: 2px; }
+p, li { font-size: 10.5pt; }
+.boxed { border: 1.2pt solid #333; padding: 8px 14px; text-align: center; margin: 10px 0; }
+.end { text-align: center; color: #888; font-size: 9pt; margin-top: 24px; }
+</style>
+<script>
+MathJax = { tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+
+<h1>Self-Referential Spectral Action:<br>Existence and Nontriviality of Fixed Points</h1>
+<h2>2-Page Summary &middot; Tianqi Liu &middot; Zhengzhou University of Light Industry</h2>
+
+<h3>Problem</h3>
+<p>In the standard Connes&ndash;Chamseddine framework, the Dirac operator $D_0$ encodes $25+$ Standard Model parameters&mdash;all externally given. We ask: <b>can $D$ depend on its own spectral action value?</b></p>
+
+<h3>Setup</h3>
+<p>Given a spectral triple $(\mathcal{A}, \mathcal{H}, D_0)$, define the spectral action
+$$S[D] = \mathrm{Tr}\, f(D/\Lambda) + \langle\psi, D\psi\rangle.$$
+The self-referential equation is $D = D_0 + \Phi(S[D])$, $\Phi: \mathbb{R} \to \mathrm{End}(\mathcal{H})$.</p>
+<p><b>Scaling ansatz.</b> $\Phi(S) = (\kappa \ln(S/S_0) + \beta) D_0$, where $S_0 = S[D_0]$.
+Set $\lambda(S)=1+\kappa\ln(S/S_0)+\beta$, so $D=\lambda(S)D_0$.
+This satisfies all spectral triple axioms for $\lambda&gt;0$.</p>
+
+<h3>Heat Kernel Expansion</h3>
+<p>Under $D=\lambda D_0$, the composite map is
+$$F(S) = C_4\lambda^{-4} + C_2\lambda^{-2} + C_0 + \lambda E,$$
+where $C_4\sim\Lambda^4$, $C_2\sim\Lambda^2$, $C_0\sim\Lambda^0$.
+Coefficients verified against CCM06: $N=96$ fermion degrees of freedom,
+$a_0 = N\cdot\mathrm{vol}/(4\pi^2)$, the &ldquo;$24$&rdquo; factor confirmed.</p>
+
+<h3>Main Results</h3>
+<p><b>Theorem 1 (Compression).</b>
+For $|\kappa|&lt;1/10$, $|\beta|&lt;0.02$, $C_4&gt;0$, the map $F$ maps $I=[0.7S_0,\,1.3S_0]$ into itself with $|F'(S)|&lt;1$ on $I$.
+By Banach's theorem, a <b>unique fixed point $S^*$</b> exists.</p>
+
+<p><b>Theorem 2 (Nontriviality).</b>
+For $\beta\neq0$, $S^*\neq S_0$.
+First-order correction: $\displaystyle \frac{S^*-S_0}{S_0} \approx -\frac{4\beta}{1+4\kappa}$.
+With $\kappa=0.08$, $\beta=0.01$: $S^*\approx 0.97\,S_0$ ($3\%$ correction).</p>
+
+<h3>$\mathcal{R}$-Invariance (Core Prediction)</h3>
+<p>The self-consistent conformal factor $\lambda^*=1+\kappa\ln(S^*/S_0)+\beta$
+rescales all SM quantities by powers of $\lambda^*$.
+The dimensionless ratio</p>
+<div class="boxed">
+$$\mathcal{R} = \frac{\Lambda_{\mathrm{cc}}\cdot G_N^2}{g_{\mathrm{YM}}^4\cdot v^4}$$
+is <b>independent of $\lambda^*$</b>, hence independent of $\kappa$ and $\beta$.
+</div>
+<p>This is the unique robust prediction surviving the scalar bottleneck
+(one equation $\to$ one constraint).</p>
+
+<h3>Honest Limitations</h3>
+<ul>
+<li><b>Scalar bottleneck:</b> one constraint, cannot predict all 25 SM parameters.</li>
+<li>$\kappa$ and $\beta$ are <b>free parameters</b>; no physical derivation exists.</li>
+<li>$\Phi(S)=g(S)D_0$ is a <b>mathematical ansatz</b>, not derived from physical principles.</li>
+<li><b>Scheme&nbsp;A</b> (inner fluctuation scaling) also works, with compression condition relaxed by $\sim\Lambda^2$.</li>
+</ul>
+
+<h3>Literature Gap</h3>
+<p>Searched arXiv (8 keyword groups), INSPIRE (8 groups), Google Scholar (5 groups).
+No prior work on &ldquo;self-referential spectral action&rdquo; or &ldquo;spectral action fixed point&rdquo; found.
+Closest: Khalkhali&ndash;Pagliaroli (arXiv:2512.08694) on bootstrapping NCG with Dirac ensembles.</p>
+
+<p class="end">&mdash; Full manuscript: <a href="https://doi.org/10.5281/zenodo.21237677">doi.org/10.5281/zenodo.21237677</a> &mdash;</p>
+
+</body>
+</html>
