@@ -1,0 +1,703 @@
+\documentclass[12pt,letterpaper]{article}
+
+% ===== Packages =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[capitalise]{cleveref}
+\usepackage{doi}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{booktabs}
+
+% ===== Theorem environments =====
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{setup}[theorem]{Setup}
+
+% ===== Macros =====
+\newcommand{\mL}{\mathcal{L}}
+\newcommand{\mF}{\mathcal{F}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mM}{\mathcal{M}}
+\newcommand{\mPhi}{\Phi}
+\newcommand{\mreg}{\mPhi_{\mathrm{reg}}}
+\newcommand{\Fix}{\mathrm{Fix}}
+\newcommand{\vol}{\mathrm{vol}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\diff}{\mathrm{d}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\chiI}{\chi_I}
+\newcommand{\EA}{E_A}
+\newcommand{\jphi}{j^2\varphi}
+\newcommand{\Sloc}{S_{\mathrm{loc}}}
+\newcommand{\Fphi}{F_\varphi}
+\newcommand{\dVol}{\,\diff^n x}
+
+% ===== Metadata =====
+\title{Self-Referential Action Functionals: \\
+Existence, Non-Triviality, and Categorical Non-Equivalence}
+\author{Liu Tianqi\\
+School of Materials and Chemical Engineering,\\
+Zhengzhou University of Light Industry,\\
+136 Science Avenue, High-tech Zone, Zhengzhou, China\\
+\texttt{tianqi689@gmail.com}
+}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We introduce \emph{Type I self-referential action functionals}, a novel class of action functionals $S[\varphi]$ whose value enters the Lagrangian density as a parameter, satisfying the fixed-point equation
+$S[\varphi] = F_\varphi(S[\varphi])$ where $F_\varphi(s) := \int_M \mL(\varphi, \partial\varphi, s) \dVol$.
+To the authors' knowledge, this structure is absent from the mathematical physics literature: it is distinct from Dyson--Schwinger equations (equation-level self-consistency), Hartree--Fock theory (effective-potential level), and Schreiber's cohesive $\infty$-topos framework (verified by keyword search).
+
+We establish three results:
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Existence and regularity} (\Cref{thm:p3}): Under the non-degeneracy condition $1 - \partial_s F_\varphi(s_0) \neq 0$, the implicit function theorem on Fr\'echet spaces (Gl\"ockner 2006, Michal--Bastiani $C^1$) yields a unique local smooth solution $S_{\mathrm{loc}}$ near any non-degenerate fixed point.
+\item \textbf{Non-triviality criterion} (\Cref{thm:p12}): On a closed manifold, for any representation $\mL$ of $S$, $\partial_s E_A \equiv 0 \iff \chi_I \equiv 1 \iff$ the variational formula degenerates to standard form. Moreover, $S$ is trivial (admits an $s$-independent representation) $\iff$ there exists a representation with $\partial_s \mL \equiv 0$. The criterion is intrinsic to $S$ (independent of representation), based on the equivalence class of $\partial_s\mathcal{L}$ modulo null Lagrangians.
+\item \textbf{Categorical non-equivalence} (\Cref{thm:p14d}): Under jet-local diffeomorphisms, non-trivial Type I functionals are not equivalent to any standard action. The proof uses the variational bicomplex closure property and a Bernoulli ODE characterization of the exceptional family.
+\end{enumerate}
+
+The case of arbitrary (non-local) diffeomorphisms is positioned as a layered open problem: mathematically open, but plausibly physically irrelevant since non-local transformations destroy the variational bicomplex structure required by physical equivalence.
+
+\medskip
+\noindent\textbf{MSC 2020:} 70S05 (Lagrangian formalism), 58E30 (Variational problems), 46G05 (Calculus in locally convex spaces), 81T70 (Quantum field theory, mathematical aspects).
+
+\medskip
+\noindent\textbf{Keywords:} self-referential action, implicit function theorem, Fr\'echet space, variational bicomplex, categorical non-equivalence.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ==================================================================
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Motivation}
+
+The action principle is foundational to modern physics: dynamics, symmetries, and quantization are all rooted in the action functional $S[\varphi] = \int_M \mL(\varphi, \partial\varphi) \dVol$. In every known classical and quantum field theory, the Lagrangian density $\mL$ depends on the field $\varphi$ and its derivatives, but \emph{not} on the value of the action itself.
+
+This paper investigates what happens when we relax this implicit assumption: \emph{what if the action value $s = S[\varphi]$ enters the Lagrangian as a parameter?} This leads to the \emph{self-referential action}:
+\begin{equation}
+S[\varphi] = F_\varphi(S[\varphi]), \qquad F_\varphi(s) := \int_M \mL(\varphi, \partial\varphi, s) \dVol.
+\label{eq:self-ref-def}
+\end{equation}
+Equation~\eqref{eq:self-ref-def} is a fixed-point equation on $\R \to \R$: the action value $s$ must be a fixed point of $F_\varphi$.
+
+\subsection{Relation to existing self-referential structures}
+
+Several self-referential structures appear in physics and mathematics, but none at the level of the action functional:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Existing structure & Self-referential layer & Relation to Type I \\
+\midrule
+Dyson--Schwinger equations & Equation level ($D = D_0 + D_0 \Sigma[D] D$) & Ally, not isomorphic \\
+Hartree--Fock theory & Effective potential level & Ally, not isomorphic \\
+S-matrix bootstrap & Amplitude level ($S = F[S]$) & Ally, not isomorphic \\
+Polyakov action & Worldsheet level (internal, not self-referential) & Orthogonal internal structure \\
+Schreiber cohesive $\infty$-topos \cite{Schreiber2013} & Differential cohomology & No coverage (keyword audit, \Cref{sec:lit-audit}) \\
+Lawvere fixed-point theorem \cite{Lawvere1969} & Cartesian closed categories & Philosophical inspiration only \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Lawvere's theorem provides a categorical unification of self-referential paradoxes, but Type I does not fit its framework: Lawvere requires a morphism $f: A \to A^A$ in a cartesian closed category, whereas Type I operates with $F_\varphi: \R \to \R$ in $\mathbf{Set}$. Our mathematical foundation is the Banach fixed-point theorem and the Fr\'echet space implicit function theorem, not Lawvere's theorem.
+
+To our knowledge, the structure \eqref{eq:self-ref-def} is novel in the mathematical physics literature.
+
+\subsection{Summary of results}
+
+\begin{description}[leftmargin=*]
+\item[Definition (\Cref{sec:def})] We define Type I self-referential actions and state the non-degeneracy condition (H4).
+\item[Existence (\Cref{sec:existence})] Using Gl\"ockner's implicit function theorem on Fr\'echet spaces \cite{Glockner2006} with Michal--Bastiani $C^1$ regularity \cite{Hamilton1982}, we prove local existence, uniqueness, and smoothness of $S[\varphi]$ near any non-degenerate fixed point (\Cref{thm:p3}).
+\item[Variational principle (\Cref{sec:variational})] We derive the variational formula featuring the \emph{implicit factor} $\chi_I[\varphi] = 1/(1 - \partial_s F_\varphi(S[\varphi]))$ and the modified Euler--Lagrange equations.
+\item[Non-triviality (\Cref{sec:nontriv})] We prove that on closed manifolds, for any representation $\mL$, $\partial_s E_A \equiv 0 \iff \chi_I \equiv 1 \iff$ variational formula degenerates to standard form (\Cref{thm:p12}), and the intrinsic criterion: $S$ is trivial $\iff$ there exists a representation with $\partial_s \mL \equiv 0$. We also give a sufficient condition for non-triviality (\Cref{thm:p13}). The criterion is intrinsic to $S$, based on $\partial_s\mathcal{L}$ modulo null Lagrangians.
+\item[Categorical non-equivalence (\Cref{sec:cat})] We prove that under jet-local diffeomorphisms, non-trivial Type I actions cannot be equivalent to any standard action (\Cref{thm:p14d}).
+\end{description}
+
+\subsection{Honest disclosure}
+\label{sec:disclosure}
+
+The core concept and research programme were developed by the author. Formalization of proofs, routine calculations, and literature organization were conducted with AI assistance. All mathematical arguments have been documented in full detail; the author takes responsibility for the correctness of the work and welcomes independent verification.
+
+% ==================================================================
+\section{Mathematical Preliminaries}
+\label{sec:prelim}
+
+\subsection{Standard action functionals}
+
+\begin{definition}[Standard action]
+\label{def:std-action}
+Let $M$ be an $n$-dimensional compact oriented smooth manifold and $V$ a finite-dimensional real vector space. Set $\mPhi := C^\infty(M, V)$. Given a smooth Lagrangian density $\mL_{\mathrm{std}}: V \times (T^*M \otimes V) \to \R$, the \emph{standard action} $S_{\mathrm{std}}: \mPhi \to \R$ is:
+\[ S_{\mathrm{std}}[\varphi] := \int_M \mL_{\mathrm{std}}\!\bigl(\varphi(x),\, \partial_\mu\varphi(x)\bigr) \dVol. \]
+\end{definition}
+
+\subsection{Banach fixed-point theorem}
+
+\begin{theorem}[Banach contraction mapping]
+\label{thm:banach}
+Let $(X, d)$ be a complete metric space and $T: X \to X$ a contraction: there exists $k < 1$ with $d(T(x), T(y)) \le k \cdot d(x, y)$ for all $x, y \in X$. Then $T$ has a unique fixed point in $X$.
+\end{theorem}
+
+\subsection{Fr\'echet spaces and the implicit function theorem}
+
+\begin{definition}[Fr\'echet space]
+A vector space $X$ equipped with a countable family of seminorms $\{p_k\}_{k \in \N}$ satisfying separation, subadditivity, homogeneity, and completeness (under the metric $d(x, y) := \sum_{k=0}^\infty 2^{-k} \min(1, p_k(x - y))$) is called a \emph{Fr\'echet space}.
+\end{definition}
+
+\begin{example}[Configuration space]
+$\mPhi = C^\infty(M, V)$ with seminorms $p_k(\varphi) := \sup_{x \in M} \|D^k \varphi(x)\|$ is a Fr\'echet space \cite{RudinFA, Treves}.
+\end{example}
+
+\begin{definition}[Michal--Bastiani $C^1$]
+\label{def:mb}
+Let $X$ be Fr\'echet, $Y$ Banach, $U \subseteq X$ open. A map $f: U \to Y$ is \emph{MB-$C^1$} if:
+\begin{itemize}
+\item[(MB1)] For each $x \in U$ and $h \in X$, the directional derivative $\diff f(x, h) := \lim_{t \to 0} (f(x + th) - f(x))/t$ exists.
+\item[(MB2)] The map $\diff f: U \times X \to Y, (x, h) \mapsto \diff f(x, h)$ is continuous.
+\end{itemize}
+\end{definition}
+
+When $X$ is Banach, MB-$C^1$ coincides with classical Fr\'echet differentiability \cite{Hamilton1982, Glockner2006}. A recent globalization of the Fr\'echet implicit function theorem is given in \cite{Eftekharinasab2024}. The complete statement of the implicit function theorem we use is given in \Cref{sec:glockner-full}.
+
+% ==================================================================
+\section{Type I Self-Referential Actions}
+\label{sec:def}
+
+\subsection{Definition}
+
+\begin{setup}
+\label{setup:basic}
+\leavevmode
+\begin{itemize}
+\item $M$: compact oriented smooth $n$-dimensional manifold (spacetime), $\vol(M) < \infty$.
+\item $V$: finite-dimensional real vector space (internal space).
+\item $\mPhi := C^\infty(M, V)$: configuration space (Fr\'echet).
+\item $\mL: V \times (T^*M \otimes V) \times \R \to \R$: smooth Lagrangian density. The third argument $s \in \R$ is the \emph{action value parameter}.
+\item $F_\varphi: \R \to \R$ defined by $F_\varphi(s) := \int_M \mL(\varphi(x), \partial\varphi(x), s) \dVol$.
+\end{itemize}
+\end{setup}
+
+\begin{definition}[Type I self-referential action]
+\label{def:typeI}
+A functional $S: \mPhi \to \R$ is a \emph{Type I self-referential action} if there exists $\mL$ as in \Cref{setup:basic} such that for every $\varphi \in \mPhi$:
+\[ S[\varphi] = F_\varphi(S[\varphi]) = \int_M \mL(\varphi, \partial\varphi, S[\varphi]) \dVol. \]
+Let $E_A$ denote the Euler--Lagrange operator of $\mL$ with respect to the $(\varphi, \partial\varphi)$ variables. The functional $S$ is \emph{non-trivial} if $S$ admits \textbf{no} $s$-independent Lagrangian representation, i.e., there exists no $s$-independent $\mL_0$ such that $S[\varphi] = \int_M \mL_0(\varphi, \partial\varphi) \dVol$. This definition is intrinsic to $S$ (the existence of an $s$-independent representation is a property of $S$, independent of the particular $\mL$).
+
+Equivalently (\Cref{thm:p12} item 5), $S$ is non-trivial if and only if for \emph{all} representations $\mL$ of $S$, $\partial_s E_A \not\equiv 0$.
+\end{definition}
+
+\begin{remark}
+Type II (functional self-reference) and Type III (operator self-reference) are deferred to future work. Type I is the weakest non-trivial self-reference; if it fails, Type II/III are hopeless.
+\end{remark}
+
+\subsection{Non-degeneracy condition}
+
+\begin{assumption}[H4: non-degeneracy]
+\label{ass:h4}
+At a fixed point $(\varphi_0, s_0)$ with $s_0 = F_{\varphi_0}(s_0)$, we assume:
+\[ 1 - \partial_s F_{\varphi_0}(s_0) \neq 0. \tag{H4} \]
+\end{assumption}
+
+\begin{remark}[Physical meaning of H4]
+H4 is the \emph{self-feedback sub-criticality condition}, analogous to fixed-point classification in renormalization group flow. The condition $|\partial_s F_\varphi| < 1$ means negative feedback dominates; $\partial_s F_\varphi = 1$ is a resonance where linearization degenerates.
+\end{remark}
+
+\begin{remark}[H4 is not necessary]
+\label{rem:h4-not-necessary}
+H4 is a sufficient condition for \Cref{thm:p3}, \textbf{not a necessary one}. For example, take $\mL = \mL_0(\varphi, \partial\varphi) - s_0/\vol(M) + s/\vol(M) + (s - s_0)^3/\vol(M)$ (with $\mL_0$ chosen so that $T_0[\varphi] \equiv s_0$); then $F_\varphi(s) = s_0 + (s - s_0)^3$, the fixed point $s = s_0$ is unique, but $\partial_s F_\varphi(s_0) = 1$ and H4 fails. In this case the implicit-function-theorem method of \Cref{thm:p3} does not apply (linearization degenerates; a higher-order analysis is required), yet a unique fixed point can still exist. Another typical H4-failure pattern is $\partial_s F_\varphi \equiv 1$ with $F_\varphi(s) = s + c$: when $c = 0$ every $s$ is a fixed point (non-unique), and when $c \neq 0$ no fixed point exists.
+\end{remark}
+
+\begin{proposition}[Banach sufficient condition]
+\label{prop:banach-suff}
+If $|\partial_s \mL| \leq K < 1/\vol(M)$ for all arguments, then $F_\varphi$ is a contraction with constant $k_\varphi = K \cdot \vol(M) < 1$, and \Cref{thm:banach} yields a unique fixed point. This condition is sufficient but not necessary; it implies H4.
+\end{proposition}
+
+% ==================================================================
+\section{Existence and Regularity}
+\label{sec:existence}
+
+\subsection{Local existence and Fr\'echet differentiability}
+
+\begin{theorem}[Local existence, uniqueness, and smoothness]
+\label{thm:p3}
+Under \Cref{setup:basic} and \Cref{ass:h4}, there exist open neighborhoods $U_0 \ni \varphi_0$ and $V_0 \ni s_0$ and a unique smooth $S_{\mathrm{loc}}: U_0 \to V_0$ such that:
+\begin{itemize}
+\item[(C1)] $G(\varphi, S_{\mathrm{loc}}(\varphi)) = 0$ for all $\varphi \in U_0$ (where $G(\varphi, s) := s - F_\varphi(s)$);
+\item[(C2)] $S_{\mathrm{loc}}$ is $C^\infty$ (in the Michal--Bastiani sense);
+\item[(C3)] The derivative is explicitly:
+\begin{equation}
+DS_{\mathrm{loc}}(\varphi) \cdot \eta = \frac{D_\varphi F_\varphi(S_{\mathrm{loc}}(\varphi)) \cdot \eta}{1 - \partial_s F_\varphi(S_{\mathrm{loc}}(\varphi))}.
+\label{eq:explicit-deriv}
+\end{equation}
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+\textbf{Step 1: Well-definedness of $G$.} By smoothness of $\mL$ and compactness of $M$, $F_\varphi(s) = \int_M \mL(\varphi, \partial\varphi, s) \dVol$ is well-defined, and $G(\varphi, s) := s - F_\varphi(s)$ maps $\mPhi \times \R \to \R$.
+
+\textbf{Step 2: MB-$C^1$ verification.}
+
+\emph{(2a) Existence of directional derivatives.} For $\eta \in \mPhi$ and $\tau \in \R$:
+\[ \frac{G(\varphi + \tau\eta, s) - G(\varphi, s)}{\tau} = -\int_M \frac{\mL(\varphi + \tau\eta, \partial\varphi + \tau\partial\eta, s) - \mL(\varphi, \partial\varphi, s)}{\tau} \dVol. \]
+By smoothness of $\mL$, the integrand converges pointwise to $-[\partial\mL/\partial\varphi \cdot \eta + \partial\mL/\partial(\partial_\mu\varphi) \cdot \partial_\mu\eta]$. By compactness of $M$ and boundedness of $\eta$, $\partial\eta$ on $M$, there exists a $\tau$-independent dominating function; by dominated convergence, the limit and integral commute, yielding:
+\[ D_\varphi G(\varphi, s) \cdot \eta = -\int_M \left[\frac{\partial\mL}{\partial\varphi} \cdot \eta + \frac{\partial\mL}{\partial(\partial_\mu\varphi)} \cdot \partial_\mu\eta\right] \dVol. \]
+Similarly, $D_s G(\varphi, s) = 1 - \int_M \partial_s \mL \dVol$.
+
+\emph{(2b) Continuity of the derivative map (MB2).} If $\varphi_n \to \varphi$ in all $p_k$, $s_n \to s$, $\eta_n \to \eta$ in all $p_k$, then by smoothness of $\mL$ and compactness of $M$, the integrand converges pointwise with a dominating function; dominated convergence gives $D_\varphi G(\varphi_n, s_n) \cdot \eta_n \to D_\varphi G(\varphi, s) \cdot \eta$.
+
+\textbf{Step 3: IFT conditions.} (IFT-1) is $G(\varphi_0, s_0) = 0$ (assumed); (IFT-2) is $D_s G(\varphi_0, s_0) = 1 - \partial_s F_{\varphi_0}(s_0) \neq 0$ (\Cref{ass:h4}), a linear isomorphism $\R \to \R$.
+
+\textbf{Step 4: Apply Gl\"ockner's IFT.} Yields $U_0, V_0, S_{\mathrm{loc}}$ satisfying (C1), with $S_{\mathrm{loc}}$ of class MB-$C^1$.
+
+\textbf{Step 4a: $C^\infty$ bootstrap.} Since $\mL$ is $C^\infty$, the MB-$C^1$ verification in Step 2 lifts to all orders, so $G$ is $C^\infty$. By \eqref{eq:explicit-deriv}, $DS_{\mathrm{loc}}(\varphi)\cdot\eta$ is expressed through $D_\varphi F_\varphi(S_{\mathrm{loc}}(\varphi))$ and $1 - \partial_s F_\varphi(S_{\mathrm{loc}}(\varphi))$, both of which are $C^m$ whenever $S_{\mathrm{loc}}$ is $C^m$ (since $F_\varphi$ is $C^\infty$). Hence $S_{\mathrm{loc}}$ being $C^1 \Rightarrow C^2 \Rightarrow \cdots \Rightarrow C^\infty$, completing the induction.
+
+\textbf{Step 5: Explicit derivative (C3).} Differentiating $G(\varphi, S_{\mathrm{loc}}(\varphi)) = 0$ via chain rule:
+\[ -D_\varphi F_\varphi(S_{\mathrm{loc}}(\varphi)) + (1 - \partial_s F_\varphi(S_{\mathrm{loc}}(\varphi))) \cdot DS_{\mathrm{loc}}(\varphi) = 0, \]
+giving \eqref{eq:explicit-deriv}.
+\end{proof}
+
+\subsection{Global extension}
+
+\begin{theorem}[Regular set]
+\label{thm:reg-set}
+Define the \emph{regular set}:
+\[ \mreg := \{\varphi \in \mPhi : \exists s_\varphi \in \R,\ G(\varphi, s_\varphi) = 0,\ 1 - \partial_s F_\varphi(s_\varphi) \neq 0\}, \]
+and the \emph{solution manifold}:
+\[ \Sigma := \{(\varphi, s) \in \mPhi \times \R : G(\varphi, s) = 0,\ 1 - \partial_s F_\varphi(s) \neq 0\}. \]
+Then:
+\begin{itemize}
+\item[(G1)] $\mreg$ is open in $\mPhi$; $\Sigma$ is a smooth submanifold of $\mPhi \times \R$ (since $D_s G \neq 0$, $\Sigma$ is locally a graph);
+\item[(G2)] The projection $\pi: \Sigma \to \mreg$, $(\varphi, s) \mapsto \varphi$, is a local diffeomorphism; $S$ is smooth and single-valued on each connected component of $\Sigma$;
+\item[(G3)] When $\mreg$ is path-connected, $S$ is single-valued on $\mreg$ $\iff$ $\pi: \Sigma \to \mreg$ is a trivial covering (i.e., each connected component of $\Sigma$ maps single-sheetedly onto $\mreg$). In particular, path-connectedness alone is \emph{not} sufficient for single-valuedness --- the same $\varphi$ may correspond to multiple non-degenerate fixed points $s_1 \neq s_2$, in which case $\pi$ is a multi-sheeted covering (see \Cref{rem:multi-fixed-point}).
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+(G1) By \Cref{thm:p3}, any $\varphi_0 \in \mreg$ has a neighborhood $U_0 \subseteq \mreg$; smoothness of $\Sigma$ follows from $G$ being $C^\infty$ with $D_s G \neq 0$ (implicit function theorem). (G2) Locally given by \Cref{thm:p3}, $\pi$ is a local diffeomorphism; on each connected component of $\Sigma$, $S$ is obtained by uniquely gluing local solutions. (G3) ($\Rightarrow$) Each connected component of a trivial covering is single-sheeted, so each $\varphi \in \mreg$ corresponds to exactly one $s$, and $S$ is single-valued. ($\Leftarrow$) If $S$ is single-valued, each $\varphi$ corresponds to exactly one $s$, so $\pi$ is injective; a local diffeomorphism that is a bijection is a trivial covering. For the multi-sheeted counterexample, see \Cref{rem:multi-fixed-point}.
+\end{proof}
+
+\begin{remark}[Multi-fixed-point counterexample]
+\label{rem:multi-fixed-point}
+Take $\mL = \frac{1}{2}(\partial_x\varphi)^2 + s^2\varphi^2$ ($s$ enters quadratically), $M = S^1$. The fixed-point equation $s = T[\varphi] + s^2 Q[\varphi]$ ($T$ kinetic energy, $Q = \int\varphi^2$), i.e., $Q s^2 - s + T = 0$. When $1 - 4QT > 0$ there are two solutions $s_\pm = (1 \pm \sqrt{1-4QT})/(2Q)$; if $1 - 2s_\pm Q \neq 0$, both are non-degenerate, so $\varphi \in \mreg$ but $S[\varphi]$ is double-valued. $\Phi_{\mathrm{reg}}$ can be path-connected while $\Sigma$ is two-sheeted.
+\end{remark}
+
+\begin{theorem}[Existence without Banach condition]
+\label{thm:p2}
+Suppose for some $\varphi \in \mPhi$ there exists $[s_-, s_+] \subseteq \R$ with:
+\begin{itemize}
+\item[(E1)] $(s_- - F_\varphi(s_-)) \cdot (s_+ - F_\varphi(s_+)) \leq 0$;
+\item[(E2)] $F_\varphi: [s_-, s_+] \to \R$ continuous.
+\end{itemize}
+Then $\Fix_\varphi \cap [s_-, s_+] \neq \emptyset$.
+\end{theorem}
+
+\begin{proof}
+$h(s) := s - F_\varphi(s)$ is continuous; by (E1) and the intermediate value theorem, $\exists s_* \in [s_-, s_+]$ with $h(s_*) = 0$.
+\end{proof}
+
+% ==================================================================
+\section{Variational Principle}
+\label{sec:variational}
+
+\subsection{Variational formula and the implicit factor}
+
+\begin{theorem}[Variational formula]
+\label{thm:var-formula}
+Let $S[\varphi]$ be a Type I self-referential action satisfying (C1) and (C2) from \Cref{thm:p3}. Then for any test field $\eta \in C_c^\infty(M, V)$:
+\begin{equation}
+\frac{\delta S}{\delta \varphi}[\varphi] \cdot \eta = \chi_I[\varphi] \cdot \int_M \left[\frac{\partial \mL}{\partial \varphi} \cdot \eta + \frac{\partial \mL}{\partial(\partial_\mu \varphi)} \cdot \partial_\mu \eta\right] \dVol,
+\label{eq:var-formula}
+\end{equation}
+where all partial derivatives of $\mL$ are evaluated at $s = S[\varphi]$, and the \emph{implicit factor} is:
+\begin{equation}
+\chi_I[\varphi] := \frac{1}{1 - \partial_s F_\varphi(S[\varphi])} = \frac{1}{1 - \int_M \frac{\partial \mL}{\partial s}\bigl(\varphi(x), \partial_\mu\varphi(x), S[\varphi]\bigr) \dVol}.
+\label{eq:implicit-factor}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+For $\varphi_\eps := \varphi + \eps\eta$, the fixed-point equation gives $S[\varphi_\eps] = F_{\varphi_\eps}(S[\varphi_\eps])$. Differentiating at $\eps = 0$:
+\[ \delta S[\varphi] \cdot \eta = \partial_\varphi F_\varphi(S[\varphi]) \cdot \eta + \partial_s F_\varphi(S[\varphi]) \cdot \delta S[\varphi] \cdot \eta, \]
+where $\partial_\varphi F_\varphi(S[\varphi]) \cdot \eta = \int_M [\partial\mL/\partial\varphi \cdot \eta + \partial\mL/\partial(\partial_\mu\varphi) \cdot \partial_\mu\eta] \dVol$ and $\partial_s F_\varphi(S[\varphi]) = \int_M \partial_s \mL \dVol$. Solving:
+\[ \delta S[\varphi] \cdot \eta \cdot (1 - \partial_s F_\varphi(S[\varphi])) = \int_M [\cdots] \dVol. \]
+By (H4), $1 - \partial_s F_\varphi \neq 0$, yielding \eqref{eq:var-formula}.
+\end{proof}
+
+\begin{remark}[Structural significance]
+The implicit factor $\chi_I[\varphi]$ is the hallmark of self-reference. For standard actions, $\partial_s \mL = 0$ so $\chi_I \equiv 1$. For non-trivial Type I actions, $\chi_I[\varphi] \not\equiv 1$ is a \emph{global} functional of $\varphi$ --- it depends on the integral of $\partial_s \mL$ over all of $M$. This makes the variational structure fundamentally non-local.
+\end{remark}
+
+\subsection{Modified Euler--Lagrange equations}
+
+\begin{theorem}[Type I Euler--Lagrange equations]
+\label{thm:el-I}
+Under the conditions of \Cref{thm:var-formula}, $\delta S / \delta \varphi = 0$ if and only if:
+\begin{equation}
+\frac{\partial \mL}{\partial \varphi} - \partial_\mu\!\left(\frac{\partial \mL}{\partial(\partial_\mu \varphi)}\right) = 0 \quad \text{at } s = S[\varphi].
+\tag{EL-I}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By \Cref{thm:var-formula}, $\delta S[\varphi] \cdot \eta = \chi_I[\varphi] \cdot \int [\cdots] \dVol$. Since $\chi_I[\varphi] \neq 0$ (H4), $\delta S = 0 \iff \int [\cdots] \dVol = 0$ for all $\eta$. By the fundamental lemma of calculus of variations, (EL-I) follows.
+\end{proof}
+
+\begin{remark}[Non-locality of (EL-I)]
+Although (EL-I) has the same formal appearance as the standard Euler--Lagrange equation, the parameter $s = S[\varphi]$ is a \emph{global} quantity --- it is the integral of $\mL$ over all of $M$. Thus (EL-I) is a non-local integro-differential equation: the equation at each point $x$ is coupled to the field configuration on all of $M$ through $S[\varphi]$. This is the core non-trivial feature of Type I self-referential actions.
+\end{remark}
+
+\begin{remark}[Additive constant symmetry breaking]
+\label{rem:additive}
+For standard actions, $\mL \to \mL + c$ shifts $S \to S + c \cdot \vol(M)$ and does not change the Euler--Lagrange equations. For non-trivial Type I actions, this symmetry is generally broken: the new fixed point $s'$ satisfies $s' = F_\varphi(s') + c \cdot \vol(M)$, and since $\partial_s F_\varphi \neq 0$ (non-triviality), $F_\varphi(s') \neq F_\varphi(s_0)$, so $s' \neq s_0 + c \cdot \vol(M)$; both the parameter $s$ in (EL-I) and the equation coefficients undergo a non-translational change.
+\end{remark}
+
+% ==================================================================
+\section{Non-Triviality}
+\label{sec:nontriv}
+
+\subsection{Degeneration criterion}
+
+\begin{theorem}[Non-triviality criterion]
+\label{thm:p12}
+Let $S$ be a Type I self-referential action (\Cref{def:typeI}) on a closed manifold $M$ ($\partial M = \emptyset$). For \emph{any} representation $\mL$ of $S$, the following (1)--(4) are equivalent:
+\begin{enumerate}[leftmargin=*]
+\item $\partial_s E_A \equiv 0$ (i.e., $\partial_s \mL$ is a null Lagrangian, equivalently $\partial_s \mL = \partial_\mu K^\mu$ for some vector density $K^\mu$);
+\item The implicit factor $\chiI \equiv 1$;
+\item The variational formula \eqref{eq:var-formula} degenerates to the standard variational formula ($\delta S$ is independent of $s$);
+\item (EL-I) formally coincides with the standard Euler--Lagrange equation (the parameter $s$ does not enter the equation coefficients).
+\end{enumerate}
+Moreover, the following intrinsic criterion is equivalent to $S$ being trivial (admitting an $s$-independent representation):
+\begin{enumerate}[leftmargin=*]\setcounter{enumi}{4}
+\item $S$ is trivial (there exists an $s$-independent $\mL_0$ with $S[\varphi] = \int \mL_0 \dVol$) $\iff$ there exists a representation $\mL$ for which (1) holds (i.e., $\partial_s \mL \equiv 0$).
+\end{enumerate}
+When (5) holds, $S$ is \emph{trivial}; otherwise \emph{non-trivial}. When (1)--(4) hold for some representation, that representation is \emph{formally degenerate}; if \emph{all} representations of $S$ fail (1), then $S$ is non-trivial.
+\end{theorem}
+
+\begin{proof}
+(1)$\Rightarrow$(2): If $\partial_s \mL = \partial_\mu K^\mu$, then on a closed manifold $\partial_s F_\varphi = \int_M \partial_\mu K^\mu \dVol = \int_{\partial M} K^\mu n_\mu \dVol = 0$ by Stokes' theorem, so $\chiI = 1$.
+
+(2)$\Rightarrow$(1): $\chiI \equiv 1 \Rightarrow \partial_s F_\varphi \equiv 0 \Rightarrow \int_M \partial_s \mL \dVol = 0$ for all $\varphi \in \mPhi$. By the variational bicomplex theory \cite[Thm 4.7]{Olver1993}, if a smooth function $g(\varphi, \partial\varphi)$ satisfies $\int_M g \dVol = 0$ for all $\varphi$, then $E_A(g) \equiv 0$, i.e., $g$ is a null Lagrangian. Hence $\partial_s \mL$ is a null Lagrangian, and $E_A(\partial_s \mL) = \partial_s E_A(\mL) \equiv 0$.
+
+(2)$\Rightarrow$(3)(4): When $\chiI = 1$, the factor $\chiI$ on the right-hand side of \eqref{eq:var-formula} vanishes, recovering the standard variational formula; in (EL-I), $s$ enters only as a parameter in the partial derivatives of $\mL$, but $\chiI = 1$ implies $\partial_s F = 0$, so varying $s$ does not change $F_\varphi$, and (EL-I) formally coincides with the standard EL equation.
+
+(3)$\Rightarrow$(2) or (4)$\Rightarrow$(2): If the variational formula degenerates to the standard form, then $\chiI \cdot \int[\cdots] = \int[\cdots]_{\mathrm{std}}$ for all $\eta$. Choosing $\eta$ with $\int[\cdots] \neq 0$ yields $\chiI = 1$.
+
+Proof of (5):
+($\Rightarrow$) $S$ is trivial, so there exists an $s$-independent $\mL_0$; for this representation $\partial_s \mL_0 = 0$, and (1) holds.
+($\Leftarrow$) There exists a representation $\mL$ with $\partial_s \mL = \partial_\mu K^\mu$ (null Lagrangian). Integrating in $s$: $\mL(\varphi, \partial\varphi, s) = \mL_0(\varphi, \partial\varphi) + \int_{s_1}^s \partial_\mu K^\mu(\varphi, \partial\varphi, s') \diff s'$. On a closed manifold $F_\varphi(s) = \int \mL_0 + \int_{s_1}^s \int_M \partial_\mu K^\mu \dVol \diff s' = \int \mL_0$ (Stokes). Hence $S[\varphi] = F_\varphi(S[\varphi]) = \int \mL_0$, so $S$ is represented by the $s$-independent $\mL_0$, i.e., $S$ is trivial.
+\end{proof}
+
+\begin{remark}[Closed manifold restriction]
+\label{rem:closed-M}
+On closed manifolds, null Lagrangians are exactly total divergences \cite{Olver1993} (for recent developments in the variational bicomplex, see \cite{Saunders2024}). On manifolds with boundary, when $\partial_s \mL$ is a null Lagrangian, $\partial_s F = \int_{\partial M} K^\mu n_\mu \dVol$ is generally non-zero, so (1) no longer implies (2). Hence \Cref{thm:p12} is restricted to closed manifolds; the boundary case requires additional boundary conditions (e.g., $K^\mu n_\mu|_{\partial M} = 0$).
+\end{remark}
+
+\subsection{Sufficient condition for non-triviality}
+
+\begin{theorem}[Sufficient condition]
+\label{thm:p13}
+A Type I self-referential action $S$ is non-trivial if either of the following holds:
+\begin{itemize}
+\item[(NT1)] The functional form of $S[\varphi]$ cannot be written as $a \tilde{S}[\varphi] + b$ ($a \in \R \setminus\{0\}$, $b \in \R$, $\tilde{S}$ a standard action);
+\item[(NT2)] For \emph{all} representations $\mL$ of $S$, $\chiI[\varphi] \not\equiv 1$ (i.e., no representation makes $\chiI \equiv 1$).
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+By \Cref{def:typeI}, $S$ is non-trivial $\iff$ no $s$-independent representation exists $\iff$ $S$ cannot be written as $\int \mL_0$. If $S = a\tilde{S} + b = a\int\tilde{\mL}_0 + b = \int(a\tilde{\mL}_0 + b/\vol(M))$, taking $\mL_0 = a\tilde{\mL}_0 + b/\vol(M)$ ($s$-independent) makes $S$ trivial. Hence (NT1) is a sufficient condition for non-triviality.
+
+(NT2) by \Cref{thm:p12} (5): $S$ trivial $\iff$ there exists a representation with $\partial_s \mL \equiv 0$ $\iff$ there exists a representation with $\chiI \equiv 1$ (\Cref{thm:p12} (1)$\Rightarrow$(2)). Hence if all representations have $\chiI \not\equiv 1$, then $S$ has no $s$-independent representation and is non-trivial.
+\end{proof}
+
+\begin{corollary}
+\label{cor:nontriv}
+For the toy example (\Cref{ex:toy}), $S[\varphi] = \bigl(T[\varphi] - \frac{m_0^2}{2}Q[\varphi]\bigr)/\bigl(1 + \frac{\alpha}{2}Q[\varphi]\bigr)$ (\Cref{eq:toy-solution}). If $\alpha \neq 0$, $S[\varphi]$ is a rational function of $T[\varphi]$, $Q[\varphi]$ (the denominator $1 + \frac{\alpha}{2}Q$ depends on $\varphi$), and cannot be written as $a\tilde{S}[\varphi] + b$ (for standard $\tilde{S}$, such an affine form has a "denominator" independent of $\varphi$). By \Cref{thm:p13} (NT1), $S$ is non-trivial.
+\end{corollary}
+
+\subsection{Categorical non-equivalence}
+\label{sec:cat}
+
+\begin{definition}[Action category]
+\leavevmode
+\begin{itemize}
+\item \textbf{Objects of $\mathsf{Act}$}: pairs $(\mPhi, S)$ with $\mPhi$ Fr\'echet and $S: \mPhi \to \R$ smooth.
+\item \textbf{Full subcategory $\mathsf{Act}_{\mathrm{std}}$}: standard actions (\Cref{def:std-action}).
+\item \textbf{Full subcategory $\mathsf{Act}_I$}: non-trivial Type I actions (\Cref{def:typeI}).
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Jet-local diffeomorphism]
+A smooth diffeomorphism $T: \mPhi \to \mPhi$ is \emph{jet-local} if for every $\varphi \in \mPhi$ and every $x \in M$, $(T[\varphi])(x)$ depends only on the finite jet $j^k\varphi(x)$ for some fixed $k$.
+\end{definition}
+
+\begin{theorem}[Categorical non-equivalence under jet-local diffeomorphisms]
+\label{thm:p14d}
+Let $S_I$ be a non-trivial Type I action (satisfying H4 on $\mreg$), $S_{\mathrm{std}}$ a standard action, and $T: \mPhi \to \mPhi$ a jet-local smooth diffeomorphism. Then it is \emph{impossible} that:
+\[ S_I[\varphi] = S_{\mathrm{std}}[T[\varphi]] \quad \text{for all } \varphi \in \mreg. \]
+\end{theorem}
+
+\begin{proof}
+The proof proceeds in six steps. We assume for contradiction that $S_I[\varphi] = S_{\mathrm{std}}[T[\varphi]]$ for all $\varphi \in \mreg$.
+
+\textbf{Step 1 (Premise exclusion).} By \Cref{def:typeI}, a non-trivial Type I action admits no $s$-independent representation. If there existed a representation with $\partial_s E_A \equiv 0$ (i.e., $\partial_s \mL$ a null Lagrangian), then by \Cref{thm:p12} (5), $S$ would be trivial (admitting an $s$-independent representation), contradicting the non-triviality premise. Hence non-triviality implies $\partial_s E_A \not\equiv 0$ for all representations. We proceed under this substantive case.
+
+\textbf{Step 2 (Constraint variation).} The variational fundamental lemma yields a jet-local identity:
+\begin{equation}
+H(\varphi)(x) := \chiI[\varphi] \cdot \EA(\jphi(x), S_I[\varphi]) = E(j^{k+2}\varphi)(x),
+\label{eq:jet-local-claim}
+\end{equation}
+where $\chiI[\varphi] = 1/(1 - \partial_s F_\varphi(S_I[\varphi]))$ is the implicit factor and $E$ depends only on $j^{k+2}\varphi$ ($T$ is a $k$-th order jet-local transformation, and the standard EL operator raises the order by 2). For notational simplicity, we use $\jphi$ to denote $j^{k+2}\varphi$ throughout.
+
+Choose a reference field $\psi_* \in \mreg$ with $\EA(j^2\psi_*(x_0), s_0) \neq 0$ at some $x_0 \in M$. Fix $\delta > 0$ small enough that $\EA \neq 0$ on $B_\delta(x_0)$. Define the constrained set:
+\[ \Phi^*_{\mathrm{constr}} := \{\varphi \in \mreg : S_I[\varphi] = s_0,\ \varphi|_{B_\delta(x_0)} = \psi_*|_{B_\delta(x_0)}\}. \]
+For $\varphi = \psi_* + \eps\rho \in \Phi^*_{\mathrm{constr}}$ with $\rho$ supported in $M \setminus B_\delta(x_0)$, jet-locality forces $dH/d\eps|_0 = 0$, hence $d\chiI/d\eps|_0 = 0$ (since $\EA(x_0) \neq 0$).
+
+\textbf{Step 3 (Proportionality via Riesz).} The condition $d\chiI/d\eps = 0$ for all such $\rho$ yields:
+\[ \int_{M \setminus B_\delta} \partial_s \EA(j^2\psi_*, s_0) \cdot \rho \dVol = 0 \quad \text{whenever} \quad \int_{M \setminus B_\delta} \EA(j^2\psi_*, s_0) \cdot \rho \dVol = 0. \]
+By the kernel inclusion $\ker F_f \subseteq \ker F_g$ and Riesz representation, there exists $\lambda$ such that:
+\begin{equation}
+\partial_s \EA(j^2\psi_*, s_0) = \lambda \cdot \EA(j^2\psi_*, s_0) \quad \text{on } M \setminus B_\delta(x_0).
+\label{eq:proportionality-local}
+\end{equation}
+
+\textbf{Step 4 ($\lambda$ depends only on $s_0$).} Taking $\delta' \to 0$ and using continuity, \eqref{eq:proportionality-local} extends to all $x \in M$. Evaluating at $x_0$:
+\[ \lambda = \frac{\partial_s \EA(j^2\psi_*(x_0), s_0)}{\EA(j^2\psi_*(x_0), s_0)}, \]
+which depends only on the fixed reference data $(\psi_*, s_0)$, not on the test field $\varphi$.
+
+\textbf{Step 5 (Bicomplex closure $\Rightarrow$ multiplicative structure).} We extend \eqref{eq:proportionality-local} from the reference field $\psi_*$ to the entire jet space.
+
+\emph{Jet coverage argument.} Fix a reference field $\psi_*$; its jet image $\Sigma_{\psi_*} := \{j^2\psi_*(x) : x \in M \setminus B_\delta\}$ is an $n$-dimensional submanifold of $J^2$ (and $\dim J^2 \gg n$, so $\Sigma_{\psi_*}$ is not itself open). However, fields in the constrained set $\Phi^*_{\mathrm{constr}}$ take the form $\varphi = \psi_* + \eps\rho$, where $\rho$ is supported in $M \setminus B_\delta(x_0)$ and satisfies the single scalar constraint $S_I[\varphi] = s_0$. At any interior point $x$, the 2-jet $j^2\rho(x)$ can vary freely (the scalar constraint $S_I = s_0$ removes only one global degree of freedom and does not affect the local variability of pointwise jets --- by choosing $\rho$ supported near $x$, one can realize arbitrary jet values while micro-adjusting $S_I$), so $j^2(\psi_* + \eps\rho)(x) = j^2\psi_*(x) + \eps\, j^2\rho(x)$ can reach any point in a neighborhood of $\Sigma_{\psi_*}$. Hence the proportionality \eqref{eq:proportionality-local} holds on some open neighborhood $N_{\psi_*} \subset J^2$ of $\Sigma_{\psi_*}$.
+
+To extend this to all of $J^2$, vary the reference field $\psi_* \in \mreg$. By \Cref{thm:reg-set} (G1), $\mreg$ is open in $\mPhi$; by the Borel extension theorem (which guarantees $C^\infty$ fields realizing any prescribed finite-order jet), the union $\bigcup_{\psi_* \in \mreg} N_{\psi_*}$ is dense in $J^2$. By smoothness of $\EA$, equality on a dense set extends by continuity to the entire jet space:
+\[ \partial_s \EA(\jphi, s_0) = \lambda(s_0) \cdot \EA(\jphi, s_0) \quad \forall \varphi, x. \]
+By the variational bicomplex closure property \cite[Thm 4.7]{Olver1993}, $\partial_s \mL - \lambda(s) \mL = \partial_\mu K^\mu$ for some $K$. The ODE in $s$ has solution:
+\[ \mL(\varphi, \partial\varphi, s) = f(s) \cdot \mL_0(\varphi, \partial\varphi) + \partial_\mu L^\mu, \]
+where $f(s) = \exp(\int \lambda)$ and $\mL_0$ is $s$-independent.
+
+\textbf{Step 6 (Multiplicative $\mL$ $\Rightarrow$ degeneration).} For multiplicative $\mL = f(s) \mL_0$, the fixed-point equation gives $S_I[\varphi] = f(S_I[\varphi]) \cdot F_0[\varphi]$, and:
+\[ \chiI = \frac{f(s)}{f(s) - s f'(s)}, \quad \EA = f(s) E_{A,0}, \quad H = \frac{f(s)^2}{f(s) - s f'(s)} E_{A,0}. \]
+Jet-locality forces $f(s)^2/(f(s) - s f'(s)) = C$ (constant), a Bernoulli ODE. Setting $u = 1/f$:
+\[ u' + u/s = 1/(Cs) \implies u = 1/C + E'/s \implies f(s) = Cs/(s + E'). \]
+For $E' = 0$: $f = C$ (constant) $\Rightarrow$ $\partial_s \mL = 0$, so $\mL = C\mL_0$ is an $s$-independent representation and $S_I$ is trivial. For $E' \neq 0$: $S_I[\varphi] = C F_0[\varphi] - E'$; taking $\mL_0' = C\mL_0 - E'/\vol(M)$ ($s$-independent) gives $S_I[\varphi] = \int \mL_0' \dVol$, so $S_I$ is also trivial (admits an $s$-independent representation). In both cases this contradicts the non-triviality of $S_I$ (\Cref{def:typeI}: no $s$-independent representation exists). \qed
+\end{proof}
+
+% ==================================================================
+\section{Discussion and Open Problems}
+\label{sec:discussion}
+
+\subsection{The compactness limitation}
+
+The current theory assumes $\vol(M) < \infty$. Extension to Minkowski spacetime ($M = \R^n$) is possible via the Schwartz space $\mS(\R^n, V)$: for $\varphi \in \mS$, rapid decay ensures all integrals converge, and the MB-$C^1$ verification proceeds analogously (with dominating function $C \cdot (1+|x|)^{-(n+1)}$ replacing compactness-based bounds). Consequently, \Cref{thm:p3,thm:p12,thm:p14d} extend to this setting.
+
+However, the Schwartz space restriction excludes scattering states, constant fields, and topological solitons. A full infinite-volume treatment (regularization + renormalization) is left as future work.
+
+\paragraph{Degenerate limit $\vol(M) \to 0$.}
+As the degenerate limit opposite to infinite volume, when $\vol(M) \to 0$ ($M$ shrinks to a point), $|F_\varphi(s)| \leq \sup|\mL| \cdot \vol(M) \to 0$ (since $\mL$ is smooth and bounded), so the fixed point $S^* \to 0$; simultaneously $\partial_s F_\varphi \leq K \cdot \vol(M) \to 0$, hence $\chi_I \to 1$ and the self-referential effect disappears. In this regime the Banach condition $K < 1/\vol(M)$ of \Cref{prop:banach-suff} becomes weaker (right-hand side $\to \infty$), consistent with the fixed point $\to 0$: the fixed point of a super-contractive map ($k_\varphi \to 0$) approaches $F_\varphi(0) \approx 0$. The theory degenerates without contradiction in this spacetime-vanishing limit.
+
+\subsection{Layered positioning of the general equivalence problem}
+
+\Cref{thm:p14d} covers jet-local diffeomorphisms. The case of arbitrary (possibly non-local) smooth $T$ remains open:
+
+\begin{conjecture}[Level 2]
+For \emph{arbitrary} smooth diffeomorphism $T: \mPhi \to \mPhi$ (including non-local), does $S_I[\varphi] = S_{\mathrm{std}}[T[\varphi]]$ have a solution?
+\end{conjecture}
+
+All known structural invariants (Euler--Lagrange equations, Hessian, symplectic form, Peierls bracket, value range, critical point structure) are \emph{not} $T$-invariant for arbitrary $T$. However, physical equivalence requires preservation of:
+\begin{itemize}
+\item \textbf{PE1}: Local variational principle;
+\item \textbf{PE2}: Covariant symplectic structure \cite{CrnkovicWitten1987, LeeWald1990, Khavkine2014};
+\item \textbf{PE3}: Peierls bracket \cite{HarlowWu2019};
+\item \textbf{PE4}: Variational bicomplex cohomology class \cite{Vitolo2001, Olver1993}.
+\end{itemize}
+These constraints restrict $T$ to jet-local form, reducing Level 2 to the proven Level 1 case. The Level 2 problem is thus mathematically open but plausibly physically irrelevant.
+
+\subsection{Physical realization and relation to Dyson--Schwinger equations}
+
+The physical motivation for self-referential actions comes from the observation that several fundamental structures in physics involve self-consistency:
+\begin{itemize}
+\item \textbf{Dyson--Schwinger equations} operate at the \emph{equation of motion} level ($D = D_0 + D_0 \Sigma[D] D$). Type I operates at the \emph{action} level --- a strictly stronger position. We conjecture that upon quantization, Type I actions yield modified Dyson--Schwinger equations with the implicit factor $\chi_I$ providing a correction to the standard self-energy structure. This conjecture is unproven.
+\item \textbf{Hartree--Fock theory} achieves self-consistency at the effective potential level. The Type I Euler--Lagrange equation (EL-I) has a similar ``self-consistent effective parameter'' structure, but at the action level rather than the wavefunction level.
+\end{itemize}
+
+No physical prediction has been derived from Type I actions to date. The construction of observable consequences, or the demonstration that known physics emerges as a limiting case, is the most important open problem.
+
+\subsection{Literature audit}
+\label{sec:lit-audit}
+
+A keyword search of Schreiber's cohesive $\infty$-topos \cite{Schreiber2013} (797 pages) confirms zero coverage of self-referential actions:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Keyword & Hits \\
+\midrule
+``self-referential'' / ``self-reference'' & 0 \\
+``action depending on action'' & 0 \\
+``$S[\varphi, S]$'' / ``implicit action'' & 0 \\
+``self-consistent action'' / ``action fixed point'' & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Future work}
+
+Open problems include: (1) the Level 2 equivalence problem (P14c), which may require a Fr\'echet space Sternberg linearization theorem; (2) infinite-volume treatment beyond Schwartz space; (3) quantization and the relation to Dyson--Schwinger equations; (4) generalizations to Type II (functional) and Type III (operator) self-reference.
+
+% ==================================================================
+\appendix
+
+\section{A Fully Solvable Toy Example}
+\label{sec:toy}
+
+\begin{example}
+\label{ex:toy}
+Let $M = [0, L]$ (one-dimensional, periodic boundary, $\vol(M) = L$), $V = \R$ (real scalar field), $\mPhi = C^\infty(S^1, \R)$, and:
+\begin{equation}
+\mL(\varphi, \partial_x\varphi, s) = \frac{1}{2}(\partial_x\varphi)^2 - \frac{1}{2}(m_0^2 + \alpha s)\varphi^2,
+\label{eq:toy-L}
+\end{equation}
+where $m_0 > 0$ and $\alpha > 0$ are parameters.
+
+\paragraph{Fixed-point equation.}
+\[ F_\varphi(s) = T[\varphi] - \frac{1}{2}(m_0^2 + \alpha s)\, Q[\varphi], \]
+where $T[\varphi] := \frac{1}{2}\int_0^L (\partial_x\varphi)^2 \diff x$ (kinetic energy) and $Q[\varphi] := \int_0^L \varphi^2 \diff x$. The fixed-point equation $s = F_\varphi(s)$ is linear in $s$:
+\[ s \cdot \bigl(1 + \tfrac{\alpha}{2} Q[\varphi]\bigr) = T[\varphi] - \tfrac{m_0^2}{2} Q[\varphi], \]
+with unique solution:
+\begin{equation}
+S[\varphi] = \frac{T[\varphi] - \frac{m_0^2}{2} Q[\varphi]}{1 + \frac{\alpha}{2} Q[\varphi]}.
+\label{eq:toy-solution}
+\end{equation}
+
+\paragraph{Well-posedness.}
+$1 + (\alpha/2) Q[\varphi] > 0$ (since $\alpha > 0$, $Q[\varphi] \geq 0$), so the denominator is non-zero. The solution is smooth in $\varphi$ (since $T$ and $Q$ are smooth functionals). The fixed point is unique (linear equation).
+
+Note that the Banach condition $|\partial_s \mL| \leq K < 1/L$ may fail for large $\varphi$, yet $S[\varphi]$ exists and is unique --- confirming that the Banach condition is sufficient but not necessary.
+
+\paragraph{Variational structure.}
+The implicit factor is:
+\[ \chi_I[\varphi] = \frac{1}{1 + \frac{\alpha}{2} Q[\varphi]}, \]
+which is non-trivial ($\chi_I \neq 1$ when $\varphi \not\equiv 0$). The Euler--Lagrange equation is:
+\[ \bigl(-\partial_x^2 + m_0^2 + \alpha S[\varphi]\bigr)\varphi = 0, \]
+which is a \emph{non-local} integro-differential equation: the effective mass $m_{\mathrm{eff}}^2 = m_0^2 + \alpha S[\varphi]$ depends on the global field configuration through $S[\varphi]$.
+
+\paragraph{Extreme limit.}
+When $\alpha \to \infty$ (self-reference dominated), $S[\varphi] \to -m_0^2/\alpha$ (constant), $\chi_I \to 0$, and the effective mass $m_{\mathrm{eff}}^2 = m_0^2 + \alpha S[\varphi] \to m_0^2 + \alpha \cdot (-m_0^2/\alpha) = 0$. That is, self-feedback completely cancels the bare mass, and EL-I degenerates to the massless free-field equation $-\partial_x^2 \varphi = 0$. This is a non-trivial physical prediction: in the strong self-referential limit, the particle's effective mass is completely screened by self-feedback.
+
+\paragraph{Non-triviality.}
+$S[\varphi] = (T - \frac{m_0^2}{2}Q)/(1 + \frac{\alpha}{2}Q)$ is a rational function of $T[\varphi]$, $Q[\varphi]$. If $\alpha \neq 0$, the denominator $1 + \frac{\alpha}{2}Q[\varphi]$ depends on $\varphi$, so $S$ cannot be written as an affine form $a\tilde{S}[\varphi] + b$ of a standard action (the latter's dependence on $\varphi$ via $\tilde{S} = \int\tilde{\mL}_0$ is linear with a "denominator independent of $\varphi$"). By \Cref{thm:p13} (NT1), $S$ is non-trivial.
+\end{example}
+
+\section{Gl\"ockner Implicit Function Theorem}
+\label{sec:glockner-full}
+
+\begin{theorem}[Gl\"ockner {\cite{Glockner2006}, Thm 2.5}]
+\label{thm:glockner-full}
+Let $X$ be a Fr\'echet space, $Y, Z$ Banach spaces, $U \subseteq X$ and $V \subseteq Y$ open sets. Let $G: U \times V \to Z$ be Michal--Bastiani $C^1$ (\Cref{def:mb}). If at $(\varphi_0, s_0) \in U \times V$:
+\begin{itemize}
+\item[(IFT-1)] $G(\varphi_0, s_0) = 0$;
+\item[(IFT-2)] $D_s G(\varphi_0, s_0): Y \to Z$ is a linear isomorphism of Banach spaces;
+\end{itemize}
+then there exist open neighborhoods $U_0 \subseteq U$ of $\varphi_0$ and $V_0 \subseteq V$ of $s_0$, and a unique continuous function $S_{\mathrm{loc}}: U_0 \to V_0$ such that:
+\begin{enumerate}
+\item $G(\varphi, S_{\mathrm{loc}}(\varphi)) = 0$ for all $\varphi \in U_0$;
+\item $S_{\mathrm{loc}}(\varphi_0) = s_0$;
+\item $S_{\mathrm{loc}}$ is Michal--Bastiani $C^1$.
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+In our setting $Y = Z = \R$ (both one-dimensional Banach spaces), so $D_s G$ is multiplication by the scalar $1 - \partial_s F_\varphi(s_0)$, and (IFT-2) reduces to:
+\[ 1 - \partial_s F_{\varphi_0}(s_0) \neq 0, \]
+which is exactly Assumption~\ref{ass:h4}. The MB-$C^1$ regularity of $G$ is verified in the proof of \Cref{thm:p3} (Step 2).
+\end{remark}
+
+% ==================================================================
+\section*{Acknowledgments}
+
+The author acknowledges the use of AI assistance in drafting preliminary proof sketches, performing routine calculations, and organizing literature. All mathematical arguments have been documented in full detail. The author takes responsibility for the correctness of the work and welcomes independent verification.
+
+% ==================================================================
+\bibliographystyle{plain}
+\begin{thebibliography}{99}
+
+\bibitem{Schreiber2013}
+Schreiber, U. (2013). \emph{Differential cohomology in a cohesive $\infty$-topos}. arXiv:1310.7930.
+
+\bibitem{Glockner2006}
+Gl\"ockner, H. (2006). Implicit functions from topological vector spaces to Banach spaces. \emph{Israel J. Math.} \textbf{155}, 205--252.
+
+\bibitem{Hamilton1982}
+Hamilton, R. (1982). The inverse function theorem of Nash and Moser. \emph{Bull. AMS} \textbf{7}(1), 65--222.
+
+\bibitem{Olver1993}
+Olver, P. J. (1993). \emph{Applications of Lie Groups to Differential Equations}, 2nd ed. Springer GTM 107.
+
+\bibitem{Anderson}
+Anderson, I. M. \emph{The Variational Bicomplex}. Online manuscript, Utah State University.
+
+\bibitem{CrnkovicWitten1987}
+Crnkovic, C., Witten, E. (1987). Covariant description of the canonical formalism in geometrical theories. In \emph{Three Hundred Years of Gravitation}, Cambridge UP, 676--684.
+
+\bibitem{LeeWald1990}
+Lee, J., Wald, R. M. (1990). Local symmetries and constraints. \emph{J. Math. Phys.} \textbf{31}(3), 725--743.
+
+\bibitem{Khavkine2014}
+Khavkine, I. (2014). Covariant phase space, constraints, gauge and the Peierls formula. arXiv:1402.1282. \emph{Int. J. Mod. Phys. A} \textbf{29}(5), 1450009.
+
+\bibitem{HarlowWu2019}
+Harlow, D., Wu, J. (2019). Covariant phase space with boundaries. arXiv:1906.08616. \emph{JHEP} 2020, 146.
+
+\bibitem{Vitolo2001}
+Vitolo, R. (2001). Some remarks on variational sequences. In \emph{Differential Geometry and its Applications}, 311--323. arXiv:math/0111161.
+
+\bibitem{RudinFA}
+Rudin, W. \emph{Functional Analysis}. McGraw-Hill.
+
+\bibitem{Treves}
+Treves, F. \emph{Topological Vector Spaces, Distributions and Kernels}. Academic Press.
+
+\bibitem{KrantzParks}
+Krantz, S. G., Parks, H. R. \emph{A Primer of Real Analytic Functions}. Birkh\"auser.
+
+\bibitem{Lawvere1969}
+Lawvere, F. W. (1969). Diagonal arguments and cartesian closed categories. \emph{Lecture Notes in Mathematics} \textbf{92}, 134--145.
+
+\bibitem{Yanofsky2003}
+Yanofsky, N. S. (2003). A universal approach to self-referential paradoxes, incompleteness and fixed points. \emph{Bull. Symb. Log.} \textbf{9}(3), 362--386. arXiv:math/0305282.
+
+\bibitem{Sternberg1957}
+Sternberg, S. (1957). Local $C^n$ transformations of the real line. \emph{Duke Math. J.} \textbf{24}(1), 97--102.
+
+\bibitem{Banach1922}
+Banach, S. (1922). Sur les op\'erations dans les ensembles abstraits et leur application aux \'equations int\'egrales. \emph{Fund. Math.} \textbf{3}, 133--181.
+
+\bibitem{Eftekharinasab2024}
+Eftekharinasab, K. (2024). Global implicit function theorems and critical point theory in Fr\'echet spaces. \emph{Aust. J. Math. Anal. Appl.} \textbf{22}(2), Art. 2. arXiv:2404.00286.
+
+\bibitem{Saunders2024}
+Saunders, D. J. (2024). Lepage equivalents and the variational bicomplex. \emph{SIGMA} \textbf{20}, 013. arXiv:2309.01594.
+
+\end{thebibliography}
+
+\end{document}

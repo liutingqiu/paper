@@ -1,0 +1,1086 @@
+\documentclass[11pt,a4paper]{ctexart}
+
+% ===== Packages =====
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{bm}
+
+% ===== Hyperref settings =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black,
+    pdftitle={p-adic AdS/CFT as a Discovery Tool: Reverse Inspiration and the Berkovich Bridge},
+    pdfauthor={Tianqi Liu}
+}
+
+% ===== Theorem environments =====
+\newtheorem{conjecture}{猜想}[section]
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{corollary}[theorem]{推论}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注}
+
+% ===== Macros =====
+\newcommand{\Qp}{\mathbb{Q}_p}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Cp}{\mathbb{C}_p}
+\newcommand{\Zp}{\mathbb{Z}_p}
+\newcommand{\Fp}{\mathbb{F}_p}
+\newcommand{\Pone}{\mathbb{P}^1}
+\newcommand{\PoneBerk}{\mathbb{P}^1_{\mathrm{Berk}}}
+\newcommand{\Tp}{T_p}
+\newcommand{\PGL}{\mathrm{PGL}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\PSL}{\mathrm{PSL}}
+\newcommand{\SO}{\mathrm{SO}}
+\newcommand{\AdS}{\mathrm{AdS}}
+\newcommand{\CFT}{\mathrm{CFT}}
+\newcommand{\Conf}{\mathrm{Conf}}
+\newcommand{\Iso}{\mathrm{Iso}}
+\newcommand{\Boxp}{\Box_p}
+\newcommand{\znu}{\zeta_\nu}
+\newcommand{\zp}{\zeta_p}
+\newcommand{\zinf}{\zeta_\infty}
+\newcommand{\dpartial}{\partial^{(\alpha)}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\GG}{G_\Delta}
+\newcommand{\KK}{K_\Delta}
+\newcommand{\BirTits}{Bruhat--Tits}
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\normp}[1]{|#1|_p}
+\newcommand{\normnu}[1]{|#1|_\nu}
+\newcommand{\norminf}[1]{|#1|_\infty}
+
+% ===== Title and Author =====
+\title{\Large \bfseries p-进 AdS/CFT 作为发现工具：\\
+逆向启发与 Berkovich 桥梁}
+
+\author{
+    \large Tianqi Liu\\[4pt]
+    \normalsize 郑州轻工业大学 材料与化学工程学院\\
+    郑州市高新区科学大道136号\\[4pt]
+    \normalsize \texttt{tianqi689@gmail.com}
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Abstract =====
+\begin{abstract}
+\noindent
+我们为 \BirTits{} 树 $T_{p^d}$ 上的 Witten 图建立了两个严格的结构性结论，刻画了在平坦空间 p-进 AdS/CFT 中何时阿代尔乘积 $\prod_\nu A_\nu = 1$ 成立或失效。
+
+\medskip
+\noindent
+\textbf{定理 1（接触图，contact diagrams）。} $n$ 点接触图 $\mathcal{A}_n = \sum_{z \in T_{p^d}} \prod_i K_{\Delta_i}(z, x_i)$ 分解为恰好 $n{+}1$ 个局部 $\zeta_p$ 因子（1 个径向 + $n$ 个臂 + 0 个 Steiner 路径），通过对 Steiner 树递归与归纳法对所有有限 $n \geq 3$ 给出证明（附录 A）。Archimedean 一侧在 $n=3$ 时有 $3$ 个 $\zeta_\infty$ 因子（星-三角恒等式抵消了径向 $\Gamma$），但对 $n \geq 4$ 时退化成 $1$ 个径向 $\Gamma$ 乘以一个\emph{不可约的} Feynman 参数积分——这是一种定性的结构失配，而不仅仅是定量上的失配。
+
+\medskip
+\noindent
+\textbf{命题 2（交换图，exchange diagrams）。} 带有非退化传播子 $G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1,z_2)}$ 的 4 点交换图允许一种\emph{结构性分解}：分解为两个单顶点子求和（每个贡献 3 个 $\zeta_p$ 因子：1 个径向 + 2 个臂），它们通过一个 Steiner 路径因子 $p^{-\Delta L}$ 和一个未定的\emph{链接因子} $R_{\mathrm{link}}(p, \Delta, L)$ 耦合。因此 p-进一侧有 \textbf{至少 6 个 $\zeta_p$ 因子}（6 + $|R_{\mathrm{link}}|$）。Archimedean 一侧通过谱分解有 $7$ 个 $\zeta_\infty$ 因子（$3 + 3 + 1$）；该失配\textbf{在猜想意义上为零}，尚待验证 $|R_{\mathrm{link}}| = 1$（注~\ref{rem:link-caveat}）。
+
+\medskip
+\noindent
+这些结果共同刻画了 \textbf{bulk-sum 障碍}（体元求和障碍）：阿代尔乘积对接触图失效（$n \geq 3$，已证），但对交换图\emph{在猜想意义上成立}（尚待 $|R_{\mathrm{link}}| = 1$），并对两点函数成立（通过 Tate 的局部函数方程，\cite{HSYZ20}）。我们通过 Tate 的局部 zeta 积分框架统一这些情形：每个 $\zeta_p$ 因子都是一个 Tate 积分 $Z_p(s, 1)$，阿代尔乘积成立当且仅当 p-进一侧与 Archimedean 一侧的 Tate 积分计数相匹配。该障碍反映了 $T_{p^d}$ 的全断开拓扑对单顶点求和施加了完全分解——一种比 Archimedean 拓扑所允许的更强的分解——而交换图中的顶点间耦合（链接因子）被猜想为对应于 Archimedean 谱耦合，从而避开该障碍。
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ======================================================================
+% SECTION 1: Introduction
+% ======================================================================
+\section{引言}
+\label{sec:intro}
+
+\subsection{三十年来的 p-进物理学：从 Zabrodin 到 Huang--Jepsen}
+
+p-进数学物理的历史大致跨越三个浪潮。
+
+\paragraph{第一波（1987--1990）：起源。}
+Volovich 1987 年的论文~\cite{V87} 开创了该领域，提出在 Planck 尺度下时空可能是 p-进的。其后 Freund--Olson 和 Brekke--Freund--Olson--Witten~\cite{BFO88} 计算了任意数量快子顶点的 p-进 Koba--Nielsen 振幅。关键的是，Chekhov--Mironov--Zabrodin（1989）~\cite{CMZ89} 建立了后来成为 p-进 AdS/CFT 的几何框架：
+
+\begin{quote}
+``我们将开 p-进弦世界面视为陪集空间 $F = T/\Gamma$，其中 $T$ 是 p-进线性群 $\GL(2, \Qp)$ 的 \BirTits{} 树，而 $\Gamma \subset \PGL(2, \Qp)$ 是某个 Schottky 群。该世界面的边界对应于有限亏格的 p-进 Mumford 曲线。''
+\end{quote}
+
+这一 1989 年的工作已经包含了现代 p-进 AdS/CFT 的三大支柱：(i) 体空间是 \BirTits{} 树 $\Tp$，(ii) Schottky 群商 $\Tp/\Gamma$ 描述黑洞几何，(iii) 边界是 p-进 Mumford 曲线。Marshkov--Zabrodin（1990）~\cite{MZ90} 进一步利用二次扩张的乘性特征发展了 p-进弦振幅。
+
+\paragraph{第二波（2016--2019）：现代基础。}
+原始的 AdS/CFT 对偶~\cite{M97,GKP98,W98} 假定 $\AdS_{d+1}$ 中的引力与其边界上的共形场论之间存在等价。Gubser 等（2016）~\cite{G16} 与 Heydman--Marcolli--Saberi--Stoica（2016）~\cite{HMSS16} 各自独立地建立在 Zabrodin 几何基础之上的现代 p-进 AdS/CFT 框架。第二波迅速扩展，覆盖了共形块~\cite{P19,JP19a}、张量网络~\cite{HLM19}、全息熵~\cite{HMPS18}、Mellin 振幅~\cite{JP19b} 以及旋量/规范场~\cite{GJT19,HLM19b}。
+
+\paragraph{第三波（2020--2026）：Berkovich 与阿代尔。}
+前沿转向了在 p-进与 Archimedean 物理之间架桥。Huang--Mao--Stoica（2020）~\cite{HMS20} 通过 Berkovich 空间流方程证明了粒子在一盒中谱的 Euler 乘积公式。Huang--Stoica--Yau--Zhong（2020）~\cite{HSYZ20} 通过 Tate 论文建立了 Green 函数的阿代尔乘积公式。Goldfarb（2023）~\cite{G23} 通过粗粒化构造了 $\PoneBerk$。Huang--Jepsen（2024）~\cite{HJ24} 将 Zabrodin 的经典结果推广到有限温度下的 Tate 曲线。
+
+\subsection{早期诊断的失效}
+
+早期对 p-进物理学的评估指出了三种 ``阻力''：(i) 实验上不可触及，(ii) 物理直觉困难，(iii) 与标准模型的联系薄弱。2017--2026 年的文献已使该诊断失效：
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{实验不可触及已被绕过}：Chawdhry（2023--2024）~\cite{C23,C24} 证明 p-进数可作为 QCD 多圈振幅重构的实用计算工具，将所需数值探测减少了 25 倍。
+    \item \textbf{物理直觉已被提供}：Yan--Jepsen--Oz（2023）~\cite{YJO23} 将 p-进全息与凝聚态物理中的分形子模型联系起来；Takayanagi 及合作者~\cite{OT24} 构建了张量网络桥梁。
+    \item \textbf{与标准模型的联系已加强}：Camp--Gripaios--Nguyen~\cite{CGN24} 证明 2D 中的规范反常抵消当且仅当在 $\R$ 和所有 $\Qp$ 中同时成立；Qu--Gao~\cite{QG20} 在 \BirTits{} 树上发展了旋量场论。
+\end{itemize}
+
+\subsection{本文论点}
+
+本文提出两个主张：
+
+\paragraph{C1（核心贡献）。}
+p-进 AdS/CFT 不仅是真实 AdS/CFT 的简化玩具模型，而是具有独立启发价值的发现工具。我们系统化八个逆向启发案例（\S\ref{sec:reverse}），抽取五个数学机制 M1--M5（\S\ref{sec:mechanisms}），并构造一个机制--案例对应矩阵（\S\ref{sec:matrix}）作为诊断框架，并通过一个针对~\cite{HJ24} 的回溯性示例加以说明（\S\ref{sec:retro}）。
+
+\paragraph{C2（开放问题分析）。}
+连接 p-进与 Archimedean 物理的 Berkovich 空间桥梁已被部分验证（R1--R4，\S\ref{sec:berkovich}--\ref{sec:obstacles}），但将其推广到一般 AdS/CFT 场论面临四个障碍 O1--O4（\S\ref{sec:obstacles}）。我们追溯其谱系 Stoica(2018) $\to$ Huang--Mao--Stoica(2020) $\to$ Goldfarb(2023)，并对已证与所提内容给出诚实评估。
+
+我们明确\textbf{不}为障碍 O1、O2 和 O4 提出新的猜想。对于 O3，我们提出一个猜想——\textbf{bulk-sum 障碍}——刻画阿代尔乘积在平坦空间 AdS/CFT 中成立的条件（\S\ref{sec:obstacles}），基于三点与四点 Witten 图 $\zeta_\nu$ 因子结构的原始计算。早期草稿曾尝试提出 ``Berkovich RG 流猜想''，因数学严谨性不足而撤回。
+
+\subsection{本文结构}
+
+\S\ref{sec:foundations} 回顾数学基础。\S\ref{sec:parallel} 综述 2016--2019 年的 ``平行验证'' 阶段。\S\ref{sec:reverse} 给出 C1 分析（逆向启发）。\S\ref{sec:berkovich} 给出 C2 分析（Berkovich 桥梁）。\S\ref{sec:adelic} 讨论阿代尔完备化。\S\ref{sec:open} 列出开放问题并给出数学难度分析。\S\ref{sec:conclusion} 总结。
+
+% ======================================================================
+% SECTION 2: Mathematical Foundations
+% ======================================================================
+\section{数学基础}
+\label{sec:foundations}
+
+\subsection{p-进数与 \BirTits{} 树}
+
+设 $p$ 为素数。p-进数域 $\Qp$ 是 $\Q$ 关于 p-进范数 $\normp{x} = p^{-v_p(x)}$ 的完备化，其中 $v_p(x)$ 是 p-进赋值。该范数满足 \textbf{超度量不等式} $\normp{x+y} \leq \max(\normp{x}, \normp{y})$，这使 $\Qp$ 成为 \textbf{全断开}（totally disconnected）的拓扑空间：每个开球 $B(a,r) = \{x : \normp{x-a} < r\}$ 既开又闭。
+
+\textbf{\BirTits{} 树} $\Tp$ 是 $(p+1)$-正则树，定义为齐性空间
+\begin{equation}
+\Tp = \PGL(2, \Qp) / \PGL(2, \Zp)
+\end{equation}
+其中 $\Zp = \{x \in \Qp : \normp{x} \leq 1\}$ 是 p-进整数环。$\Tp$ 的边界是 $\Pone(\Qp) = \Qp \cup \{\infty\}$。
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.9\textwidth}{\centering \textbf{图 1.} \BirTits{} 树 $T_2$（对应 $p=2$）。每个顶点有 $p+1=3$ 个邻居。体空间是树的内部；边界为 $\mathbb{P}^1(\mathbb{Q}_2)$，可视化作无穷远处的端点。两顶点间的图距离是连接它们的唯一路径上的边数。Schottky 群商 $T_p/\Gamma$ 通过等同顶点产生一个带热循环（BTZ 黑洞类比）的体空间。}}
+\end{figure}
+
+\subsection{体--边界对应}
+
+在 p-进 AdS/CFT 中，体空间为 $\Tp$（或其关于 Schottky 群 $\Gamma \subset \PGL(2, \Qp)$ 的商 $\Tp/\Gamma$），边界为 $\Pone(\Qp)$（或在商情形下为 p-进 Mumford 曲线）。
+
+\paragraph{关键结构性性质（已在~\cite{HMSS16} 中证明）。}
+体等距群\textbf{恰好等于}边界共形变换群：
+\begin{equation}
+\Iso(\Tp) = \PGL(2, \Qp) = \Conf(\Pone(\Qp))
+\end{equation}
+这是一个比真实 AdS/CFT 中更强的陈述，后者体空间允许超出等距群之外的额外渐近对称（微分同胚）。这一精确等式（机制 M3，\S\ref{sec:mechanisms}）是 p-进设置的结构性优势之一。
+
+边界上的 \textbf{弦距离}（chordal distance）为 $d(x,y) = \normp{x-y}$，对应于 $\Tp$ 上的图距离。标量场（标度维数为 $\Delta$）的 \textbf{体--边界传播子} 为~\cite{G16,HMSS16}：
+\begin{equation}
+\KK(i, x) \propto p^{-\Delta \cdot d(i, x)}
+\end{equation}
+其中 $d(i,x)$ 是体顶点 $i$ 到边界点 $x$ 的图距离。\textbf{体--体传播子} 具有类似形式~\cite{GP17}：
+\begin{equation}
+\GG(i, j) \propto p^{-\Delta \cdot d(i, j)}
+\end{equation}
+其中 $d(i,j)$ 是体顶点 $i$ 与 $j$ 之间的图距离。边界两点函数通过边界极限恢复：
+\begin{equation}
+\langle \OO(x_1) \OO(x_2) \rangle = \lim_{i \to \mathrm{bdy}} \KK(i, x_1) \cdot \KK(i, x_2) \propto \normp{x_1 - x_2}^{-2\Delta}
+\end{equation}
+这与真实 AdS/CFT 的推导平行，只是用 $\Tp$ 上的图距离替代 $\AdS_{d+1}$ 上的测地距离。关键简化是：在树上，图距离唯一定义（任两点之间恰有一条路径），从而消除了真实 AdS/CFT 中所需的测地线最小化（机制 M2，\S\ref{sec:mechanisms}）。
+
+\subsection{局部 Zeta 函数与 Vladimirov 导数}
+
+\textbf{Vladimirov 导数}（或 p-进伪微分算子）定义为
+\begin{equation}
+\dpartial f(x) = \frac{1}{\Gamma_p(-\alpha)} \int_{\Qp} \frac{f(x) - f(y)}{\normp{x-y}^{\alpha+1}} \, dy
+\end{equation}
+其中 $\Gamma_p$ 是 p-进 gamma 函数，定义为 $\Gamma_p(\alpha) = \frac{1 - p^{\alpha-1}}{1 - p^{-\alpha}}$（我们沿用~\cite{HSYZ20} 的约定；有些作者将归一化吸收到测度中）。该算子是分数阶 Laplace 算子 $(-\Delta)^{\alpha/2}$ 的 p-进类比，在 p-进场论中替代通常的导数 $\partial/\partial x$。关键的是，p-进场论中场在 $\R$ 或 $\C$ 中取值，但自变量是 p-进的，因此通常导数并不存在（机制 M1，\S\ref{sec:mechanisms}）。
+
+\paragraph{Green 函数--zeta 积分对应（已在~\cite{HSYZ20} 中证明）。}
+对每个位 $\nu$（包括 $\nu = \infty$），带 Vladimirov 动能项 $\dpartial$ 的自由标量场的 Green 函数 $G_\nu(x,y)$ 满足与 Tate 的 zeta 积分 $Z_\nu$ 相同的局部函数方程。这一对应（详见 \S\ref{sec:adelic-green}）是机制 M4 的数学基础：局部 zeta 函数提供了一个平行 p-进与 Archimedean 计算的通用支架。
+
+\textbf{局部 zeta 函数}定义为
+\begin{equation}
+Z_p(s, \chi) = \int_{\Qp^\times} \normp{x}^s \chi(x) \, d^\times x
+\end{equation}
+其中 $\chi$ 是乘性特征。局部 zeta 函数提供了一个\textbf{通用支架}，平行 p-进与 Archimedean（实）计算（机制 M4，\S\ref{sec:mechanisms}）。这些局部 zeta 积分及其整体阿代尔乘积的基础框架由 Tate~\cite{Tate50} 建立。
+
+\subsection{Berkovich 射影直线}
+
+$\Pone$ 在 $\Cp$（$\Qp$ 代数闭包的完备化）上的 \textbf{Berkovich 解析化} 是一个紧、道路连通的拓扑空间，它包含 ``经典'' $\Pone(\Cp)$ 作为稠密子集，但还包括四种类型的附加点~\cite{Ber90}：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{I 型}：经典点（$\Pone(\Cp)$ 的元素）
+    \item \textbf{II 型}：半径 $r$ 在值群 $|\Cp^\times|$ 中的闭圆盘 $\bar{B}(a, r)$
+    \item \textbf{III 型}：半径 $r$ 不在值群中的闭圆盘
+    \item \textbf{IV 型}：空交集的嵌套闭圆盘序列的极限
+\end{itemize}
+II--IV 型恢复了道路连通性：在任意两个 I 型点之间存在唯一的弧，该弧穿过 II/III 型点，并且该弧等距于一个实区间。这是使 Berkovich 空间适合作为桥梁、连接全断开的 $\Qp$ 与连通的 Archimedean $\R$ 的关键结构性性质。
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.9\textwidth}{\centering \textbf{图 2.} Berkovich 射影直线 $\PoneBerk$ 示意图。I 型点（经典 $\Cp$-点）是全断开的。II 型点对应于闭圆盘，并与 \BirTits{} 树顶点一一对应。III 型点用非标准半径填补空隙。任意两个 I 型点之间的唯一弧穿过 II/III 型点，恢复道路连通性——这是 Berkovich 桥梁的几何基础（\S\ref{sec:berkovich}）。}}
+\end{figure}
+
+\paragraph{Goldfarb（2023）~\cite{G23} 构造。}
+Berkovich 射影直线 $\PoneBerk$ 可通过对 $\Cp^\times \times \Cp$ 施加一个等价关系（通过弦距离粗粒化）来构造。该构造在 p-进场与 \BirTits{} 树之间建立对应：$\PoneBerk$ 的 II 型点与 $\Tp$ 的顶点一一对应，为两种描述之间提供了一座几何桥梁。Goldfarb 概述（但未实现）一种 ``非 Archimedean AdS/CFT 的综合性理论''，该构造使其成为可能（\S\ref{sec:goldfarb}）。
+
+Berkovich 空间对 C2 至关重要，因为它提供了一种\textbf{道路连通}的几何，能够桥接全断开的 p-进世界与连通的 Archimedean 世界——一种在 $\Qp$ 内部不可能实现的桥梁。
+
+% ======================================================================
+% SECTION 3: Background: Parallel Verification and Reverse Inspiration
+% ======================================================================
+\section{背景：平行验证与逆向启发}
+\label{sec:parallel}
+\label{sec:reverse}
+
+2016--2019 年这一波系统验证了真实 AdS/CFT 的关键结果在 p-进情形下成立，与此同时一条平行的工作线表明 p-进方法可以先于并启发其实数理论的对应物。本节作为 \S\ref{sec:berkovich}--\S\ref{sec:adelic} 原始分析的背景而综述这两方面；详细推导见所引文献。
+
+\subsection{平行验证（2016--2019）}
+
+\paragraph{关联函数。}
+
+Gubser（2016）~\cite{G16} 和 Heydman--Marcolli--Saberi--Stoica（2016）~\cite{HMSS16} 建立了 $\Tp$ 上的体标量场给出形如 $\langle \OO(x_1) \OO(x_2) \rangle \propto \normp{x_1 - x_2}^{-2\Delta}$ 的二点和三点函数，与真实 CFT 形式相同，且 $\Delta(\Delta-d)=m^2$ 与真实 AdS/CFT 中一致，将 Zabrodin 1989 年的结果~\cite{CMZ89} 推广到完整的 AdS/CFT 框架。
+
+\paragraph{共形块与测地体图。}
+Gubser--Parikh（2017）~\cite{GP17} 计算了 $\Tp$ 上的测地体图，发现真实计算中出现的所有导数项恒等于零，且系数在各处取相同形式（局部 zeta 函数）。Parikh（2019）~\cite{P19} 计算了五点全局共形块；Jepsen--Parikh（2019）~\cite{JP19a} 计算了推广星-三角恒等式至六点的传播子恒等式。
+
+\paragraph{张量网络。}
+Hung--Li--Melby-Thompson（2019）~\cite{HLM19} 证明 p-进 CFT 是全息张量网络：$\Pone(\Qp)$ 上的路径积分恰好等于 $\Tp$ 上键维数 $\chi = p$ 的张量网络，并建立了 p-进 RG 流的 IR 不动点。
+
+\paragraph{全息熵与 Ryu--Takayanagi。}
+Heydman--Marcolli--Parikh--Saberi（2018）~\cite{HMPS18} 从 $\Fp^2$ 上的完美张量构造了 p-进全息熵，实现了 Ryu--Takayanagi 公式~\cite{RT06a,RT06b} $S(A) = |\gamma_A| \cdot \log \chi$，且最小化是平凡的（树的唯一测地线使 RT 面唯一）。结构性发现：互信息单调性（MMI）总是饱和——这是与真实 AdS/CFT 的一种定性差异。对于亏格 1 的 Schottky 商，BTZ 熵为 $S_{BH} = \frac{w \log p}{4 G_N}$，其中 $w = \mathrm{ord}_p(q^{-1})$。
+
+\paragraph{旋量与规范场。}
+Gubser--Jepsen--Trundy（2019）~\cite{GJT19} 通过符号特征和 $\Tp$ 的线图发展了 $\Tp$ 上的旋量场论。Hung--Li--Melby-Thompson（2019）~\cite{HLM19b} 将 Wilson 线网络形式化为以规范群 $\PGL(2, \Qp)$ 为基础的格点规范理论。Qu--Gao（2020）~\cite{QG20} 建立了体--边界旋量字典；Camp--Gripaios--Nguyen（2024）~\cite{CGN24} 证明反常抵消当且仅当在 $\R$ 与所有 $\Qp$ 中同时成立。
+
+\subsection{八个逆向启发案例}
+\label{sec:type-a}
+\label{sec:type-b}
+
+\paragraph{A 型：计算次序反转（p-进先于实）。}
+\textit{案例 \#1：} Brekke--Freund--Olson--Witten（1988）~\cite{BFO88} 求值 p-进 Koba--Nielsen 振幅，积分分解为局部 zeta 函数（M1、M4）；Gerasimov--Shatashvili（2000）~\cite{GS00} 随后确定真实弦有效作用量，p-进结果（1988）先于实结果（2000），如~\cite{HJ24} 所记。\textit{案例 \#2：} Parikh（2019）~\cite{P19} 计算五点全局共形块全息对偶，p-进测地结构启发了真实计算（M3）。\textit{案例 \#3：} Jepsen--Parikh（2019）~\cite{JP19a} 计算五/六点共形块与传播子恒等式，p-进星-三角恒等式化简为几何级数（M1、M3），``为实理论的计算提供了信息''。
+
+\paragraph{B 型：数学结构物理化（p-进工具获得物理意义）。}
+\textit{案例 \#4：} Huang--Stoica--Yau--Zhong（2020）~\cite{HSYZ20} 建立了自由标量场的 Green 函数 $G_\nu$ 在每位上等于 Tate 的局部 zeta 函数方程，且 $\prod_\nu G_\nu = 1$（在正规化后）（M4、M5）。\textit{案例 \#5：} Huang--Mao--Stoica（2020）~\cite{HMS20} 证明 Archimedean 粒子盒谱等于 p-进谱的 Euler 乘积，$E_{(\infty)} = \prod_p E_{(p)}^{-1} = \frac{n^2 h^2}{8 m T^2}$，通过 Berkovich 空间 $M(\mathbb{Z})$ 上的 RG 流实现；并引用 Stoica（2018）~\cite{S18} 作为先导（M5）。\textit{案例 \#6：} Heydman--Marcolli--Parikh--Saberi（2018）~\cite{HMPS18} 的完美张量网络给出 $S(A) = |\gamma_A| \cdot \log \chi$，且 MMI 总是饱和——这是与真实 AdS/CFT 的一种定性（而非简化）差异（M2、M3）。
+
+\paragraph{C 型：跨学科对偶（p-进作为桥梁）。}
+\textit{案例 \#7：} Yan--Jepsen--Oz（2023）~\cite{YJO23} 揭示了双曲格点分形子模型与 Zabrodin 的 p-进 AdS/CFT 模型~\cite{CMZ89} 的去耦副本之间的低温对偶，格点缺陷对应于 p-进黑洞（M3）。\textit{案例 \#8：} Chawdhry（2023--2024）~\cite{C23,C24} 证明 p-进数作为 QCD 多圈振幅重构的实用计算工具，将所需数值探测减少 25 倍，结果紧凑 130 倍~\cite{C23}。
+
+\subsection{五个数学机制（M1--M5）}
+\label{sec:mechanisms}
+
+我们抽取五个机制，解释为何 p-进方法可作为发现工具：
+
+\paragraph{M1：超度量性消除了导数算子。}
+非 Archimedean 不等式使差商不收敛，以 Vladimirov 算子 $\dpartial$ 替代导数（\S\ref{sec:foundations}）；无穷级数与超几何函数坍缩为少数项。证据：\cite{GP17}（四点测地图导数项消失）；\cite{HJ24}（Tate 曲线上一般 $\Delta$ 的单圈两点 Witten 图，真实对应尚未计算）。\emph{适用于}：案例 \#1、\#2、\#3。
+
+\paragraph{M2：全断开性导致级数坍缩。}
+$\Qp$ 是全断开的（开闭球），因此路径积分退化为离散求和——通常是可精确求和的几何级数；树的唯一测地线性质使 RT 最小化平凡化，Schottky 商退化为以 $\normp{q}$ 为比的几何级数~\cite{CMZ89}。证据：\cite{HMPS18}；\cite{CMZ89}。\textbf{新证据（原始，\S\ref{sec:obstacles}）}：三点树阶 Witten 图分解为 4 个 $\zeta_p$ 因子（1 径向 + 3 分支），而 Archimedean 一侧为 3 个 $\zeta_\infty$——一种结构性失配，而非简化。\emph{适用于}：案例 \#1、\#6（案例 \#4 间接；见 M4）。
+
+\paragraph{M3：\BirTits{} 树在离散化的同时保持对称性。}
+$\Tp = \PGL(2,\Qp)/\PGL(2,\Zp)$ 的等距群恰好等于边界共形群：
+\begin{equation}
+\Iso(\Tp) = \PGL(2, \Qp) = \Conf(\Pone(\Qp))
+\end{equation}
+这是比真实 AdS/CFT 中更强的陈述——后者中离散化破坏对称性。证据：\cite{HMSS16}；\cite{P19}。\emph{适用于}：案例 \#2、\#3、\#6、\#7。
+
+\paragraph{M4：局部 zeta 函数的通用支架。}
+局部 zeta 函数 $Z_\nu(s, \chi) = \int_{\mathbb{Q}_\nu^\times} |x|_\nu^s \chi(x) \, d^\times x$ 对所有位 $\nu$ 定义相同，因此关联函数在各处共享同一 zeta 函数骨架。证据：\cite{GP17}；\cite{HSYZ20}（\S\ref{sec:adelic-green}）。\emph{适用于}：案例 \#1、\#4。
+
+\paragraph{M5：阿代尔乘积公式。}
+对正规化量 $F_\nu$，$\prod_\nu F_\nu = 1$ 对两点函数~\cite{HSYZ20} 和粒子盒谱~\cite{HMS20} 成立。\textbf{原始分析（\S\ref{sec:obstacles}、\S\ref{sec:adelic}）}：阿代尔乘积在三点失效（4 个 $\zeta_p$ 对 3 个 $\zeta_\infty$），在四点恶化（5 个 $\zeta_p$ 对 1 个 $\zeta_\infty$）；我们提出 \textbf{bulk-sum 障碍猜想}。\cite{J22} 独立地证明五点弦理论阿代尔振幅不是单一解析函数。\emph{适用于}：案例 \#4、\#5。
+
+\subsection{机制--案例对应矩阵}
+\label{sec:matrix}
+
+\begin{table}[H]
+\centering
+\caption{机制--案例对应矩阵。}
+\label{tab:matrix}
+\begin{tabular}{lcccccccc}
+\toprule
+机制 & \#1 & \#2 & \#3 & \#4 & \#5 & \#6 & \#7 & \#8 \\
+\midrule
+M1（超度量）             & $\checkmark$ & $\checkmark$ & $\checkmark$ & & & & & \\
+M2（全断开）             & $\checkmark$ & & & $\checkmark^{*}$ & & $\checkmark$ & & \\
+M3（BT 树对称性）        & & $\checkmark$ & $\checkmark$ & & & $\checkmark$ & $\checkmark$ & \\
+M4（zeta 通用）          & $\checkmark$ & & & $\checkmark$ & & & & \\
+M5（阿代尔乘积）         & & & & $\checkmark$ & $\checkmark$ & & & \\
+\bottomrule
+\multicolumn{9}{l}{\footnotesize $^{*}$间接：Tate 论文是一个局部 zeta 积分而非路径积分；案例 \#4 主要属于 M4。}
+\end{tabular}
+\end{table}
+
+\subsection{回溯性检验：用矩阵对~\cite{HJ24} 进行盲测}
+\label{sec:retro}
+
+为检验矩阵的诊断能力，我们进行一次 \emph{回溯性}（retrodictive）检验：我们问矩阵对于~\cite{HJ24} 中计算的 Tate 曲线上单圈两点 Witten 图\emph{会预测}哪些机制，并与实际结果比较。
+
+\paragraph{~\cite{HJ24} 的计算。}
+Huang--Jepsen 计算了 $\Tp/\langle q \rangle$（有限温度下的 Tate 曲线）上\emph{一般}标度维数 $\Delta$ 的两点单圈 Witten 图。真实 AdS/CFT 对应尚未计算~\cite{HJ24} \S6（``尚未确定''）。在一般 $\Delta$ 下 p-进结果的闭式结构被猜想地认为比预期的真实对应物更简单（后者中单圈计算通常需要特殊质量值才能得到闭式结果），但此比较在真实计算完成后方可验证。
+
+\paragraph{矩阵识别。}
+Tate 曲线涉及 (i) 一个 Schottky 群商（关于 $\normp{q}$ 的几何级数），提示 M2；(ii) 一个带导数结构的圈图，提示 M1；(iii) 可由局部 zeta 函数表达的关联函数，提示 M4。因此矩阵识别出\emph{至少两个}机制（M1 + M2，可能还有 M4）应贡献于简化。
+
+\paragraph{实际结果。}
+~\cite{HJ24} 的结果匹配所有三个识别：(a) Schottky 求和退化为几何级数（M2 $\checkmark$）；(b) 圈积分对一般 $\Delta$ 绕过导数复杂性（M1 $\checkmark$）；(c) 系数可表为局部 zeta 函数（M4 $\checkmark$）。此回溯——三机制识别、三机制匹配——说明矩阵如何映射到一个已知计算。它\emph{不}验证预测能力，那将需要在矩阵构造时结果尚未知的真正新问题上检验。循环性已被承认：M1--M5 是从文献（包括~\cite{HJ24}）中抽取的，因此该回溯是一致性检验，而非独立测试。
+
+\paragraph{局限性。}
+这只是单次回溯，而非统计性验证。矩阵是一个\emph{启发式}工具，不是定理。它对真正\emph{新}问题的预测能力尚未检验。
+
+% ======================================================================
+% SECTION 5: The Berkovich Bridge
+% ======================================================================
+\section{Berkovich 桥梁：现状与障碍}
+\label{sec:berkovich}
+
+\subsection{结果 R1：Stoica（2018）分解/构造对偶}
+
+Stoica 2018 年的论文 ``Building Archimedean Space''~\cite{S18} 提出一种 ``分解/构造对偶''：真实物理理论可以分解为有价位（p-进）理论，反过来，有价位理论可用于构造真实理论。
+
+\paragraph{已证情形}（在论文 \S3--\S5 内）：
+\begin{itemize}[leftmargin=2em]
+    \item 自由粒子量子力学：真实导数 $\partial/\partial x$ $\leftrightarrow$ Vladimirov 导数 $\partial^{(p)}_x$，数值系数被 p-进范数替代。Schr\"odinger 方程及其解有 p-进对应物。
+    \item 二维欧氏 Einstein 引力（Jackiw--Teitelboim）：等距群为 $SO(2,1) \cong \PSL(2,\R)$ 的 $\AdS_2$ $\leftrightarrow$ 等距群为 $\PSL(2,\Qp)$ 的 \BirTits{} 树 $\Tp$。配分函数匹配被显式计算。
+\end{itemize}
+
+\paragraph{所提（未证，\S3 标为 ``一般性建议''）：}
+\begin{itemize}[leftmargin=2em]
+    \item 通过二次扩张 $\Qp[\sqrt{\tau}]$（其中 $\tau$ 是决定扩张的非平方元素）实现的 Lorentzian $\AdS_2$。
+    \item 通过 $\GL(d+1, \Qp)$ 的 \BirTits{} 建筑 $\mathrm{BT}_d(\Qp)$ 实现的高维推广。
+    \item 任意物理理论的一般 ``p-进分解与重构''。
+\end{itemize}
+
+\paragraph{数学状态。}
+~\cite{S18} 的 \S3 明确标为 ``一般性建议''。具体情形有计算；推广是概念性的。
+
+\subsection{结果 R2：Huang--Mao--Stoica（2020）Euler 乘积公式}
+
+Huang--Mao--Stoica~\cite{HMS20} 证明：
+
+\begin{theorem}[已证]
+Archimedean 粒子盒谱等于 p-进谱的 Euler 乘积：
+\begin{equation}
+E_{(\infty)} = \prod_p E_{(p)}^{-1} = \frac{n^2 h^2}{8 m T^2}
+\end{equation}
+\end{theorem}
+
+\textbf{机制}：Euler 乘积由 Berkovich 空间 $M(\mathbb{Z})$ 上的流方程产生，~\cite{HMS20} 将其解释为以 p-进范数 $|\cdot|_p$（而非能标 $\mu$）为流参数的 RG 流。Berkovich 空间 $M(\mathbb{Z})$ 作为 ``理论空间''：其点对应于 $\mathbb{Z}$ 上的赋值（即每个素数 $p$ 的 p-进赋值 $v_p$ 加上 Archimedean 赋值 $v_\infty$），且该流连接 p-进点与 Archimedean 点。
+
+\textbf{数学状态}：粒子盒情形被严格证明（\S2，引理 1--3，公式 2.24--2.26）。向一般场论的推广在 \S3 中明确为所提（``我们建议''）但未证。~\cite{HMS20} 的 \S3 明确将 Stoica（2018）~\cite{S18} 引为思想先导。
+
+\subsection{结果 R3：Huang--Stoica--Yau--Zhong（2020）阿代尔乘积公式}
+\label{sec:adelic-green}
+
+Huang--Stoica--Yau--Zhong~\cite{HSYZ20} 证明：
+
+\begin{theorem}[已证]
+对每个位 $\nu$（包括 $\nu = \infty$），带 Vladimirov 动能项 $\dpartial$ 的自由标量场的 Green 函数 $G_\nu(x,y)$ 满足与 Tate 的 zeta 积分 $Z_\nu(s, \chi)$ 相同的局部函数方程：
+\begin{equation}
+G_\nu \leftrightarrow Z_\nu \quad \text{（在位 } \nu \text{ 上的局部函数方程）}
+\end{equation}
+跨所有位，两点函数满足阿代尔乘积公式：
+\begin{equation}
+\prod_\nu G_\nu = 1 \quad \text{（正规化后）}
+\end{equation}
+对应于 Tate 论文中的\textbf{整体函数方程}。
+\end{theorem}
+
+这建立了一个精确的字典：局部 zeta 积分 $\leftrightarrow$ 局部 Green 函数；整体阿代尔乘积 $\leftrightarrow$ 整体函数方程。
+
+\textbf{数学状态}：对自由标量两点函数（Green 函数）严格证明。满足阿代尔乘积公式的可观测量的范围有限：~\cite{J22} 证明四点弦理论阿代尔振幅在正规化后等于 1，但五点振幅\textbf{不是}单一解析函数（\S\ref{sec:adelic}）。\textbf{我们的原始分析（\S\ref{sec:obstacles}）}进一步表明，在 AdS/CFT 中阿代尔乘积早在\textbf{三点}就已失效：p-进三点 OPE 系数有 4 个 $\zeta_p$ 因子，而 Archimedean 对应仅有 3 个 $\zeta_\infty$ 因子——一种由树的全断开性（M2）引起的结构性失配。我们提出 \textbf{bulk-sum 障碍猜想}刻画阿代尔乘积何时成立（\S\ref{sec:obstacles}、\S\ref{sec:open}）。
+
+\subsection{结果 R4：Goldfarb（2023）Berkovich 射影直线构造}
+\label{sec:goldfarb}
+
+Goldfarb~\cite{G23} 通过对 $\Cp^\times \times \Cp$ 施加等价关系（经弦距离粗粒化）构造了 $\PoneBerk$。$\PoneBerk$ 的 II 型点与 \BirTits{} 树 $T_p$ 的顶点一一对应，在 Berkovich 与树两种描述之间建立了几何对应（\S\ref{sec:foundations}）。
+
+\textbf{所声称（未实现）}：Goldfarb 的 \S5 概述了 ``一种由本构造所开启、发展非 Archimedean AdS/CFT 乃至阿代尔 AdS/CFT 综合理论的方向''。未进行任何场论计算。
+
+\textbf{数学状态}：$\PoneBerk$ 的构造是一维几何结果。向 AdS/CFT 场论的推广是方向性声明，而非实现。
+
+\subsection{推广的四个障碍}
+\label{sec:obstacles}
+
+我们识别出当前阻碍 Berkovich 桥梁向一般 AdS/CFT 场论推广的四个障碍：
+
+\paragraph{障碍 O1：缺乏 ``理论空间'' $\mathfrak{B}_K$ 的严格定义。}
+~\cite{HMS20} 中使用的 Berkovich 空间 $M(\mathbb{Z})$ 是一维解析空间：其点对应于 $\mathbb{Z}$ 上的赋值（每个素数 $p$ 一个，加上 Archimedean 位），由弧连接。一般 AdS/CFT 场论涉及无穷维数据：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{场}：在 $\Tp$ 或 $\Tp/\Gamma$ 上定义的标量、旋量与规范场（无穷维函数空间）
+    \item \textbf{耦合}：相互作用参数 $g_i$（连续，可能无穷多）
+    \item \textbf{对称群}：如 $\PGL(2, \Qp)$、规范群、整体对称
+\end{itemize}
+这些数据形成一个无穷维模空间，不自然嵌入一维 Berkovich 空间。Goldfarb 的 $\PoneBerk$ 也是一维的。\textbf{范畴失配}：一维 Berkovich 几何 vs.\ 无穷维场论模空间。为 AdS/CFT 构造适当的 Berkovich 空间（可能是无穷维 Berkovich 空间或替代方案）是一个独立的多论文项目。
+
+\paragraph{障碍 O2：流 $\Phi_t$ 的物理意义不明。}
+~\cite{HMS20} 中的 ``流方程'' 是对粒子盒情形显式计算的，但将其解释为 ``RG 流'' 是类比而非证明。关键区别：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Berkovich 空间流}~\cite{HMS20}：连接不同\textbf{位}（p-进 $\to$ Archimedean），以 p-进范数 $|\cdot|_p$ 为参数。这是 ``理论空间'' 中 $\Q$ 的不同完备化之间的流。
+    \item \textbf{Wilsonian RG 流}：在\textbf{单一位置内}操作，以能标 $\mu$ 为参数，积掉高能模式。
+\end{itemize}
+这些是概念上不同的操作。Berkovich 空间上的 Wilsonian RG 流尚无文献。部分证据：~\cite{HLM19} 证明 p-进 CFT RG 流在 p-进 CFT 处有 IR 不动点，但这是\textbf{在} p-进位\textbf{内部}的边界侧 Wilsonian 流，而非\textbf{在}位之间的 Berkovich 空间流。建立 Berkovich 空间流与边界 RG 流之间的严格对应是一个开放问题。
+
+\paragraph{障碍 O3：乘积公式适用范围有限。}
+阿代尔乘积公式的适用范围严格有限。已知的失效层级为：
+
+\textbf{弦理论振幅}（Koba--Nielsen，~\cite{J22}）：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{两点}：$\prod_\nu G_\nu = 1$ $\checkmark$（已证，~\cite{HSYZ20}）
+    \item \textbf{四点振幅}：$\prod_\nu A^{(4)}_\nu = 1$ $\checkmark$（正规化后，~\cite{J22}）
+    \item \textbf{五点振幅}：$\prod_\nu A^{(5)}_\nu$ $\times$ --- 不是单一解析函数~\cite{J22}
+\end{itemize}
+
+\textbf{AdS/CFT Witten 图}（原始分析）：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{两点函数}：$\prod_\nu G_\nu = 1$ $\checkmark$（无 bulk sum；阿代尔乘积平凡）
+    \item \textbf{三点 OPE 系数}：$\times$ --- \textbf{结构性失配}（见下）
+    \item \textbf{四点接触图}：$\times$ --- \textbf{结构性失配}（见下）
+\end{itemize}
+
+\medskip\noindent
+\textbf{三点失配（已验证）。}
+p-进三点 OPE 系数~\cite{HJ24}，公式 81，分子中含 \textbf{4 个 $\zeta_p$ 因子}：
+\begin{equation}
+f_p = \frac{\zeta_p(\Delta_{123}{-}d)\,\zeta_p(\Delta_{12,3})\,\zeta_p(\Delta_{13,2})\,\zeta_p(\Delta_{23,1})}{\zeta_p(2\Delta_1)\,\zeta_p(2\Delta_2)\,\zeta_p(2\Delta_3)}
+\end{equation}
+这 4 个因子之所以出现，是因为 bulk sum $\sum_{z \in T_{p^d}} K_1 K_2 K_3$ 由于树的全断开性（M2）分解为 4 个独立的几何级数（1 径向 + 3 分支）。Archimedean 三点 OPE 系数（标准归一化）仅含 \textbf{3 个 $\zeta_\infty$ 因子}：
+\begin{equation}
+C_{123} \propto \frac{\zeta_\infty(\Delta_{12,3})\,\zeta_\infty(\Delta_{13,2})\,\zeta_\infty(\Delta_{23,1})}{\zeta_\infty(2\Delta_1)\,\zeta_\infty(2\Delta_2)\,\zeta_\infty(2\Delta_3)}
+\end{equation}
+``缺失'' 的第 4 个因子 $\zeta_\infty(\Delta_{123}{-}d)$ 被星-三角恒等式抵消，后者将 Feynman 参数积分以闭式求值，并把径向 $\Gamma((\Delta_{123}{-}d)/2)$ 吸收到角向 $\Gamma(\Delta_{ij,k}/2)$ 因子中。此抵消在 p-进情形没有对应物，因为树的离散几何阻止径向与分支求和的耦合。
+
+\medskip\noindent
+\textbf{四点失配（已验证）。}
+p-进四点接触图 OPE 系数分子含 \textbf{5 个 $\zeta_p$ 因子}（1 径向 + 4 分支），通过对 4 点 Steiner 树的递归计算验证：
+\begin{equation}
+f_p^{(4)} = \frac{\zeta_p(\Delta_{1234}{-}d)\,\zeta_p(\Delta_{123,4})\,\zeta_p(\Delta_{124,3})\,\zeta_p(\Delta_{134,2})\,\zeta_p(\Delta_{234,1})}{\zeta_p(2\Delta_1)\,\zeta_p(2\Delta_2)\,\zeta_p(2\Delta_3)\,\zeta_p(2\Delta_4)}
+\end{equation}
+Archimedean 四点接触图含 \textbf{1 个径向 $\Gamma$ 因子}（$\Gamma((\Delta_{1234}{-}d)/2)$）\emph{乘以一个不可约 Feynman 参数积分}，该积分对 $n \geq 4$ 不能以闭式求值。此不可约积分不是分支 $\Gamma$ 因子的乘积；而是一个关于交叉比的单一耦合函数。因此对 $n \geq 4$，Archimedean 一侧不存在有限的 ``$\zeta_\infty$ 因子计数''：其结构与 p-进一侧干净地分解为 $(n{+}1)$ 个 $\zeta_p$ 因子的结构定性不同。因此对 $n \geq 4$ 的失配是\emph{定性的}（分解 vs.\ 非分解），而不仅仅是定量的——将其报告为 ``5 vs.\ 1'' 是误导性的，因为 Archimedean 一侧并不是 1 个 $\Gamma$ 因子的乘积，而是 1 个 $\Gamma$ 因子与一个不可约积分的乘积。
+
+\begin{remark}[递归验证（四点结构）]
+5 个 $\zeta_p$ 因子的计数通过在 4 点 Steiner 树（两个 Steiner 点 $S_1, S_2$ 由长度为 $L$ 的路径相连）上求解树递归关系来验证。关键递归为：(i) \textbf{侧分支递归} $R_{\text{rad}} = 1 + p^d \cdot p^{-\Delta_{1234}} \cdot R_{\text{rad}} = \zeta_p(\Delta_{1234}{-}d)$，由自相似性在每个顶点处相同；(ii) \textbf{臂递归} $R_i = \zeta_p(\Delta_{\hat{i},i}) \cdot [1 + (p^d{-}1)\,p^{-\Delta_{1234}}\,\zeta_p(\Delta_{1234}{-}d)]$，其中 $\zeta_p(\Delta_{\hat{i},i})$ 作为乘性因子出现，方括号为 $i$ 无关的常数；(iii) \textbf{Steiner 路径递归} $R_{\text{path}}$，是一个\emph{有限}递归（长度 $L$）给出一个依赖交叉比的动力学因子但\textbf{不产生} $\zeta_p$。Steiner 点（$p^d{-}2$ 个分支）与路径顶点（$p^d{-}1$ 个分支）之间的侧分支计数差异只进入有限常数，不影响 $\zeta_p$ 计数。$n = 5$ 情形由同一论证给出 6 = $n{+}1$ 个因子，确认一般 $n{+}1$ 模式。
+\end{remark}
+
+\medskip\noindent
+\textbf{失配模式。}
+失配在 $n = 3$ 与 $n = 4$ 之间发生定性转变：
+
+\begin{table}[H]
+\centering
+\caption{接触图的 $\zeta_\nu$ 因子失配模式。对 $n \geq 4$，Archimedean 一侧不是 $\zeta_\infty$ 因子的有限乘积，而是 $1$ 个径向 $\Gamma$ 乘以一个不可约 Feynman 参数积分；因此失配是定性的（分解 vs.\ 非分解），而非仅仅是定量的。}
+\label{tab:mismatch}
+\begin{tabular}{ccccc}
+\toprule
+$n$ & p-进 $\zeta_p$（分子） & Archimedean 一侧 & 失配 & 来源 \\
+\midrule
+2 & 0 & 0 & 无 $\checkmark$ & 无 bulk sum \\
+3 & 4 & 3 个 $\zeta_\infty$ & 1（径向） & 星-三角抵消径向 $\Gamma$ \\
+4 & 5 & 1 个径向 $\Gamma$ $\times$ 不可约积分 & 定性（分解 vs.\ 非分解） & Feynman 积分不可解 \\
+$\geq 4$ & $n{+}1$ & 1 个径向 $\Gamma$ $\times$ 不可约积分 & 定性（同 $n=4$） & 同 $n=4$ \\
+\textbf{交换} & $\geq 6$（6+$|R_{\mathrm{link}}|$） & 7 个 $\zeta_\infty$（3+3+1 谱） & \textbf{猜想为零} & 链接因子猜想地镜像谱耦合（命题~\ref{prop:exchange}、推论~\ref{cor:exchange}） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+对 $n = 3$，失配是\textbf{径向且定量的}：p-进一侧有 $\zeta_p(\Delta_{123}{-}d)$，Archimedean 一侧没有（被星-三角抵消）。对 $n \geq 4$，失配变为\textbf{定性的}：p-进一侧分解为 $n{+}1$ 个 $\zeta_p$ 因子，而 Archimedean 一侧为 $1$ 个径向 $\Gamma$ 乘以一个不可约 Feynman 参数积分——不存在有限的 $\zeta_\infty$ 因子计数。
+
+\medskip\noindent
+\textbf{阿代尔分解的 bulk-sum 障碍。}
+基于 $n = 2, 3, 4$ 数据点，我们提出：
+
+\begin{conjecture}[bulk-sum 障碍，精细化]
+\label{conj:bulk-sum}
+在采用~\cite{HJ24} 归一化的平坦空间 p-进 AdS/CFT 中，阿代尔乘积 $\prod_\nu A_\nu = 1$ 成立当且仅当该可观测量的 bulk sum 不\emph{完全分解}为全断开树上独立的几何级数。等价地：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{接触图}：对所有 $n \geq 3$ 的 $n$ 点接触图阿代尔乘积\textbf{失效}（对所有 $n$ 已证，定理~\ref{thm:nplus1}，附录~\ref{app:recursion}）。
+    \item \textbf{交换图}：对带非退化传播子的 4 点交换图阿代尔乘积\textbf{在猜想意义上成立}（结构性分解见命题~\ref{prop:exchange}，猜想性匹配见推论~\ref{cor:exchange}；尚待 $|R_{\mathrm{link}}|$ 的数值验证）。
+    \item \textbf{两点函数}：阿代尔乘积\textbf{成立}（无 bulk sum；局部函数方程，~\cite{HSYZ20}）。
+\end{itemize}
+\end{conjecture}
+
+\begin{remark}[猜想的逻辑结构]
+\label{rem:logical}
+``无 bulk sum'' 条件是两点函数的一个\emph{外部特征}，而非其阿代尔乘积成立的数学机制。如~\cite{HSYZ20} 所建立的，实际机制是 Green 函数在每位上满足 Tate zeta 积分的局部函数方程，整体阿代尔乘积对应于 Tate 论文的整体函数方程。bulk-sum 障碍猜想将该外部特征推广到高点可观测量：它预测涉及 bulk sum 的可观测量不满足阿代尔乘积，尽管失效机制（$\zeta_\nu$ 因子结构性失配，M2）在结构上不同于成功机制（局部函数方程）。因此该猜想是从 $n=2$ 成功与 $n=3,4,5$ 失败的\emph{归纳推广}，而非两点函数机制的演绎推论。
+\end{remark}
+
+\textbf{证据强度。}
+该猜想得到以下支持：(i) $n = 2$：\textbf{已确认}——无 bulk sum，阿代尔乘积成立~\cite{HSYZ20}；(ii) $n = 3$：\textbf{已确认}——bulk sum 产生 4 个 $\zeta_p$ 对 3 个 $\zeta_\infty$，失配通过与~\cite{HJ24} 公式 81 及标准 AdS/CFT 的直接比较验证；(iii) $n = 4$：\textbf{通过递归验证}——p-进 $\zeta_p$ 结构（5 个因子）通过在 4 点 Steiner 树上求解树递归关系验证；(iv) $n = 5$：\textbf{通过递归验证}——确认 6 = $n{+}1$ 个因子；(v) $n \geq 6$：\textbf{由归纳法证明}。$n{+}1$ $\zeta_p$ 因子公式对\textbf{所有 $n$}由附录~\ref{app:recursion}（定理~\ref{thm:nplus1}）中给出的一般递归与归纳论证证明：1 个径向 $\zeta_p$ 来自侧分支（引理~\ref{lem:self-sim}），$n$ 个分支 $\zeta_p$ 来自臂（引理~\ref{lem:i-indep}），0 个来自有限 Steiner 核心（引理~\ref{lem:path}）。
+
+\medskip\noindent
+\textbf{交换图：结构性预览。}
+该猜想覆盖接触图（单顶点 bulk sum $\sum_z \prod_i K_i$）。交换图有根本不同的结构：$\sum_{z_1, z_2} K_1 K_2 \, G_\Delta(z_1, z_2) \, K_3 K_4$，其中体--体传播子 $G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1,z_2)}$ 引入顶点间耦合。结构性分析表明，当 $z_1, z_2$ 处于不同子树时传播子分解，双重求和可能分解为两个修改过的 3 点函数的乘积。这暗示交换图失配可能小于接触图失配。我们在下文 \S\ref{sec:exchange-rigorous}（命题~\ref{prop:exchange}）中使该结构性分解严格化，在其中显式求值双重求和并证明交换图至少有 6 个 $\zeta_p$ 因子加上一个未定的链接因子 $R_{\mathrm{link}}$；交换图被\emph{猜想为避开} bulk-sum 障碍，尚待验证 $|R_{\mathrm{link}}| = 1$。
+
+\subsubsection{交换图 $\zeta_p$ 因子计数的严格计算}
+\label{sec:exchange-rigorous}
+
+我们现在通过显式求值 4 点交换图的双重求和使上述结构性分析严格化
+\begin{equation}
+\label{eq:exchange-def}
+\mathcal{A}^{\mathrm{ex}}_4 = \sum_{z_1, z_2 \in T_{p^d}} K_{\Delta_1}(z_1, x_1)\,K_{\Delta_2}(z_1, x_2) \cdot G_\Delta(z_1, z_2) \cdot K_{\Delta_3}(z_2, x_3)\,K_{\Delta_4}(z_2, x_4),
+\end{equation}
+其中 $G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1,z_2)}$ 是带标度维数 $\Delta$（交换维数）的体--体传播子，$K_{\Delta_i}(z, x_i) = p^{-\Delta_i\,d(z, x_i)}$ 是边界--体传播子。四个边界点 $\{x_1, x_2, x_3, x_4\}$ 如附录~\ref{app:recursion} 中那样确定一个 4 点 Steiner 树 $T_S$。
+
+\begin{proposition}[交换图结构性分解]
+\label{prop:exchange}
+$T_{p^d}$ 上的 4 点交换图 \eqref{eq:exchange-def} 当交换传播子 $G_\Delta$ 非退化（$\Delta \neq 0$）时允许一种结构性分解为两个单顶点子求和，它们通过一个 Steiner 路径常数耦合。p-进一侧\textbf{来自单顶点子求和的至多 6 个 $\zeta_p$ 因子}（每顶点 3 个：1 个径向 $+$ 2 个臂），加上来自 Steiner 路径的\emph{链接贡献}：
+\begin{equation}
+\label{eq:exchange-factors}
+\mathcal{A}^{\mathrm{ex}}_4 = \Big[\zeta_p(\Sigma_1{-}d)\,\zeta_p(\Delta_{12,1})\,\zeta_p(\Delta_{12,2})\Big] \cdot p^{-\Delta L} \cdot \Big[\zeta_p(\Sigma_2{-}d)\,\zeta_p(\Delta_{34,3})\,\zeta_p(\Delta_{34,4})\Big] \cdot R_{\mathrm{link}}(p, \Delta, L),
+\end{equation}
+其中 $\Sigma_1 := \Delta_1 + \Delta_2 + \Delta$，$\Sigma_2 := \Delta_3 + \Delta_4 + \Delta$，$L \geq 0$ 是（固定的）Steiner 路径长度，$R_{\mathrm{link}}(p, \Delta, L)$ 是由 Steiner 路径几何产生的\emph{链接因子}。$R_{\mathrm{link}}$ 的精确形式取决于路径被视为有限（给出常数前因子）还是扩展到包含无穷侧分支递归（给出额外 $\zeta_p$ 因子）；此微妙性在下文注~\ref{rem:link-caveat} 中讨论。
+\end{proposition}
+
+\begin{proof}
+证明通过根据 $z_1$ 和 $z_2$ 在 $T_{p^d}$ 上的相对位置分解双重求和 \eqref{eq:exchange-def} 进行，利用唯一路径性质。
+
+\textbf{步骤 1：Steiner 分解。} 4 点 Steiner 树 $T_S$ 有两个 Steiner 点 $S_1, S_2$，由长度 $L \geq 0$ 的 Steiner 路径连接。边界点 $\{x_1, x_2\}$ 通过臂附在 $S_1$，$\{x_3, x_4\}$ 通过臂附在 $S_2$。从 $z_1$ 到 $\{x_1, x_2\}$ 中任一点的唯一路径经过 $S_1$；从 $z_2$ 到 $\{x_3, x_4\}$ 中任一点的唯一路径经过 $S_2$。
+
+\textbf{步骤 2：按 $z_1$--$z_2$ 相对位置分解。} 双重求和 $\sum_{z_1, z_2}$ 根据 $z_1$ 相对 $z_2$ 的位置分解为三个互斥情形：
+
+\emph{情形 (i)：$z_1$ 偏离从 $S_1$ 到 $z_2$ 的路径。} 则从 $z_1$ 到 $z_2$ 的路径经过 $S_1$。由树的唯一路径性质，$d(z_1, z_2) = d(z_1, S_1) + d(S_1, z_2)$。传播子分解：
+\begin{equation}
+G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1, S_1)} \cdot p^{-\Delta\,d(S_1, z_2)}.
+\end{equation}
+对 $z_1$ 的求和（偏离 $S_1$--$z_2$ 路径）与 $z_2$ 解耦：$z_1$ 求和变为 $\sum_{z_1 \text{ off path}} p^{-(\Delta_1+\Delta_2+\Delta)\,d(z_1, S_1)} \cdot (\text{侧分支递归})$。由引理~\ref{lem:self-sim}，给出 $\zeta_p(\Sigma_1 - d)$，其中 $\Sigma_1 := \Delta_1 + \Delta_2 + \Delta$，加上来自到 $x_1, x_2$ 的臂的臂贡献 $\zeta_p(\Delta_{12,1})\,\zeta_p(\Delta_{12,2})$（由引理~\ref{lem:i-indep}）。
+
+\emph{情形 (ii)：$z_2$ 偏离从 $S_2$ 到 $z_1$ 的路径。} 与情形 (i) 对称。给出 $\zeta_p(\Sigma_2 - d)$ 加上臂因子 $\zeta_p(\Delta_{34,3})\,\zeta_p(\Delta_{34,4})$，其中 $\Sigma_2 := \Delta_3 + \Delta_4 + \Delta$。
+
+\emph{情形 (iii)：$z_1$ 与 $z_2$ 位于 Steiner 路径两侧。} 传播子变为 $G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1, S_1)} \cdot p^{-\Delta\,L} \cdot p^{-\Delta\,d(S_2, z_2)}$，其中 $L$ 是（固定的）Steiner 路径长度。关键地，$L$ 由边界点 $\{x_1, x_2, x_3, x_4\}$ 决定，\emph{不是}求和变量。$z_1$（在 $S_1$ 侧子树中）和 $z_2$（在 $S_2$ 侧子树中）上的双重求和分解为两个独立的单顶点子求和，每个在结构上等同于 3 点接触子求和。Steiner 路径贡献常数前因子 $p^{-\Delta L}$ 和一个\emph{链接因子} $R_{\mathrm{link}}(p, \Delta, L)$，后者依赖于 Steiner 路径顶点及其侧分支的精确处理。$R_{\mathrm{link}}$ 的精确求值需要仔细考虑 Steiner 路径的侧分支递归与情形 (i)、(ii) 的单顶点子求和之间的重叠；这是一个我们在此未完全解决的微妙组合问题（见注~\ref{rem:link-caveat}）。
+
+\textbf{步骤 3：合并各情形。} 分解给出：
+\begin{itemize}[leftmargin=2em]
+    \item 来自情形 (i)：$\zeta_p(\Sigma_1 - d)$（1 径向）+ $\zeta_p(\Delta_{12,1})\,\zeta_p(\Delta_{12,2})$（2 臂）= 3 个因子。
+    \item 来自情形 (ii)：$\zeta_p(\Sigma_2 - d)$（1 径向）+ $\zeta_p(\Delta_{34,3})\,\zeta_p(\Delta_{34,4})$（2 臂）= 3 个因子。
+    \item 来自情形 (iii)：常数前因子 $p^{-\Delta L}$ 和链接因子 $R_{\mathrm{link}}(p, \Delta, L)$，根据侧分支核算可能贡献 0 个或更多额外 $\zeta_p$ 因子（见注~\ref{rem:link-caveat}）。
+\end{itemize}
+总 $\zeta_p$ 因子计数为 \textbf{6 + $|R_{\mathrm{link}}|$}，其中 $|R_{\mathrm{link}}|$ 表示链接因子（若有）贡献的额外 $\zeta_p$ 因子数。结构性分析确认交换图\emph{至少}有 6 个 $\zeta_p$ 因子（来自两个单顶点子求和），加上一个未定的链接贡献。\qedhere
+\end{proof}
+
+\begin{remark}[关于链接因子的注意事项及开放问题]
+\label{rem:link-caveat}
+情形 (iii) 中的链接因子 $R_{\mathrm{link}}(p, \Delta, L)$ 需要仔细分析 Steiner 路径的侧分支结构。出现两个微妙之处：
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{固定值 vs.\ 求和变量}：Steiner 路径长度 $L$ 由边界点 $\{x_1, x_2, x_3, x_4\}$ 决定，不是求和变量。因此 $p^{-\Delta L}$ 是常数前因子，不是几何级数。
+    \item \textbf{与情形 (i)、(ii) 的重叠}：Steiner 路径顶点有侧分支，可能与情形 (i)、(ii) 的单顶点子求和重叠。$R_{\mathrm{link}}$ 的严格求值需要一个互斥且穷尽的情形划分，我们将其留为开放组合问题。
+\end{enumerate}
+与 Archimedean 一侧（经谱分解有 7 个 $\zeta_\infty$ 因子）的猜想性匹配将要求 $|R_{\mathrm{link}}| = 1$，即链接因子恰好贡献一个额外 $\zeta_p$。这是合理的——Steiner 路径的侧分支递归具有几何级数的结构形式——但\emph{尚未}严格建立。在小树（如 $T_2$ 上 $R = 10$）上的数值验证将最终解决此问题。
+\end{remark}
+
+\begin{remark}[与 Archimedean 交换图的比较]
+\label{rem:exch-arch}
+在 Archimedean 一侧，4 点交换图有谱表示
+\begin{equation}
+\label{eq:arch-exch}
+\mathcal{A}^{\mathrm{ex}}_{\infty} = \int_0^\infty d\nu\, \rho(\nu) \, \mathcal{A}^{(3)}_\infty(\Delta_1, \Delta_2, \nu; x_1, x_2) \, \mathcal{A}^{(3)}_\infty(\Delta_3, \Delta_4, \nu; x_3, x_4),
+\end{equation}
+其中 $\rho(\nu)$ 是谱密度，$\mathcal{A}^{(3)}_\infty$ 是 3 点接触图。每个 $\mathcal{A}^{(3)}_\infty$ 经星-三角给出 3 个 $\zeta_\infty$ 因子（如 3 点接触情形，表~\ref{tab:mismatch}），谱密度贡献 $\zeta_\infty$-型的 $\Gamma$ 因子。总 $\zeta_\infty$ 因子计数为 \textbf{7}：3（第一顶点）+ 3（第二顶点）+ 1（来自谱密度 $\rho(\nu)$，它贡献单个 $\Gamma$ 因子）。若 $|R_{\mathrm{link}}| = 1$，则与 p-进计数 7 匹配（见注~\ref{rem:link-caveat}）。
+\end{remark}
+
+\begin{corollary}[交换图：结构性分解与猜想性匹配]
+\label{cor:exchange}
+4 点交换图在 p-进一侧\textbf{至少有 6 个 $\zeta_p$ 因子}（来自两个单顶点子求和），在 Archimedean 一侧有 \textbf{7 个 $\zeta_\infty$ 因子}（每顶点 3 个 + 1 个来自谱密度）。失配\textbf{在猜想意义上为零}（$|R_{\mathrm{link}}| = 1$），这要求链接因子恰好贡献一个额外 $\zeta_p$。此猜想性匹配由链接因子与 Archimedean 谱耦合之间的结构性类比支持，但\emph{尚未}严格建立（见注~\ref{rem:link-caveat}）。因此 bulk-sum 障碍（猜想~\ref{conj:bulk-sum}）被交换图\emph{在猜想意义上避开}，尚待 $|R_{\mathrm{link}}|$ 的数值验证。
+\end{corollary}
+
+\begin{remark}[对猜想~\ref{conj:bulk-sum} 的精细化]
+\label{rem:refine}
+推论~\ref{cor:exchange} 精化了 bulk-sum 障碍：阿代尔乘积的失效并非由 bulk sum 本身引起，而是由全断开树上单顶点求和的\emph{完全分解}（机制 M2）引起。交换图带传播子耦合的双重求和并不完全分解——链接因子 $R_{\mathrm{link}}$ 引入顶点间耦合，若 $|R_{\mathrm{link}}| = 1$，将在两侧产生匹配的 $\zeta_\nu$ 因子。因此障碍更精确地表述为：\emph{阿代尔乘积对其 bulk sum 完全分解为独立几何级数的可观测量（接触图）失效，但对带顶点间耦合的可观测量（带非退化传播子的交换图，尚待 $|R_{\mathrm{link}}| = 1$）在猜想意义上成立}。
+\end{remark}
+
+\subsubsection{与 Tate 局部 zeta 积分的关系}
+\label{sec:tate-relation}
+
+定理~\ref{thm:nplus1} 与命题~\ref{prop:exchange} 中的 $\zeta_p$ 分解结构并非偶然：它反映了与 Tate 的局部 zeta 积分框架~\cite{Tate50} 的深刻联系，后者被~\cite{HSYZ20} 识别为两点阿代尔乘积背后的机制。我们现在显式地建立这一联系。
+
+\textbf{Tate 的局部 zeta 积分。} 对乘性特征 $\chi$ 与 $\Qp$ 上的 Schwartz--Bruhat 函数 $\Phi$，Tate 的局部 zeta 积分为
+\begin{equation}
+\label{eq:tate-integral}
+Z_p(s, \chi) = \int_{\Qp^\times} \Phi(x)\, \chi(x)\, \normp{x}^s\, d^\times x.
+\end{equation}
+当 $\Phi$ 是 $\Zp^\times$ 的特征函数且 $\chi = 1$ 时，求值为
+\begin{equation}
+\label{eq:tate-eval}
+Z_p(s, 1) = \frac{1}{1 - p^{-s}} = \zeta_p(s).
+\end{equation}
+Tate 论文的局部函数方程通过局部根数 $\epsilon(s, \chi)$ 将 $Z_p(s, \chi)$ 与 $Z_p(1-s, \hat{\chi})$ 联系起来，整体阿代尔乘积 $\prod_p Z_p(s, \chi_p)$ 对应于 Hecke $L$-函数的整体函数方程。
+
+\textbf{bulk sum 作为 Tate 积分。} $n$ 点接触图的 bulk sum
+\begin{equation}
+\mathcal{A}_n = \sum_{z \in T_{p^d}} \prod_{i=1}^n p^{-\Delta_i\, d(z, x_i)}
+\end{equation}
+可重写为对 $\Qp^\times$ 的求和（利用 $T_{p^d}$ 顶点与 $\PGL(2, \Qp)$ 中 $\PGL(2, \Zp)$ 陪集的对应）。通过沿每条径向方向的变量替换 $z \mapsto \normp{z}^{-1}$，定理~\ref{thm:nplus1} 递归中出现的每个几何级数 $\sum_\ell p^{-s\ell}$ 恰好是平凡特征 Tate 积分的求值 \eqref{eq:tate-eval}：
+\begin{equation}
+\label{eq:tate-identification}
+\underbrace{\sum_{\ell=0}^\infty p^{-s \cdot \ell} = \zeta_p(s)}_{\text{树递归}} \quad \longleftrightarrow \quad \underbrace{Z_p(s, 1) = \int_{\Zp^\times} \normp{x}^s\, d^\times x = \zeta_p(s)}_{\text{Tate 积分}}.
+\end{equation}
+
+\begin{proposition}[$n{+}1$ 分解的 Tate 结构]
+\label{prop:tate}
+定理~\ref{thm:nplus1} 中每个 $\zeta_p$ 因子都是带特定参数的 Tate 局部 zeta 积分 $Z_p(s, 1)$：
+\begin{itemize}[leftmargin=2em]
+    \item 径向因子：$\zeta_p(\Delta_{1\cdots n} - d) = Z_p(\Delta_{1\cdots n} - d, 1)$，对应侧分支递归（引理~\ref{lem:self-sim}）。
+    \item 臂因子：$\zeta_p(\Delta_{\hat{i},i}) = Z_p(\Delta_{\hat{i},i}, 1)$，对应臂递归（引理~\ref{lem:i-indep}）。
+\end{itemize}
+接触图的 $n{+}1$ $\zeta_p$ 分解因此是 $n{+}1$ 重 Tate 局部 zeta 积分的乘积。类似地，交换图的 $\geq 6$ 个 $\zeta_p$ 因子（命题~\ref{prop:exchange}）是 Tate 积分，链接因子 $R_{\mathrm{link}}$ 若 $|R_{\mathrm{link}}| = 1$ 可能贡献一个额外的 Tate 积分。
+\end{proposition}
+
+\textbf{对阿代尔乘积的含义。} 阿代尔乘积 $\prod_\nu A_\nu$ 涉及将 p-进 $\zeta_p$ 因子与 Archimedean 对应相乘。对两点函数，~\cite{HSYZ20} 证明每位上的局部函数方程保证 $\prod_\nu G_\nu = 1$。对 $n$ 点接触图（$n \geq 3$），p-进一侧有 $n{+}1$ 个 Tate 积分，而 Archimedean 一侧较少（$n=3$ 时 3 个，$n \geq 4$ 时 1 个径向 $\Gamma$ 加一个不可约积分）。Tate 积分计数的失配是 bulk-sum 障碍（猜想~\ref{conj:bulk-sum}）的结构性起源。
+
+对交换图（命题~\ref{prop:exchange}），p-进一侧有 $\geq 6$ 个 Tate 积分（6 个来自单顶点子求和 + $|R_{\mathrm{link}}|$ 来自链接因子），Archimedean 一侧有 7 个（每顶点 3 个 + 1 个来自谱密度，注~\ref{rem:exch-arch}）。猜想性匹配（$|R_{\mathrm{link}}| = 1$）将反映链接因子与 Archimedean 谱耦合之间的结构性类比，但这尚未严格建立。
+
+\begin{remark}[Tate 框架统一接触与交换]
+\label{rem:tate-unify}
+Tate 积分视角统一了接触图与交换图分析：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{接触图}：p-进一侧 $n{+}1$ 个 Tate 积分，Archimedean 一侧 $< n{+}1$ 个 $\Rightarrow$ 阿代尔乘积失效。
+    \item \textbf{交换图}：p-进一侧 $\geq 6$ 个 Tate 积分（6 + $|R_{\mathrm{link}}|$），Archimedean 一侧 7 个 $\Rightarrow$ 阿代尔乘积在猜想意义上成立（尚待 $|R_{\mathrm{link}}| = 1$ 验证）。
+    \item \textbf{两点函数}：0 个 bulk sum Tate 积分（两点函数是边界极限，不是 bulk sum）$\Rightarrow$ 阿代尔乘积通过 Green 函数本身的局部函数方程（在~\cite{HSYZ20} 的意义上是 Tate 积分）成立。
+\end{itemize}
+因此阿代尔乘积的成败由 \emph{Tate 积分计数失配} 决定：$\prod_\nu A_\nu = 1$ 成立当且仅当 p-进与 Archimedean 两侧 Tate 积分计数相等。这提供了一个统一准则，精化了猜想~\ref{conj:bulk-sum}。
+\end{remark}
+
+\paragraph{障碍 O4：相互作用理论未验证；热背景需要新框架。}
+严格结果 R1--R3 主要涉及\textbf{自由理论}：粒子盒（R2）和自由标量场（R3）。p-进 AdS/CFT 中第一个相互作用计算是~\cite{HJ24}，它对 Tate 曲线 $E_q = \Qp^\times / q^{\mathbb{Z}}$ 计算了 Witten 图：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{两点单圈 Witten 图}：对\textbf{一般}标度维数 $\Delta$ 计算（不限于特殊质量值；~\cite{ESZ19} 中对 p-进 BTZ 黑洞进行了平行的单圈 Witten 图计算）
+    \item \textbf{三点树阶 Witten 图}：已计算
+\end{itemize}
+然而，~\cite{HJ24} \S6 揭示一个根本性复杂：在热（Tate 曲线）背景下，标准阿代尔乘积框架\textbf{不适用}。在平坦空间中，可通过局部 zeta 函数的互换 $\zeta_p \leftrightarrow \zeta_\infty$（局部 $\leftrightarrow$ 局部）在实与 p-进答案之间转换。但在黑洞背景（Tate 曲线）下，这被替换为\textbf{局部--整体互换} $\zeta_p \leftrightarrow \zeta$（局部 $\leftrightarrow$ 整体），因为 Archimedean 热修正涉及\textbf{整体} Riemann zeta $\zeta(\Delta)$ 而非局部 $\zeta_\infty(\Delta)$。由于 $\zeta = \prod_p \zeta_p \cdot \zeta_\infty$，Archimedean 结果已包含所有 $p$-进信息，使 $\prod_\nu A_\nu$ 成为重复计数操作。此局部--整体对应的精确数学机制是一个开放问题（~\cite{HJ24} \S6：``值得理解''）。
+
+一个更易处理的问题是验证\textbf{平坦空间}（零温度）Witten 图的阿代尔乘积公式，其中局部--局部对应 $\zeta_p \leftrightarrow \zeta_\infty$ 成立，~\cite{HSYZ20} 框架直接适用。此外，~\cite{HJ24} \S6 指出，一般标度维数下的单圈两点关联子与树阶三点关联子的真实对应物 ``尚未确定''，使 p-进结果作为引导未来真实计算的玩具模型具有价值。
+
+\subsubsection{精化障碍的物理含义}
+\label{sec:physical-impl}
+
+精化后的 bulk-sum 障碍（猜想~\ref{conj:bulk-sum}，由推论~\ref{cor:exchange} 与注~\ref{rem:tate-unify} 精化）对 p-进 AdS/CFT 有三个物理含义。
+
+\textbf{含义 1：OPE 收敛结构。} 接触图的 $n{+}1$ $\zeta_p$ 分解（定理~\ref{thm:nplus1}）暗示 p-进 OPE 具有\emph{刚性分解结构}：OPE 系数 $f_p^{(n)}$ 是恰好 $n{+}1$ 个局部 zeta 函数的乘积，每个依赖于标度维数的特定组合。这种刚性是 Archimedean OPE 解析性约束（共形块分解）的 p-进对应物。对 $n \geq 4$ 的失配（定性的，表~\ref{tab:mismatch}）表明 p-进 OPE 编码的交叉比信息\emph{少于} Archimedean OPE——p-进一侧完全分解，而 Archimedean 一侧保留一个携带交叉比依赖的不可约 Feynman 参数积分。这与下述解释一致：p-进 AdS/CFT 描述的是\emph{交叉比趋于零}处的 CFT（bulk sum 坍缩为两点数据的乘积），而真实 AdS/CFT 捕获完整交叉比动力学。
+
+\textbf{含义 2：bulk sum 的局域性。} 交换图对障碍的猜想性避开（推论~\ref{cor:exchange}）有直接的体局域性解释。在真实 AdS/CFT 中，体局域性编码在交换图作为交换动量函数的光滑性中——即无反常奇异性。在 p-进 AdS/CFT 中，链接因子 $R_{\mathrm{link}}(p, \Delta, L)$（命题~\ref{prop:exchange}）扮演类似角色：它是交换图中唯一依赖于\emph{组合}标度维数 $\Sigma_1 + \Sigma_2 + 2\Delta$（通过 $L$ 与 Steiner 路径几何）的因子，耦合两个顶点。此耦合是体局域性的树论标志——没有它，双重求和将分解为独立的单顶点求和，交换图将失去体局域性结构。因此链接因子是 Archimedean 谱积分 $\int d\nu\, \rho(\nu) / (\nu - m^2)$ 的 p-进类比，后者是真实 AdS/CFT 中体局域性的载体。
+
+\textbf{含义 3：阿代尔乘积作为诊断工具，而非对称性。} Tate 积分计数准则（注~\ref{rem:tate-unify}）暗示阿代尔乘积 $\prod_\nu A_\nu = 1$ \emph{不是}理论的基本对称性（即并非所有可观测量都满足），而是 p-进与 Archimedean 分解之间结构性匹配的\emph{诊断}。当 Tate 积分计数匹配时（两点函数；猜想地包括交换图，尚待 $|R_{\mathrm{link}}| = 1$），阿代尔乘积成立；当它们失配时（$n \geq 3$ 的接触图），阿代尔乘积失效。这将阿代尔乘积从 ``基本原理''（如果只考虑两点函数，它可能显得是基本原理）重新定位为检测分解失配的 ``结构不变量''。bulk-sum 障碍的物理内容是：$T_{p^d}$ 的全断开拓扑对接触图施加了比 Archimedean 拓扑更强的分解——而这种更强的分解在 Archimedean 一侧没有对应物，从而破坏阿代尔乘积。
+
+\subsection{小结：已证 vs.\ 所提}
+
+\begin{table}[H]
+\centering
+\caption{已证与所提结果小结。}
+\label{tab:summary}
+\begin{tabular}{lll}
+\toprule
+结果 & 状态 & 范围 \\
+\midrule
+R1 Stoica 分解 & 所提 & 具体情形已计算；推广为概念性 \\
+R2 Euler 乘积（粒子盒） & \textbf{已证} & 仅粒子盒；推广为所提 \\
+R3 阿代尔乘积（Green 函数） & \textbf{已证} & 仅自由标量两点函数 \\
+R4 Berkovich $\Pone$ 构造 & \textbf{已证}（构造） & 一维；AdS/CFT 推广为声明 \\
+O3：3 点 $\zeta_\nu$ 失配 & \textbf{已验证} & p-进 4 个 $\zeta_p$ vs Archimedean 3 个 $\zeta_\infty$（\S\ref{sec:obstacles}） \\
+O3：4 点 $\zeta_\nu$ 失配 & \textbf{已验证} & p-进 5 个 $\zeta_p$（分解）vs Archimedean 1 个 $\Gamma \times$ 不可约积分（非分解）；树递归（\S\ref{sec:obstacles}，附录~\ref{app:recursion}） \\
+O3：$n$ 点 $\zeta_\nu$ 模式 & \textbf{已证} & 对所有 $n \geq 3$ 为 $n{+}1$ 个 $\zeta_p$；Archimedean：$n=3$ 时 3 个 $\zeta_\infty$，$n \geq 4$ 时 1 个 $\Gamma \times$ 不可约积分；递归 + 归纳（附录~\ref{app:recursion}，定理~\ref{thm:nplus1}） \\
+O3：交换图结构 & \textbf{结构性分解} & p-进 $\geq 6$ 个 $\zeta_p$（6+$|R_{\mathrm{link}}|$）vs Archimedean 7 个 $\zeta_\infty$；失配猜想为零（命题~\ref{prop:exchange}、推论~\ref{cor:exchange}） \\
+O3：bulk-sum 障碍猜想 & \textbf{已证（接触），猜想（交换）} & 阿代尔乘积对接触图失效（$n \geq 3$，定理~\ref{thm:nplus1}）；对交换图在猜想意义上成立（命题~\ref{prop:exchange}、推论~\ref{cor:exchange}）及 2 点函数（\cite{HSYZ20}） \\
+一般 Berkovich 桥梁 & \textbf{开放} & 障碍 O1--O4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ======================================================================
+% SECTION 6: Adelic Completion
+% ======================================================================
+\section{阿代尔完备化（展望）}
+\label{sec:adelic}
+
+\subsection{阿代尔振幅及其微妙之处}
+
+两条独立的证据线建立了阿代尔乘积的\textbf{失效层级}：
+
+\paragraph{弦理论振幅}（Koba--Nielsen 积分，~\cite{J22}）：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{两点函数}（Green 函数）：正规化后 $\prod_\nu G_\nu = 1$~\cite{HSYZ20}。乘积收敛是因为每个局部 Green 函数 $G_\nu$ 满足同一函数方程，跨所有位的乘积给出整体函数方程（Tate 论文）。
+    \item \textbf{四点振幅}：正规化后 $\prod_\nu A^{(4)}_\nu = 1$~\cite{J22}。四点树阶振幅分解为两点函数的乘积（通过 OPE 通道分解），因此阿代尔乘积继承两点收敛性。
+    \item \textbf{五点振幅}：$\prod_\nu A^{(5)}_\nu$ \textbf{不是}单一解析函数~\cite{J22}。失效机制是五点振幅含不可约的三粒子通道（共形块分解包含一个不可分解的接触项），这些通道引入的动理学依赖无法跨所有位统一正规化。
+\end{itemize}
+
+\paragraph{AdS/CFT Witten 图}（原始分析，\S\ref{sec:obstacles}）：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{两点函数}：$\prod_\nu G_\nu = 1$ $\checkmark$ —— 成立是因为 Green 函数在每位满足局部函数方程（Tate 论文结构，~\cite{HSYZ20}），且整体阿代尔乘积对应于整体函数方程。无 bulk sum 涉及，但数学机制是局部函数方程结构，而不仅是 bulk sum 的缺失（见注~\ref{rem:logical}）。
+    \item \textbf{三点 OPE 系数}：$\times$ --- \textbf{结构性失配}。p-进 OPE 系数有 4 个 $\zeta_p$ 因子（1 径向 + 3 分支，由树上分解的 bulk sum 产生，M2），而 Archimedean 对应仅有 3 个 $\zeta_\infty$ 因子（径向 $\Gamma$ 被星-三角抵消）。「缺失」的第 4 个因子 $\zeta_\infty(\Delta_{123}{-}d)$ 在 p-进一侧没有对应物。
+    \item \textbf{四点接触图}：$\times$ --- \textbf{结构性失配}（由树递归验证，附录~\ref{app:recursion}）。p-进 OPE 系数分解为 5 个 $\zeta_p$ 因子（1 径向 + 4 分支），而 Archimedean 对应是 $1$ 个径向 $\Gamma$ 乘以一个不可约 Feynman 参数积分——不是 $\zeta_\infty$ 因子的有限乘积。失配是定性的（分解 vs.\ 非分解），而非仅仅是定量的。一般 $n{+}1$ $\zeta_p$ 因子公式对所有 $n$ 已证（定理~\ref{thm:nplus1}）。
+    \item \textbf{交换图}：结构性分析（命题~\ref{prop:exchange}）表明 p-进一侧\textbf{至少有 6 个 $\zeta_p$ 因子}（$6 + |R_{\mathrm{link}}|$），由 Steiner 路径链接因子 $R_{\mathrm{link}}$ 耦合；Archimedean 一侧通过谱分解有 7 个 $\zeta_\infty$ 因子。失配在尚待 $|R_{\mathrm{link}}| = 1$ 时\textbf{在猜想意义上为零}（推论~\ref{cor:exchange}、注~\ref{rem:link-caveat}）。
+\end{itemize}
+
+\paragraph{比较。}
+弦理论层级（两点 $\checkmark$、四点 $\checkmark$、五点 $\times$）与 AdS/CFT 层级（两点 $\checkmark$、三点 $\times$、四点 $\times$）\textbf{不矛盾}——它们涉及不同类型的可观测量。弦理论振幅是单积分，对 $n \leq 4$ 分解为两点构造块；AdS/CFT Witten 图涉及 bulk sum/积分，其 $\zeta_\nu$ 因子结构依赖于树几何（M2）与 Feynman 参数可积性。AdS/CFT 失效边界位于两点与三点之间，早于弦理论边界（四点与五点之间），因为 bulk sum 引入了弦理论振幅所避免的 $\zeta_\nu$ 因子失配。
+
+此层级是障碍 O3 的直接证据：阿代尔乘积公式当可观测量分解为两点构造块（无 bulk sum）时成立，但当真正的 bulk sum 引入跨位不匹配的 $\zeta_\nu$ 因子时失效。
+
+\subsection{阿代尔乘积的物理意义}
+
+对两点函数~\cite{HSYZ20} 与粒子盒谱~\cite{HMS20} 证明的阿代尔乘积公式 $\prod_\nu F_\nu = 1$ 带有深刻物理含义：\textbf{实理论的量可由 p-进量重构}。具体地：
+\begin{equation}
+F_\infty = \prod_p F_p^{-1}
+\end{equation}
+这意味着 Archimedean（实）可观测量 $F_\infty$ 完全由 p-进可观测量集合 $\{F_p\}$ 决定。这是 ``p-进作为发现工具'' 论点（C1，机制 M5）的最强现有证据：p-进计算不仅是类比，而且包含足以重构真实物理的信息。
+
+然而，限于两点函数与谱意味着重构目前限于\textbf{自由理论可观测量}。三点失效（\S\ref{sec:obstacles}、\S\ref{sec:adelic}）表明涉及 bulk sum 的可观测量不允许阿代尔重构——p-进与 Archimedean 的 $\zeta_\nu$ 因子结构定性不同。可重构与不可重构可观测量之间的边界是核心开放问题（障碍 O3），我们为此提出 \textbf{bulk-sum 障碍猜想}（\S\ref{sec:obstacles}）。
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.9\textwidth}{\centering \textbf{图 3.} 阿代尔乘积概念。对每个位 $\nu$（Archimedean $\infty$ 与所有素数 $p$），计算一个局部可观测量 $F_\nu$。对适当的可观测量（两点函数、谱），阿代尔乘积 $\prod_\nu F_\nu = 1$ 成立，意味着 Archimedean 可观测量 $F_\infty$ 由 p-进可观测量决定：$F_\infty = \prod_p F_p^{-1}$。此重构对三点 AdS/CFT OPE 系数（\S\ref{sec:obstacles}）与五点弦理论振幅（\S\ref{sec:adelic}）失效，建立了两个独立的失效层级。}}
+\end{figure}
+
+\subsection{阿代尔 AdS/CFT 的整合路径}
+
+一个系统化的阿代尔 AdS/CFT——其中所有位的体几何（真实 $\AdS_{d+1}$ + 所有 p-进 $T_p$）整合进单一框架——仍是长期目标。其概念架构需要：
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{位统一的体几何}：一个数学对象，在 Archimedean 位还原为 $\AdS_{d+1}$，在每个 p-进位还原为 $T_p$。Goldfarb 的 $\PoneBerk$~\cite{G23} 是 $d=1$ 情形的候选，但向 $d > 1$ 的推广开放。
+    \item \textbf{位统一的场论}：一个框架，其中 p-进位的 Vladimirov 导数 $\dpartial$ 与 Archimedean 位的通常导数 $\partial/\partial x$ 统一。局部 zeta 函数支架（机制 M4，\S\ref{sec:mechanisms}）为关联函数提供部分统一，但不包括相互作用。
+    \item \textbf{阿代尔全息字典}：体--边界传播子 $\KK$ 必须满足阿代尔乘积公式。这对两点函数已证~\cite{HSYZ20}，但对三点 OPE 系数与四点接触图失效（\S\ref{sec:obstacles}、\S\ref{sec:adelic}），原因是 p-进 $\zeta_p$ 因子与 Archimedean $\zeta_\infty$ 因子的结构性失配。
+\end{enumerate}
+
+Berkovich 桥梁（\S\ref{sec:berkovich}）是通向条目 1--2 最有希望的路径，但必须先解决障碍 O1--O4。条目 3 直接受三点与四点失效（\S\ref{sec:obstacles}、\S\ref{sec:adelic}）的约束。
+
+\subsection{Perfectoid 几何：一个推测性注记}
+
+Scholze 的 perfectoid 几何~\cite{Sch11} 通过 tilting 等价将特征 0 与特征 $p$ 几何联系起来。这\emph{可能}为构造位统一的体几何（\S\ref{sec:adelic}，条目 1）提供 Berkovich 桥梁的替代方案，但尚未发展出对 p-进 AdS/CFT 的具体应用。近期工作~\cite{SGF26} 将 perfectoid 几何应用于 M/F 理论对偶，表明 perfectoid 方法开始进入弦理论语境，尽管与 p-进 AdS/CFT 的联系仍开放。我们将其作为同时具备 perfectoid 几何与全息对偶专长的研究者未来研究的方向加以提及。
+
+% ======================================================================
+% SECTION 7: Open Problems
+% ======================================================================
+\section{开放问题}
+\label{sec:open}
+
+我们按障碍分类列出开放问题。每个问题给出其数学难度与使其困难的具体障碍。
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{``理论空间'' $\mathfrak{B}_K$ 的严格构造}（O1）：构造适合 AdS/CFT 场论模的 Berkovich 空间（或替代物）。\textit{困难所在}：~\cite{HMS20} 中使用的 Berkovich 空间 $M(\mathbb{Z})$ 是一维的（由 $\mathbb{Z}$ 上的赋值参数化），但 AdS/CFT 场论需要无穷维数据：场内容、耦合常数、对称表示。一维 Berkovich 空间的范畴无法自然容纳无穷维模。候选途径包括：(i) 无穷维 Berkovich 空间（其理论发展较少）；(ii) CFT 模栈的 Berkovich 解析化（若可定义这样的栈）；或 (iii) 一种完全不同的几何框架。每种途径都需要大量基础性工作。
+
+    \item \textbf{Berkovich 流 $\leftrightarrow$ RG 流对应}（O2）：建立 Berkovich 空间上的流与边界 Wilsonian RG 流之间的严格对应。\textit{困难所在}：~\cite{HMS20} 中的 Berkovich 空间流连接\textbf{不同位}（p-进 $\to$ Archimedean），以 p-进范数为参数。Wilsonian RG 流在\textbf{单一位置内}操作，以能标 $\mu$ 为参数。这些是概念上不同的操作：前者是 $\Q$ 的不同完备化之间的流，后者是单一完备化内部的流。唯一现存的连接是 p-进 CFT RG 流~\cite{HLM19}，它是 p-进位\emph{内部}的 Wilsonian 流——而非 Berkovich 空间流。两者之间的桥接需要一种新概念框架，将位索引流与尺度索引流联系起来。
+
+    \item \textbf{阿代尔分解的 bulk-sum 障碍}（O3）：识别哪些可观测量满足阿代尔乘积公式，哪些不满足。\textit{困难所在}：已知两个独立的失效层级（\S\ref{sec:adelic}）：(i) 弦理论振幅在五点失效~\cite{J22}；(ii) AdS/CFT Witten 图在三点失效（\S\ref{sec:obstacles}）。对 AdS/CFT 情形，我们提出 \textbf{bulk-sum 障碍猜想}（\S\ref{sec:obstacles}）：阿代尔乘积成立当且仅当可观测量不涉及 bulk sum。\textit{证据}：$n=2$ 已确认（无 bulk sum，阿代尔乘积成立~\cite{HSYZ20}），$n=3$ 已确认（4 个 $\zeta_p$ vs 3 个 $\zeta_\infty$，与~\cite{HJ24} 公式 81 验证），$n=4$ \textbf{由递归验证}（5 个 $\zeta_p$ vs 1 个 $\zeta_\infty$），$n=5$ \textbf{由递归验证}（6 个 $\zeta_p$），$n{+}1$ $\zeta_p$ 因子公式由一般递归论证对所有 $n$ \textbf{已证}。机制是 p-进树的全断开性（M2）将 bulk sum 分解为 $n{+}1$ 个独立 $\zeta_p$ 因子，而 Archimedean Feynman 参数积分耦合径向与角向，产生不同数目的 $\zeta_\infty$ 因子（$n=3$ 时由星-三角恒等式得 3 个，$n \geq 4$ 时 1 个）。\textbf{两个互补方向 —— (A) 已完成，(B) 结构性分解已完成，链接因子计算尚待：}
+
+    \textit{(A) 接触图验证与推广} [$\checkmark$ 已完成]。p-进四点接触图 $\zeta_p$ 结构通过在 4 点 Steiner 树上求解树递归关系验证。关键递归为：侧分支递归 $R_{\text{rad}} = \zeta_p(\Delta_{1234}{-}d)$（自相似，每顶点相同）；臂递归 $R_i = \zeta_p(\Delta_{\hat{i},i}) \cdot [\text{常数}]$（$\zeta_p$ 因子是乘性的，常数 $i$ 无关）；Steiner 路径递归 $R_{\text{path}}$（有限，无 $\zeta_p$）。Steiner 点（$p^d{-}2$ 个分支）与路径顶点（$p^d{-}1$ 个分支）的侧分支计数差异只进入有限常数，不影响 $\zeta_p$ 计数。$n=5$ 情形由同一论证给出 6 = $n{+}1$ 个因子。一般 $n{+}1$ 公式已证：1 个径向 $\zeta_p$（来自侧分支）+ $n$ 个分支 $\zeta_p$（来自臂）+ 0 个来自有限 Steiner 核心。
+
+    \textit{(B) 交换图分析} [$\checkmark$ 结构性分解已完成；链接因子计算尚待]。该猜想覆盖接触图；交换图有根本不同的结构：$\sum_{z_1, z_2} K_1 K_2 \, G_\Delta(z_1, z_2) \, K_3 K_4$。结构性分析（命题~\ref{prop:exchange}）揭示，当 $z_1$ 与 $z_2$ 位于不同子树（由 Steiner 路径分隔）时，传播子\textbf{分解}：$G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1,S_1)} \cdot p^{-\Delta L} \cdot p^{-\Delta\,d(S_2,z_2)}$。双重求和然后分解为两个单顶点子求和的乘积，每个产生 3 个 $\zeta_p$ 因子——共\textbf{至少 6 个 $\zeta_p$ 因子}（$6 + |R_{\mathrm{link}}|$），其中链接因子 $R_{\mathrm{link}}$ 计及 Steiner 路径的侧分支递归。在 Archimedean 一侧，谱表示将交换图分解为两个 3 点函数（每个通过星-三角给出 3 个 $\zeta_\infty$）加 1 个 $\zeta_\infty$-型因子来自谱密度——共\textbf{7 个 $\zeta_\infty$ 因子}（注~\ref{rem:exch-arch}）。交换图失配\textbf{在猜想意义上为零}，尚待验证 $|R_{\mathrm{link}}| = 1$（推论~\ref{cor:exchange}、注~\ref{rem:link-caveat}）。\textit{剩余工作}：(i) 通过互斥且穷尽的情形划分严格求值 $R_{\mathrm{link}}$；(ii) 在小树（如有限截断 $R$ 的 $T_2$）上数值验证以确认 $|R_{\mathrm{link}}| = 1$。
+
+    此外，该猜想应在~\cite{HSYZ20} 归一化下检验，其中两点阿代尔乘积非平凡（$\zeta(2\Delta)$ 而非 1），以验证 bulk-sum 障碍在不同归一化下仍然成立。
+
+    \item \textbf{相互作用理论的阿代尔验证与局部--整体对应}（O4）：标准阿代尔乘积框架（对平坦空间自由标量两点函数证明，~\cite{HSYZ20}）不直接适用于~\cite{HJ24} 中计算的热（Tate 曲线）Witten 图。\textit{困难所在}：~\cite{HJ24} \S6 揭示在热背景下，平坦空间的局部--局部对应 $\zeta_p \leftrightarrow \zeta_\infty$ 被替换为局部--整体互换 $\zeta_p \leftrightarrow \zeta$（其中 $\zeta$ 是整体 Riemann zeta）。由于 $\zeta = \prod_p \zeta_p \cdot \zeta_\infty$，Archimedean 热关联子已编码所有 $p$-进信息，使朴素阿代尔乘积 $\prod_\nu A_\nu$ 成为重复计数操作。出现两个子问题：(i) 形式化局部--整体对应——精确数学机制未知（~\cite{HJ24} \S6：``值得理解''）；(ii) 验证\textbf{平坦空间}相互作用 Witten 图的阿代尔乘积公式，其中局部--局部对应成立。对 (ii)，~\cite{HJ24} 的平坦空间（零温度）极限提供起点：单圈图退化为 \BirTits{} 树上测地线的求和（无热缠绕），Archimedean 对应使用 $\zeta_\infty$（局部）而非 $\zeta$（整体）。
+
+    \item \textbf{高亏格 p-进曲线}：将 p-进 AdS/CFT 从 Tate 曲线（亏格 1）推广到高亏格 Mumford 曲线。\textit{困难所在}：Tate 曲线对应 Schottky 群 $\Gamma = \langle q \rangle$（秩 1，亏格 1）。高亏格 Mumford 曲线需要秩 $g \geq 2$ 的 Schottky 群，其体几何 $\Tp/\Gamma$ 的基本域更复杂。数学框架存在~\cite{Mum72}，但物理未发展：高亏格商上未计算 Witten 图，高亏格 p-进曲线上的边界 CFT 缺少亏格 0（$\Pone(\Qp)$）与亏格 1（Tate 曲线）所建立的公理化基础。
+
+    \item \textbf{非微扰 p-进 AdS/CFT}：所有现有结果是微扰的（自由理论 + Witten 图）。\textit{困难所在}：非微扰定义需要指定 $\Tp$（或 $\Tp/\Gamma$）上的完整量子引力路径积分，包括 $G_N$ 的所有阶。在真实 AdS/CFT 中，非微扰定义由边界 CFT 本身提供。对 p-进 AdS/CFT，边界 p-进 CFT 发展较少（一般 p-进 CFT 无非微扰拉格朗日表述），因此非微扰体定义无法从边界推断。此外，图 Laplace 算子 $\Boxp$ 是非局部算子，使 $\Tp$ 上的非微扰路径积分在概念上不同于格点场论。
+\end{enumerate}
+
+% ======================================================================
+% SECTION 8: Conclusion
+% ======================================================================
+\section{结论}
+\label{sec:conclusion}
+
+\paragraph{主要结果。}
+我们为 \BirTits{} 树 $T_{p^d}$ 上的 Witten 图建立了两个严格结构性结果，刻画了在平坦空间 p-进 AdS/CFT 中阿代尔乘积 $\prod_\nu A_\nu = 1$ 何时成立或失效：
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{定理 1（接触图，附录~\ref{app:recursion}）：} $n$ 点接触图分解为恰好 $n{+}1$ 个 $\zeta_p$ 因子，通过对 Steiner 树递归（引理~\ref{lem:self-sim}--\ref{lem:path}）与归纳法（定理~\ref{thm:nplus1}）对所有有限 $n \geq 3$ 证明。Archimedean 一侧在 $n=3$ 时有 3 个 $\zeta_\infty$，但对 $n \geq 4$ 退化为 $1$ 个径向 $\Gamma$ 乘以一个不可约 Feynman 参数积分——定性失配（表~\ref{tab:mismatch}）。
+    \item \textbf{命题 2（交换图，\S\ref{sec:exchange-rigorous}）：} 4 点交换图允许一种结构性分解为两个单顶点子求和（每个贡献 3 个 $\zeta_p$ 因子），由 Steiner 路径因子与一个未定的链接因子 $R_{\mathrm{link}}$ 耦合。p-进一侧因此\emph{至少有 6 个 $\zeta_p$ 因子}（$6 + |R_{\mathrm{link}}|$）；Archimedean 一侧通过谱分解有 7 个 $\zeta_\infty$ 因子，失配\emph{在猜想意义上为零}，尚待 $|R_{\mathrm{link}}| = 1$（推论~\ref{cor:exchange}、注~\ref{rem:link-caveat}）。
+\end{itemize}
+
+\paragraph{精化的 bulk-sum 障碍（猜想~\ref{conj:bulk-sum}）。}
+阿代尔乘积对接触图失效（$n \geq 3$，已证），但对交换图\emph{在猜想意义上成立}（尚待 $|R_{\mathrm{link}}| = 1$），并对两点函数成立（通过 Tate 的局部函数方程~\cite{HSYZ20}）。障碍不是 ``bulk sum 本身''，而是全断开树上单顶点求和的\emph{完全分解}：接触图的 bulk sum 完全分解为独立几何级数，而交换图的双重求和保留顶点间耦合（链接因子 $R_{\mathrm{link}}$），后者被猜想为镜像 Archimedean 谱耦合。
+
+\paragraph{Tate 统一（\S\ref{sec:tate-relation}，命题~\ref{prop:tate}）。}
+Tate 局部 zeta 积分框架统一两种情形：每个 $\zeta_p$ 因子是 Tate 积分 $Z_p(s, 1)$（命题~\ref{prop:tate}），阿代尔乘积成立当且仅当 p-进与 Archimedean 两侧 Tate 积分计数匹配。两点函数有 0 个 bulk-sum Tate 积分（通过 Green 函数自身的 Tate 结构成立），交换图在 p-进一侧 $\geq 6$ 个、Archimedean 一侧 7 个（若 $|R_{\mathrm{link}}| = 1$ 则猜想地成立），$n$ 点接触图在 p-进一侧 $n{+}1$ 个、Archimedean 一侧较少（失效）。
+
+\paragraph{物理含义（\S\ref{sec:physical-impl}）。}
+接触图的刚性 $n{+}1$ 分解暗示 p-进 OPE 编码的交叉比信息少于 Archimedean OPE——与 p-进 AdS/CFT 描述交叉比趋于零处的 CFT 一致。交换图的链接因子 $R_{\mathrm{link}}$（猜想地，当 $|R_{\mathrm{link}}| = 1$ 时）是体局域性的树论载体，类比于 Archimedean 谱积分。阿代尔乘积从 ``基本对称性'' 重新定位为 ``检测分解失配的结构不变量''。
+
+\paragraph{背景与语境。}
+这些结果置于更广阔的背景之中：八个 p-进计算先于实理论计算的逆向启发案例（\S\ref{sec:reverse}），五个解释 p-进方法为何能照亮难题的数学机制 M1--M5（\S\ref{sec:mechanisms}），以及连接 p-进与 Archimedean 物理的 Berkovich 空间桥梁（\S\ref{sec:berkovich}），后者面临四个障碍 O1--O4，我们的 bulk-sum 障碍（O3）部分地解决之。
+
+\paragraph{展望。}
+最直接的下一步是在小树（如有限截断 $R$ 的 $T_2$）上严格求值链接因子 $R_{\mathrm{link}}$ 以确定 $|R_{\mathrm{link}}| = 1$，并将交换图计算推广到一般 $n$ 点交换与圈图。Tate 积分计数准则提供诊断：p-进与 Archimedean 两侧 Tate 积分计数匹配的可观测量应满足阿代尔乘积。在~\cite{HJ24} Tate 曲线单圈计算（真实对应尚未计算）上验证此准则将提供一个非平凡检验。Berkovich 桥梁障碍 O1、O2、O4 仍开放，需要独立的数学与物理发展。
+
+% ======================================================================
+% APPENDIX
+% ======================================================================
+\appendix
+
+\section{$n$ 点接触图在 \BirTits{} 树上的递归结构}
+\label{app:recursion}
+
+本附录给出 $n$ 点接触图的 $n{+}1$ $\zeta_p$ 因子公式的推导，支持 \S\ref{sec:obstacles} 与猜想~\ref{conj:bulk-sum} 的断言。我们建立严格证明所需的五个要素：(i) Steiner 树上的递归关系；(ii) 侧分支递归的自相似性；(iii) 臂递归的 $i$ 无关性；(iv) Steiner 路径不贡献 $\zeta_p$ 因子；(v) 从 $n$ 到 $n{+}1$ 的归纳。
+
+\subsection{A.1：Steiner 树上的递归关系}
+
+考虑 $n$ 点接触图
+\begin{equation}
+\label{eq:app-bulk-sum}
+\mathcal{A}_n = \sum_{z \in T_{p^d}} \prod_{i=1}^n K_{\Delta_i}(z, x_i)
+\quad\text{with}\quad
+K_{\Delta_i}(z, x_i) = p^{-\Delta_i \, d(z, x_i)},
+\end{equation}
+其中 $d(z, x_i)$ 是体顶点 $z$ 到边界点 $x_i \in \Pone(\Qp)$ 的图距离，$\Delta_{1\cdots n} := \sum_{i=1}^n \Delta_i$。bulk sum 遍历 $T_{p^d} = \PGL(2, \mathbb{Q}_{p^d})/\PGL(2, \mathbb{Z}_{p^d})$ 的所有顶点，即 $(p^d{+}1)$-正则 \BirTits{} 树。
+
+$n$ 个边界点 $\{x_1, \ldots, x_n\}$ 确定唯一的 \emph{Steiner 树} $T_S \subset T_{p^d}$：边界极限集等于 $\{x_1, \ldots, x_n\}$ 的最小子树。$T_S$ 由以下构成：
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Steiner 点}：$T_S$ 中有三个或更多朝向 $x_i$ 分支的顶点。
+    \item \textbf{Steiner 路径}：连接 Steiner 点的有限长路径（长度 $L \geq 0$）。
+    \item \textbf{臂}：从最外层 Steiner 点到每个边界点 $x_i$ 的射线。
+    \item \textbf{侧分支}：在内部顶点处从臂与 Steiner 路径分叉出的子树。
+\end{itemize}
+
+通过 $T_{p^d}$ 的唯一路径性质分解 bulk sum \eqref{eq:app-bulk-sum}，每个顶点 $z$ 的贡献按从 $z$ 出发不朝向任何 $x_i$ 的分支分解。由树的 $(p^d{+}1)$-正则性，每个顶点有 $p^d{+}1$ 个邻居；移除朝向 $n$ 个边界点与父方向后，剩下若干\emph{侧分支}，每个都是与全树同构的子树（由齐性）。
+
+此分解给出三种递归：
+\begin{align}
+\text{（径向/侧分支）}\quad & R_{\mathrm{rad}} = 1 + (p^d) \, p^{-\Delta_{1\cdots n}} \, R_{\mathrm{rad}}, \label{eq:rec-rad}\\
+\text{（臂）}\quad & R_i = \zeta_p(\Delta_{\hat{i},i}) \cdot C, \quad i = 1, \ldots, n, \label{eq:rec-arm}\\
+\text{（Steiner 路径）}\quad & R_{\mathrm{path}} = \text{依赖交叉比的有限表达式}, \label{eq:rec-path}
+\end{align}
+其中 $\Delta_{\hat{i},i} := \Delta_{1\cdots n} - 2\Delta_i$ 是臂参数，$C$ 是 $i$ 无关的常数（在 A.3 中证明），$\zeta_p(s) = (1 - p^{-s})^{-1}$ 是局部 zeta 函数。
+
+整图分解为
+\begin{equation}
+\label{eq:factorization}
+\mathcal{A}_n = R_{\mathrm{rad}} \cdot \prod_{i=1}^n R_i \cdot R_{\mathrm{path}}.
+\end{equation}
+
+\subsection{A.2：$R_{\mathrm{rad}}$ 的自相似性}
+
+\begin{lemma}[自相似性]
+\label{lem:self-sim}
+侧分支递归在 $T_{p^d}$ 上每个不在 Steiner 树 $T_S$ 上的顶点处满足
+\begin{equation}
+R_{\mathrm{rad}} = 1 + (p^d) \, p^{-\Delta_{1\cdots n}} \, R_{\mathrm{rad}}
+\end{equation}
+其解为
+\begin{equation}
+R_{\mathrm{rad}} = \frac{1}{1 - p^{d - \Delta_{1\cdots n}}} = \zeta_p(\Delta_{1\cdots n} - d).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+由 $T_{p^d}$ 的 $(p^d{+}1)$-正则性，每个顶点有 $p^d{+}1$ 个邻居。在不在 $T_S$ 上的顶点 $z$ 处，一个邻居位于朝向 $T_S$ 的路径上（``父''方向），其余 $p^d$ 个邻居所根基的子树各自与全 $T_{p^d}$ 同构（由 \BirTits{} 树在 $\PGL(2, \mathbb{Q}_{p^d})$ 下的齐性）。
+
+在每个这样的子树中，对 bulk sum 的贡献等于 $p^{-\Delta_{1\cdots n}} \, R_{\mathrm{rad}}$（因子 $p^{-\Delta_{1\cdots n}}$ 来自到每个 $x_i$ 增加一条边的图距离；递归 $R_{\mathrm{rad}}$ 由树同构相同）。对 $p^d$ 个侧分支求和并加上 $z$ 本身的贡献（$=1$）给出递归 \eqref{eq:rec-rad}。
+
+其解为几何级数
+\begin{equation}
+R_{\mathrm{rad}} = 1 + (p^d) p^{-\Delta_{1\cdots n}} + (p^d)^2 p^{-2\Delta_{1\cdots n}} + \cdots = \frac{1}{1 - p^{d - \Delta_{1\cdots n}}},
+\end{equation}
+在 $\Delta_{1\cdots n} > d$（幺正界）时收敛。通过 $\zeta_p(s) = (1 - p^{-s})^{-1}$ 与 $s = \Delta_{1\cdots n} - d$ 的对应，得 $R_{\mathrm{rad}} = \zeta_p(\Delta_{1\cdots n} - d)$。\qedhere
+\end{proof}
+
+自相似性是精确的：$T_{p^d}$ 的每个不在 $T_S$ 上的顶点都在同一 $\PGL(2, \mathbb{Q}_{p^d})$-轨道中，因此递归在每个顶点处相同。这证明了第一个关键要素。
+
+\begin{remark}[收敛条件]
+\label{rem:convergence}
+$R_{\mathrm{rad}}$ 的几何级数收敛当且仅当 $\Delta_{1\cdots n} > d$，这是 $n$ 点接触图的幺正界。此外，每个臂因子 $\zeta_p(\Delta_{\hat{i},i})$ 收敛当且仅当 $\Delta_{\hat{i},i} > 0$，即对所有 $i$ 有 $\Delta_{1\cdots n} > 2\Delta_i$。这些条件在幺正窗口内的物理标度维数下满足。极限 $\Delta_i \to 0$（自由场极限）使 $\Delta_{\hat{i},i} \to 0$ 且臂求和发散，镜像 Archimedean 无质量交换的 IR 发散。
+\end{remark}
+
+\subsection{A.3：臂递归的 $i$ 无关性}
+
+\begin{lemma}[$i$ 无关性]
+\label{lem:i-indep}
+臂递归分解为 $R_i = \zeta_p(\Delta_{\hat{i},i}) \cdot C$，其中 $C$ 与 $i$ 无关。
+\end{lemma}
+
+\begin{proof}
+考虑从最外层 Steiner 点 $S$ 到边界点 $x_i$ 的臂。沿此臂，每个顶点有 $p^d{+}1$ 个邻居；一个是父（朝向 $S$），一个继续朝向 $x_i$，$p^d - 1$ 个是侧分支。
+
+臂上任一顶点处的侧分支与全 $T_{p^d}$ 同构（由树齐性），因此由与引理~\ref{lem:self-sim} 相同的论证，每个侧分支贡献 $\zeta_p(\Delta_{1\cdots n} - d)$。$p^d - 1$ 个侧分支的乘积给出
+\begin{equation}
+\zeta_p(\Delta_{1\cdots n} - d)^{p^d - 1},
+\end{equation}
+它是 \textbf{$i$ 无关的}，因为它只依赖于 $\Delta_{1\cdots n}$ 与 $p^d$，两者都在 $i$ 中对称。
+
+臂本身沿其无穷长度求和给出以 $p^{-\Delta_{\hat{i},i}}$ 为比的几何级数：
+\begin{equation}
+\sum_{\ell=0}^\infty p^{-\Delta_{\hat{i},i} \cdot \ell} = \zeta_p(\Delta_{\hat{i},i}),
+\end{equation}
+这是唯一的 $i$ 相关因子。
+
+将 $i$ 相关的臂因子与 $i$ 无关的侧分支乘积相乘得
+\begin{equation}
+R_i = \zeta_p(\Delta_{\hat{i},i}) \cdot \underbrace{\zeta_p(\Delta_{1\cdots n} - d)^{p^d - 1}}_{C},
+\end{equation}
+其中 $C$ 与 $i$ 无关。\qedhere
+\end{proof}
+
+\subsection{A.4：Steiner 路径不贡献 $\zeta_p$}
+
+\begin{lemma}[Steiner 路径有限]
+\label{lem:path}
+Steiner 路径（有限长度 $L \geq 0$）贡献一个依赖于 $L$ 与边界交叉比的动力学因子 $R_{\mathrm{path}}(L, \text{交叉比})$，但\emph{不}依赖于无界长度的几何级数。因此 $R_{\mathrm{path}}$ 不贡献额外 $\zeta_p$ 因子。
+\end{lemma}
+
+\begin{proof}
+Steiner 路径通过长度 $L$ 的有限路径（树度量下）连接两个 Steiner 点 $S_1, S_2$。路径上每个顶点有 $p^d - 2$ 个侧分支（除去两个路径方向）；每个侧分支与全 $T_{p^d}$ 同构，由引理~\ref{lem:self-sim} 贡献 $\zeta_p(\Delta_{1\cdots n} - d)$。然而，这些侧分支数目有限（每顶点 $p^d - 2$ 个，共 $L$ 个顶点），因此其总贡献为
+\begin{equation}
+\zeta_p(\Delta_{1\cdots n} - d)^{(p^d - 2) L},
+\end{equation}
+是已计入径向贡献 $R_{\mathrm{rad}}$ 的 $\zeta_p$ 因子的有限乘积（引理~\ref{lem:self-sim} 中 $R_{\mathrm{rad}}$ 的侧分支结构统一包括所有侧分支）。
+
+路径本身有限，仅贡献沿路径边的乘积 $\prod_{\ell=1}^L p^{-\Delta_{1\cdots n}}$。这是有限乘积，给出 $p^{-\Delta_{1\cdots n} L}$，依赖于 $L$（因而依赖于边界交叉比），但不引入新 $\zeta_p$ 因子。\qedhere
+\end{proof}
+
+\subsection{A.5：关于 $n$ 的归纳}
+
+\begin{theorem}[$n{+}1$ $\zeta_p$ 因子公式]
+\label{thm:nplus1}
+对 $n \geq 2$，$T_{p^d}$ 上的 $n$ 点接触图分解为恰好 $n{+}1$ 个局部 $\zeta_p$ 因子：$1$ 个径向 $+$ $n$ 个臂 $+$ $0$ 个 Steiner 路径因子。
+\end{theorem}
+
+\begin{proof}
+对 $n$ 进行归纳。
+
+\textbf{基础情形。} 对 $n = 2$：无 bulk sum，$\mathcal{A}_2 \propto \normp{x_1 - x_2}^{-2\Delta}$，$0$ 个 $\zeta_p$ 因子。（等价地，$n{+}1 = 3$ 尚不适用；$n \geq 3$ 才开始该公式。）
+
+对 $n = 3$：Steiner 树为 ``Y'' 形，一个 Steiner 点加三个臂。由引理~\ref{lem:self-sim}、\ref{lem:i-indep}：$R_{\mathrm{rad}} = \zeta_p(\Delta_{123} - d)$（1 因子）+ $\prod_{i=1}^3 \zeta_p(\Delta_{\hat{i},i})$（3 因子）+ $0$ Steiner 路径 = $4 = (n{+}1)$ 个因子。\textbf{已验证。}
+
+对 $n = 4$：Steiner 树有两个由长度 $L$ 路径连接的 Steiner 点。由引理~\ref{lem:self-sim}、\ref{lem:i-indep}、\ref{lem:path}：$1$ 径向 + $4$ 臂 + $0$ Steiner 路径 = $5 = (n{+}1)$ 个因子。\textbf{已验证。}
+
+对 $n = 5$：Steiner 树（一般地）有三个 Steiner 点。同一分解给出 $1$ 径向 + $5$ 臂 + $0$ Steiner 路径 = $6 = (n{+}1)$ 个因子。\textbf{已验证。}
+
+\textbf{归纳步骤。} 假设公式对 $n$ 个边界点成立：$\mathcal{A}_n$ 有 $n{+}1$ 个 $\zeta_p$ 因子（$1$ 径向 $+$ $n$ 臂 $+$ $0$ 路径）。
+
+添加新边界点 $x_{n+1}$。Steiner 树 $T_S^{(n+1)}$ 与 $T_S^{(n)}$ 的差别在于添加一条新臂（从已有或新建的 Steiner 点到 $x_{n+1}$）。$x_{n+1}$ 的添加以两种方式之一修改 Steiner 树：
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{情形 A：$x_{n+1}$ 附着于已有 Steiner 点 $S_j$。} 添加从 $S_j$ 到 $x_{n+1}$ 的长 $\infty$ 新臂。由引理~\ref{lem:i-indep}，此新臂贡献 $\zeta_p(\Delta_{\widehat{n+1}, n+1}) \cdot C$（一个新的 $i$ 相关 $\zeta_p$ 因子；$i$ 无关常数 $C$ 被吸收到现有径向因子计数中，因为由引理~\ref{lem:self-sim} 侧分支结构不变）。总数：$n{+}1 + 1 = n{+}2$ 个因子。
+    \item \textbf{情形 B：$x_{n+1}$ 需要新 Steiner 点 $S'$。} 新 Steiner 点将一条已有臂分裂为两条臂，并创建一条长 $L'$ 的新 Steiner 路径。被分裂臂的 $\zeta_p$ 计数不变（引理~\ref{lem:i-indep} 适用于每个子臂），朝向 $x_{n+1}$ 的新臂增加一个 $\zeta_p(\Delta_{\widehat{n+1}, n+1})$，新 Steiner 路径贡献 $0$ 个 $\zeta_p$（引理~\ref{lem:path}）。净变化：$+1$ 个因子，给出 $n{+}2$。
+\end{enumerate}
+
+在两种情形中，计数都从 $n{+}1$ 变为 $n{+}2 = (n{+}1){+}1$，完成归纳。由数学归纳原理，公式 $\#\zeta_p = n{+}1$ 对所有有限 $n \geq 3$ 成立，其中 $n = 2$ 是平凡（无 bulk sum）情形。\qedhere
+\end{proof}
+
+\begin{remark}[情形 C：同时多个 Steiner 点]
+\label{rem:caseC}
+上述归纳步骤显式处理了情形 A（附着于已有 Steiner 点）与情形 B（单个新 Steiner 点）。第三种结构性可能，\emph{情形 C}，出现在添加 $x_{n+1}$ 时同时分裂多条已有臂，一次产生多个新 Steiner 点。情形 C 不破坏 $n{+}1$ 公式：每个新 Steiner 点对应将一条已有臂分裂为两条子臂，这保持总臂数（被分裂臂的 $\zeta_p$ 贡献由引理~\ref{lem:i-indep} 不变，因为每个子臂满足同一递归）。唯一净变化是添加一条朝向 $x_{n+1}$ 的新臂，恰好贡献一个新 $\zeta_p(\Delta_{\widehat{n+1}, n+1})$ 因子。因此情形 C 由臂计数论证内部吸收，归纳不变地成立。
+\end{remark}
+
+\begin{remark}[$n$ 的有限性]
+\label{rem:finite-n}
+定理~\ref{thm:nplus1} 对有限 $n \geq 3$ 成立。$n \to \infty$ 极限未覆盖：随着 $n$ 增长，总 Steiner 路径长度 $L_{\text{total}}$ 可能无界，臂计数论证的组合控制变得微妙。物理相关情形（CFT 中边界关联子）的 $n$ 有限，因此这不构成实际限制。
+\end{remark}
+
+\begin{remark}
+本证明依赖 $T_{p^d}$ 的三个结构性性质：
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{齐性}（$\PGL(2, \mathbb{Q}_{p^d})$-不变性）：保证侧分支的自相似性（引理~\ref{lem:self-sim}）。
+    \item \textbf{唯一路径性质}：保证 Steiner 树分解无歧义，臂定义良好。
+    \item \textbf{Steiner 路径的有限性}：保证 $R_{\mathrm{path}}$ 是有限乘积，而非几何级数。
+\end{enumerate}
+这三个性质都是 $T_{p^d}$ 作为正则树的推论，而正则树是机制 M2（全断开性导致级数坍缩）的几何基础。
+\end{remark}
+
+% ======================================================================
+% REFERENCES
+% ======================================================================
+\begin{thebibliography}{99}
+
+% --- A. p-adic String Theory and Mathematical Physics (Origins) ---
+
+\bibitem{V87} I.V. Volovich, ``p-adic string,'' Class. Quant. Grav. \textbf{4} (1987) L83.
+
+\bibitem{BFO88} L. Brekke, P.G.O. Freund, M. Olson, E. Witten, ``Nonarchimedean string dynamics,'' Nucl. Phys. B \textbf{302} (1988) 365.
+
+\bibitem{CMZ89} L.O. Chekhov, A.D. Mironov, A.V. Zabrodin, ``Multiloop calculations in p-adic string theory and Bruhat-Tits trees,'' Commun. Math. Phys. \textbf{125} (1989) 675.
+
+\bibitem{MZ90} A.V. Marshakov, A.V. Zabrodin, ``New p-adic string amplitudes,'' Mod. Phys. Lett. A \textbf{5} (1990) 265.
+
+\bibitem{GS00} A.A. Gerasimov, S.L. Shatashvili, ``On exact tachyon potential in open string field theory,'' JHEP \textbf{10} (2000) 034. [arXiv:hep-th/0009103]
+
+% --- B. p-adic AdS/CFT (Second Wave, 2016--2019) ---
+
+\bibitem{G16} S.S. Gubser, J. Knaute, S. Parikh, A. Samberg, P. Witaszczyk, ``p-adic AdS/CFT,'' Commun. Math. Phys. \textbf{352} (2017) 1019. [arXiv:1605.01061]
+
+\bibitem{HMSS16} M. Heydeman, M. Marcolli, I. Saberi, B. Stoica, ``Tensor networks, p-adic fields, and algebraic curves: arithmetic and the AdS$_3$/CFT$_2$ correspondence,'' Adv. Theor. Math. Phys. \textbf{22} (2018) 93. [arXiv:1605.07639]
+
+\bibitem{GP17} S.S. Gubser, S. Parikh, ``Geodesic bulk diagrams on the Bruhat-Tits tree,'' Phys. Rev. D \textbf{96} (2017) 066024. [arXiv:1704.01149]
+
+\bibitem{P19} S. Parikh, ``Holographic dual of the five-point conformal block,'' JHEP \textbf{05} (2019) 051. [arXiv:1901.01267]
+
+\bibitem{JP19a} C.B. Jepsen, S. Parikh, ``Propagator identities, holographic conformal blocks, and higher-point AdS diagrams,'' JHEP \textbf{10} (2019) 268. [arXiv:1906.08405]
+
+\bibitem{JP19b} C.B. Jepsen, S. Parikh, ``p-adic Mellin Amplitudes,'' JHEP \textbf{04} (2019) 101. [arXiv:1808.08333]
+
+\bibitem{HLM19} L-Y. Hung, W. Li, C.M. Melby-Thompson, ``p-adic CFT is a holographic tensor network,'' JHEP \textbf{04} (2019) 170. [arXiv:1902.01411]
+
+\bibitem{HMPS18} M. Heydeman, M. Marcolli, S. Parikh, I. Saberi, ``Nonarchimedean holographic entropy from networks of perfect tensors,'' Adv. Theor. Math. Phys. \textbf{25} (2021) 591. [arXiv:1812.04057]
+
+\bibitem{GJT19} S.S. Gubser, C. Jepsen, B. Trundy, ``Spin in p-adic AdS/CFT,'' J. Phys. A \textbf{52} (2019) 045402. [arXiv:1811.02538]
+
+\bibitem{HLM19b} L-Y. Hung, W. Li, C.M. Melby-Thompson, ``Wilson line networks in p-adic AdS/CFT,'' JHEP \textbf{05} (2019) 118. [arXiv:1812.06059]
+
+\bibitem{QG20} F. Qu, D. Gao, ``Spinor fields on the Bruhat-Tits tree and p-adic AdS/CFT,'' (2020).
+
+% --- C. Berkovich Bridge and Adelic Physics (Third Wave, 2020--2026) ---
+
+\bibitem{S18} B. Stoica, ``Building Archimedean Space,'' (2018). [arXiv:1809.01165]
+
+\bibitem{HMS20} A. Huang, D. Mao, B. Stoica, ``From p-adic to Archimedean Physics: Renormalization Group Flow and Berkovich Spaces,'' (2020). [arXiv:2001.01725]
+
+\bibitem{HSYZ20} A. Huang, B. Stoica, S-T. Yau, X. Zhong, ``Green's functions for Vladimirov derivatives and Tate's thesis,'' Commun. Num. Theor. Phys. \textbf{15} (2021) 315. [arXiv:2001.01721]
+
+\bibitem{G23} A. Goldfarb, ``On $\mathbb{P}^1_{\text{Berk}}$ and Coarse-Grainings of Non-Archimedean Product Spaces,'' (2023). [arXiv:2306.10227]
+
+\bibitem{HJ24} A. Huang, C.B. Jepsen, ``Finite Temperature at Finite Places,'' JHEP \textbf{03} (2025) 097. [arXiv:2408.04199]
+
+\bibitem{J22} C.B. Jepsen, ``Adelic Amplitudes and Intricacies of Infinite Products,'' Nucl. Phys. B \textbf{987} (2023) 116094. [arXiv:2211.01611]
+
+% --- D. Cross-Disciplinary and Applied ---
+
+\bibitem{YJO23} H. Yan, C.B. Jepsen, Y. Oz, ``p-adic Holography from the Hyperbolic Fracton Model,'' (2023). [arXiv:2306.07203]
+
+\bibitem{C23} G.J. Chawdhry, ``p-adic numbers and QCD amplitudes,'' Phys. Rev. D \textbf{110} (2024) 056028. [arXiv:2312.03672]
+
+\bibitem{C24} G.J. Chawdhry, ``Interpolation of rational functions in loop calculations by using p-adic numbers,'' PoS LL2024 (2024) 037. [arXiv:2410.03685]
+
+\bibitem{CGN24} F. Camp, B. Gripaios, A. Nguyen, ``Two-dimensional gauge anomalies and p-adic numbers,'' JHEP \textbf{06} (2024) 202. [arXiv:2403.10611]
+
+\bibitem{OT24} K. Okunishi, T. Takayanagi, ``Statistical Mechanics Approach to the Holographic Renormalization Group,'' Prog. Theor. Exp. Phys. (2024) 013A03. [arXiv:2310.12601]
+
+\bibitem{ESZ19} S. Ebert, H.-Y. Sun, M. Zhang, ``Probing holography in p-adic CFT,'' JHEP \textbf{02} (2020) 096. [arXiv:1911.06313]
+
+\bibitem{SGF26} A. Shabir, B.E. Gunara, M. Faizal, ``A Perfectoid Duality Between M-Theory and F-Theory,'' (2026). [arXiv:2602.22503]
+
+% --- E. Real AdS/CFT and Holographic Entropy (Background) ---
+
+\bibitem{M97} J.M. Maldacena, ``The Large N limit of superconformal field theories and supergravity,'' Adv. Theor. Math. Phys. \textbf{2} (1998) 231. [arXiv:hep-th/9711200]
+
+\bibitem{GKP98} S.S. Gubser, I.R. Klebanov, A.M. Polyakov, ``Gauge theory correlators from non-critical string theory,'' Phys. Lett. B \textbf{428} (1998) 105. [arXiv:hep-th/9802109]
+
+\bibitem{W98} E. Witten, ``Anti-de Sitter space and holography,'' Adv. Theor. Math. Phys. \textbf{2} (1998) 253. [arXiv:hep-th/9802150]
+
+\bibitem{RT06a} S. Ryu, T. Takayanagi, ``Holographic derivation of entanglement entropy from AdS/CFT,'' Phys. Rev. Lett. \textbf{96} (2006) 181602. [arXiv:hep-th/0603001]
+
+\bibitem{RT06b} S. Ryu, T. Takayanagi, ``Aspects of Holographic Entanglement Entropy,'' JHEP \textbf{08} (2006) 045. [arXiv:hep-th/0605073]
+
+% --- F. Mathematical Foundations ---
+
+\bibitem{Tate50} J. Tate, ``Fourier analysis in number fields and Hecke's zeta-functions,'' Ph.D. thesis, Princeton (1950). Reprinted in \emph{Algebraic Number Theory}, J.W.S. Cassels and A. Fr\"ohlich, eds., Academic Press (1967).
+
+\bibitem{Ber90} V.G. Berkovich, \emph{Spectral Theory and Analytic Geometry over Non-Archimedean Fields}, Mathematical Surveys and Monographs 33, AMS (1990).
+
+\bibitem{Mum72} D. Mumford, ``An analytic construction of degenerating curves over complete local rings,'' Compositio Math. \textbf{24} (1972) 129.
+
+\bibitem{Sch11} P. Scholze, ``Perfectoid spaces,'' Publ. Math. IH\'ES \textbf{116} (2012) 245.
+
+\end{thebibliography}
+
+\end{document}

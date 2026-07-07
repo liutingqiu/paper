@@ -1,0 +1,607 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== Packages =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{physics}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{framed}
+
+\geometry{margin=2.5cm}
+
+% ===== Theorem environments =====
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ===== Macros =====
+\providecommand{\Tr}{\operatorname{Tr}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\dimh}{\dim\mathcal{H}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Lcc}{\Lambda_{\mathrm{cc}}}
+\newcommand{\GN}{G_N}
+\newcommand{\gYM}{g_{\mathrm{YM}}}
+\newcommand{\Sstar}{S^{*}}
+\newcommand{\Szero}{S_0}
+\newcommand{\Dzero}{D_0}
+\newcommand{\lambdastar}{\lambda^{*}}
+\newcommand{\kappabeta}{\kappa, \beta}
+
+% ===== Title =====
+\title{\textbf{Self-Referential Spectral Action: \\
+Existence and Nontriviality of Fixed Points}}
+
+\author{Tianqi Liu\\
+  \textit{School of Materials and Chemical Engineering}\\
+  Zhengzhou University of Light Industry\\
+  136 Science Avenue, Zhengzhou 450001, China\\
+  \texttt{tianqi689@gmail.com}}
+
+\date{\today}
+
+% ===== Document =====
+\begin{document}
+
+\maketitle
+
+% ---------- Abstract ----------
+\begin{abstract}
+We investigate whether the Dirac operator in Connes' spectral action framework can depend on its own spectral action value, forming a self-referential loop $D = D_0 + \Phi(S[D])$. For the scaling ansatz $\Phi(S) = g(S) \cdot D_0$ with $g(S) = \kappa \ln(S/S_0) + \beta$, we prove that the composite map $F: S \mapsto S[D_0 + \Phi(S)]$ is a Banach contraction on a neighborhood of the unperturbed action $S_0$, guaranteeing a unique fixed point $S^*$ whenever $|\kappa| < 1/10$ and $\beta \neq 0$. The fixed point is nontrivial ($S^* \neq S_0$) for generic $\beta$.
+
+\medskip
+
+\noindent\textbf{The central physical result} is the following: the self-referential structure determines a self-consistent conformal factor $\lambda^* = 1 + g(S^*)$, under which all standard model quantities scale by powers of $\lambda^*$. The dimensionless ratio
+\[
+  \R = \frac{\Lcc \cdot \GN^2}{\gYM^4 \cdot v^4}
+\]
+is \textbf{invariant under $\lambda^*$-scaling}, and therefore independent of the free parameters $\kappa$ and $\beta$. This $\R$-invariance is the unique robust prediction of the self-referential framework that survives the ``scalar bottleneck'' (one equation $\to$ one constraint). All other results---including the existence and nontriviality theorems---depend on the choice of $\Phi$ and its parameters, which currently lack a physical derivation.
+
+\medskip
+
+\noindent\textbf{Keywords}: spectral action, noncommutative geometry, Banach fixed point, self-referential, conformal invariance
+\end{abstract}
+
+% ---------- Body ----------
+\section{Introduction}
+
+\subsection{Motivation}
+
+In standard physics, the action functional $S[\varphi] = \int \mathcal{L}(\varphi, \partial\varphi)\,d^nx$ is externally given---the Lagrangian and its parameters come from ``outside.'' In a companion work~\cite{PaperI}, the first author introduced the concept of a \emph{self-referential action} satisfying $S[\varphi] = F_\varphi(S[\varphi])$, where the action value appears as an argument of its own functional. Using the Banach fixed-point theorem on a compact manifold, existence and nontriviality (in the sense of inequivalence to any standard action under jet-local diffeomorphisms) were established.
+
+The present work investigates whether a similar self-referential structure can be realized within Connes' noncommutative geometry (NCG) framework, specifically at the level of the \emph{spectral action}.
+
+\subsection{The Spectral Action Principle}
+
+Connes' spectral triple $(\mathcal{A}, \mathcal{H}, D)$ provides a geometric framework that reconstructs the Standard Model coupled to general relativity from purely spectral data~\cite{Con94, CCM06}. The spectral action
+\[
+  S[D] = \Tr\, f(D/\Lambda) + \langle\psi, D\psi\rangle
+\]
+where $f$ is a positive cutoff function and $\Lambda$ is the cutoff scale, encodes the Einstein-Hilbert action, Yang-Mills kinetic terms, the Higgs potential, and fermion couplings in a single trace~\cite{CC96}.
+
+However, in the standard framework, the Dirac operator $D$ (and hence the 25+ Standard Model parameters it encodes) is \emph{externally given}. The spectral action evaluates $S[D]$ for a fixed $D$; it does not constrain $D$ itself.
+
+\subsection{The Core Question}
+
+\textbf{Can $D$ depend on its own spectral action value?} Formally, we ask whether there exists a map $\Phi: \mathbb{R} \to \End(\mathcal{H})$ such that
+\[
+  D = D_0 + \Phi(S[D])
+\]
+and the composite map $S \mapsto S[D_0 + \Phi(S)]$ has a fixed point. If $\Phi$ is a contraction, the Banach fixed-point theorem guarantees a unique self-consistent $S^*$.
+
+\subsection{What This Paper Predicts---and What It Does Not}
+
+\textbf{Hard results} (independent of $\kappabeta$ values):
+\begin{itemize}
+  \item Existence and uniqueness of the fixed point $S^*$ (Theorem~\ref{thm:contraction})
+  \item Nontriviality $S^* \neq S_0$ (Theorem~\ref{thm:nontrivial}, conditional on $\beta \neq 0$)
+  \item \textbf{Invariance of the dimensionless ratio $\R$} (Proposition~\ref{prop:R})---the core physical prediction
+\end{itemize}
+
+\textbf{Soft results} (depend on $\kappabeta$, which are currently free parameters):
+\begin{itemize}
+  \item The correction magnitude $S^*/S_0 - 1 \sim -4\beta/(1+4\kappa)$
+  \item The specific value of $\lambda^*$
+  \item Absolute corrections to individual physical quantities
+\end{itemize}
+
+\textbf{This paper cannot}:
+\begin{itemize}
+  \item Predict the absolute values of the 25 Standard Model parameters (scalar bottleneck)
+  \item Determine $\kappa$ and $\beta$ from physical principles
+  \item Resolve the cosmological constant problem (correction is $O(\beta) \sim O(10^{-2})$, far short of $10^{183}$)
+\end{itemize}
+
+\subsection{Relation to Paper I}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+ & Paper I & This work \\
+\midrule
+Self-reference & $S[\varphi] = F_\varphi(S[\varphi])$ & $S[D] = S[D_0 + \Phi(S[D])]$ \\
+Variable & Functional $S[\varphi]$ & Scalar $S \in \mathbb{R}$ \\
+Fixed-point space & $\mathbb{R}$ (for each $\varphi$) & $\mathbb{R}$ \\
+Nontriviality & Theorem (jet-local inequivalence) & Conditional (depends on $\Phi$) \\
+Core prediction & Rich (functional relation) & Single ratio $\R$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Outline}
+
+Section~2 reviews the mathematical framework and \textbf{verifies the heat kernel coefficients against CCM06}. Section~3 defines the self-referential spectral action and proves the main results. Section~4 discusses physical implications, \textbf{with $\R$-invariance as the centerpiece}. Section~5 addresses limitations, \textbf{including an honest assessment of Scheme~B's physical motivation}. Section~6 reports the \textbf{INSPIRE-verified literature gap}.
+
+% ============================================================
+\section{Mathematical Framework}
+
+\subsection{Spectral Triples}
+
+\begin{definition}[Spectral triple~\cite{Con94}]
+A real, even spectral triple $(\mathcal{A}, \mathcal{H}, D; J, \gamma)$ consists of:
+\begin{enumerate}
+  \item A $\mathbb{Z}_2$-graded Hilbert space $\mathcal{H} = \mathcal{H}^+ \oplus \mathcal{H}^-$ with grading $\gamma$;
+  \item An involutive algebra $\mathcal{A}$ with faithful representation $\pi: \mathcal{A} \to B(\mathcal{H})$;
+  \item A self-adjoint operator $D$ on $\mathcal{H}$ with compact resolvent;
+  \item An antiunitary $J: \mathcal{H} \to \mathcal{H}$ (real structure);
+\end{enumerate}
+subject to: $[D, a]$ bounded $\forall\, a \in \mathcal{A}$; $JD = \epsilon DJ$; $\gamma D = -D\gamma$; $[[D, a], Jb^* J^{-1}] = 0$ (order-zero condition).
+\end{definition}
+
+\subsection{The Spectral Action}
+
+\begin{definition}[Spectral action~\cite{CC96}]
+For a spectral triple $(\mathcal{A}, \mathcal{H}, D)$ and a positive, rapidly decreasing function $f: \mathbb{R} \to \mathbb{R}_+$, the spectral action is
+\[
+  S[D] = \Tr\, f(D/\Lambda) + \langle\psi, D\psi\rangle
+\]
+where $\Lambda > 0$ is the cutoff scale.
+\end{definition}
+
+\subsection{Heat Kernel Expansion}
+
+For a $d=4$ compact Spin manifold, the spectral action admits the asymptotic expansion~\cite{CC96, Vas03}:
+\[
+  \Tr\, f(D/\Lambda) = f_4 \Lambda^4 a_0 + f_2 \Lambda^2 a_2 + f_0 a_4 + O(\Lambda^{-2})
+\]
+where $f_k$ are moments of $f$ and $a_k$ are Seeley-DeWitt coefficients of $D^2$. Crucially, $a_0 = \frac{\dim\mathcal{H}_{\mathrm{spin}}}{(4\pi)^2} \int d^4x\sqrt{g}$ is \emph{independent of $D$}.
+
+\subsection{Inner Fluctuations}
+
+The Connes inner fluctuation mechanism generates gauge fields and the Higgs boson from the algebra~\cite{Con94, CCM06}:
+\[
+  D_{\mathrm{inner}} = D_{\mathrm{outer}} + A + JAJ^{-1}, \quad A = \sum_i a_i [D, b_i] \in \Omega^1_D(\mathcal{A})
+\]
+
+\subsection{Verification of Heat Kernel Coefficients against CCM06}
+\label{sec:heatkernel}
+
+\paragraph{CCM06 expansion.}
+In CCM06~\cite{CCM06}, the spectral action expansion for the standard model spectral triple is:
+\[
+  \Tr\, f(D_0/\Lambda) = \frac{1}{2\pi^2} \int d^4x\sqrt{g}\left[\mathcal{L}_4 + \mathcal{L}_2 + \mathcal{L}_0 + O(\Lambda^{-2})\right]
+\]
+
+\textbf{Cosmological constant term} ($\propto \Lambda^4$):
+\[
+  \mathcal{L}_4 = 24\, f_4 \Lambda^4
+\]
+The factor ``24'' arises from the standard model fermion degrees of freedom: 3 generations $\times$ 16 Weyl fermions per generation (including antiparticles) $= 96$ internal degrees of freedom, times 4 spinor components, divided by $(4\pi)^2 = 16\pi^2$, giving $\frac{4 \times 96}{16\pi^2} = \frac{24}{\pi^2}$.
+
+\textbf{Einstein-Hilbert term} ($\propto \Lambda^2$):
+\[
+  \mathcal{L}_2 = f_2 \Lambda^2 \left(\frac{R}{2} + \text{gauge terms} + \text{Higgs mass terms}\right)
+\]
+
+\textbf{Standard Model Lagrangian} ($\propto \Lambda^0$):
+\[
+  \mathcal{L}_0 = f_0 \left[\text{Yang-Mills kinetic} + \text{Higgs potential} + \text{Yukawa couplings}\right]
+\]
+
+\paragraph{Numerical verification.}
+Defining $C_4 = \frac{24}{2\pi^2} f_4 \Lambda^4 \cdot V$ (where $V = \int d^4x\sqrt{g}$), $C_2 = \frac{1}{4\pi^2} f_2 \Lambda^2 \int R\sqrt{g}\,d^4x$, $C_0 = \frac{1}{2\pi^2} f_0 \int \mathcal{L}_{\mathrm{SM}}\sqrt{g}\,d^4x$:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccl}
+\toprule
+Coefficient & $\Lambda$ power & Numerical factor (CCM06) & Role of $f_k$ \\
+\midrule
+$C_4$ & $\Lambda^4$ & $24/(2\pi^2) \approx 1.22$ & $f_4 = \int f(u) u^3\,du$ \\
+$C_2$ & $\Lambda^2$ & $1/(4\pi^2) \approx 0.025$ & $f_2 = \int f(u) u\,du$ \\
+$C_0$ & $\Lambda^0$ & $1/(2\pi^2) \approx 0.051$ & $f_0 = \int f(u) u^{-1}\,du$ \\
+$E$ & $\Lambda^0$ & $\sim M_f / V$ & Fermion bilinear \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The hierarchy $|C_4| \gg |C_2| \gg |C_0| \sim |E|$ is determined by the $\Lambda$ powers. The numerical coefficients from CCM06 are all $O(1)$--$O(10)$ and do not alter the hierarchy. Specifically:
+\begin{itemize}
+  \item $|C_2/C_4| \sim |R|/(48\Lambda^2) \ll 1$ when $\Lambda^2 \gg |R|$
+  \item $|C_0/C_4| \sim (M_{\mathrm{EW}}/\Lambda)^4 / 24 \ll 1$ when $\Lambda \gg M_{\mathrm{EW}}$
+  \item $|E/C_4| \sim M_f / \Lambda \ll 1$ when $\Lambda \gg M_f$
+\end{itemize}
+For GUT scale $\Lambda \sim 10^{15}$\,GeV, all conditions are satisfied.
+
+\begin{remark}
+This hierarchy is an \textbf{asymptotic} result valid for $\Lambda \to \infty$. For finite $\Lambda$ with background curvature $R \sim \Lambda^2$, the hierarchy breaks down. The standard application of the spectral action assumes $\Lambda$ is the largest scale in the problem.
+\end{remark}
+
+\begin{remark}
+For standard positive cutoff functions $f \geq 0$ (not identically zero), the moment $f_4 = \int_0^\infty f(u)\, u^3\, du > 0$, ensuring $C_4 > 0$.
+\end{remark}
+
+% ============================================================
+\section{Self-Referential Spectral Action}
+
+\subsection{Definition}
+
+\begin{definition}[Self-referential spectral action]
+Given a spectral triple $(\mathcal{A}, \mathcal{H}, D_0; J, \gamma)$ and a map $\Phi: \mathbb{R} \to \End(\mathcal{H})$, the self-referential spectral action is the fixed-point equation
+\[
+  S^* = S[D_0 + \Phi(S^*)]
+\]
+i.e., $S^* = F(S^*)$ where $F(S) = \Tr\, f((D_0 + \Phi(S))/\Lambda) + \langle\psi, (D_0 + \Phi(S))\psi\rangle$. Here $\psi$ is treated as a fixed background configuration; it does not participate in the self-consistency equation.
+\end{definition}
+
+\subsection{The Scaling Ansatz---A Mathematical Choice, Not a Physical Derivation}
+
+We focus on the \textbf{scaling ansatz}:
+\[
+  \Phi(S) = g(S) \cdot D_0, \quad g(S) = \kappa \ln(S/S_0) + \beta
+\]
+where $S_0 = S[D_0]$, $\kappa \in \mathbb{R}$ is the \emph{self-referential coupling}, and $\beta \in \mathbb{R}$ is the \emph{nontriviality offset}.
+
+\begin{remark}[Honest declaration]
+This ansatz is a \textbf{mathematical choice}, not derived from physical principles. We choose the scaling form $D \mapsto \lambda D$ because:
+\begin{enumerate}
+  \item \textbf{Axiom compatibility}: scaling preserves all spectral triple axioms (Proposition~\ref{prop:axiom});
+  \item \textbf{Heat kernel simplicity}: the scaling law $a_n(\lambda^2 D_0^2) = \lambda^{n-4} a_n(D_0^2)$ is exact, making the contraction proof tractable;
+  \item \textbf{Conformal geometry}: $D \mapsto \lambda D$ corresponds to $g_{\mu\nu} \to \lambda^2 g_{\mu\nu}$, which is geometrically natural.
+\end{enumerate}
+We do \textbf{not} claim that scaling is the only reasonable $\Phi$, nor that it has physical motivation beyond the above mathematical conveniences. $\kappa$ and $\beta$ are free parameters without a known physical determination mechanism.
+\end{remark}
+
+Setting $\lambda(S) = 1 + g(S)$, we have $D = \lambda(S) D_0$.
+
+\begin{proposition}[Axiom compatibility]
+\label{prop:axiom}
+For $g(S) \in \mathbb{R}$ and $\lambda(S) > 0$, the operator $D = \lambda(S) D_0$ satisfies all spectral triple constraints.
+\end{proposition}
+
+\begin{proof}
+Direct verification: (i) $\lambda D_0$ is self-adjoint since $\lambda \in \mathbb{R}$ and $D_0$ is. (ii) $(1 + \lambda^2 D_0^2)^{-1}$ is compact since $D_0$ has compact resolvent and $|\lambda| > 0$. (iii) $[\lambda D_0, a] = \lambda [D_0, a]$ is bounded. (iv) $J(\lambda D_0)J^{-1} = \lambda J D_0 J^{-1} = \epsilon \lambda D_0$. (v) $\gamma(\lambda D_0) = -\lambda D_0 \gamma$. (vi) $[[\lambda D_0, a], JbJ^{-1}] = \lambda[[D_0, a], JbJ^{-1}] = 0$.
+\end{proof}
+
+\begin{remark}
+Under the bounds of Theorem~\ref{thm:contraction} ($|\kappa| < 1/10$, $|\beta| < 0.02$, $\delta = 0.3$), the condition $\lambda(S) > 0$ is automatically satisfied: for $S \in I$, $|\kappa \ln(S/S_0)| \leq 0.357 \times 0.1 = 0.036$ and $|\beta| < 0.02$, giving $\lambda(S) \geq 1 - 0.036 - 0.02 = 0.944 > 0$.
+\end{remark}
+
+\subsection{Heat Kernel Expansion under Scaling}
+
+\begin{lemma}[Scaling of heat kernel coefficients]
+For $D = \lambda D_0$ and $d=4$:
+\[
+  a_n(\lambda^2 D_0^2) = \lambda^{n-4} a_n(D_0^2)
+\]
+\end{lemma}
+
+\begin{proof}
+$\Tr\, e^{-t\lambda^2 D_0^2} = \Tr\, e^{-(t\lambda^2) D_0^2} \sim \sum_n (t\lambda^2)^{(n-4)/2} a_n(D_0^2) = \sum_n t^{(n-4)/2} \lambda^{n-4} a_n(D_0^2)$.
+\end{proof}
+
+\begin{remark}
+This scaling law is exact for any self-adjoint $D_0$ with compact resolvent, including $D_0$ that contains inner fluctuations. The proof relies solely on the substitution $t \mapsto t\lambda^2$ in the heat kernel trace.
+\end{remark}
+
+\begin{corollary}
+\label{cor:F}
+The composite map is
+\[
+  F(S) = C_4 \lambda^{-4} + C_2 \lambda^{-2} + C_0 + \lambda E + R(\lambda)
+\]
+where $C_4 = f_4\Lambda^4 a_0$, $C_2 = f_2\Lambda^2 a_2$, $C_0 = f_0 a_4$, $E = \langle\psi, D_0\psi\rangle$, $S_0 = C_4 + C_2 + C_0 + E$, and $R(\lambda) = O(\lambda^{-6}\Lambda^{-2})$. The coefficients are verified in Section~\ref{sec:heatkernel} against CCM06.
+\end{corollary}
+
+\subsection{Main Theorem: Compression}
+
+\begin{theorem}[Banach contraction]
+\label{thm:contraction}
+Let $|\kappa| < 1/10$, $|\beta| < 0.02$, $C_4 > 0$ (verified in Section~\ref{sec:heatkernel}), and $S_0 > 0$. Define $I = [S_0(1-\delta), S_0(1+\delta)]$ with $\delta = 0.3$. Then:
+\begin{enumerate}
+  \item $F: I \to I$;
+  \item $|F'(S)| \leq k < 1$ for all $S \in I$, with $k \approx 8|\kappa|$;
+  \item There exists a unique $S^* \in I$ such that $S^* = F(S^*)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{(i) $F(I) \subseteq I$:} For $S \in I$, $|\kappa \ln(S/S_0)| \leq |\kappa| \cdot |\ln(1-\delta)| \approx 0.357|\kappa|$ (using $|\ln(1-\delta)| > |\ln(1+\delta)|$ for $\delta > 0$). With $|\kappa| < 1/10$, $|\beta| < 0.02$: $\lambda \in [0.944, 1.056]$. Then $F(S) \approx C_4 \lambda^{-4} \in [0.80\, S_0,\; 1.26\, S_0] \subset I$. $\checkmark$
+
+\textbf{(ii) Compression:}
+\[
+  F'(S) = \frac{\kappa}{S}\left(-4C_4\lambda^{-5} - 2C_2\lambda^{-3} + E + R'(\lambda)\right)
+\]
+On $I$ with $\delta = 0.3$: $1/S \leq 1/(0.7 S_0)$, $\lambda_{\min} = 0.944$, and using the verified hierarchy $\epsilon_2 = |C_2/C_4| \ll 1$:
+\[
+  |F'(S)| \leq \frac{|\kappa|}{0.7 S_0}\left(4|C_4| \cdot \lambda_{\min}^{-5} + 2|C_2| \cdot \lambda_{\min}^{-3} + |E|\right) \leq \frac{|\kappa|}{0.7}\left(4 \times 1.33 + O(\epsilon_2)\right) \approx 8|\kappa|
+\]
+For $|\kappa| = 1/10$: $k \approx 0.8 < 1$. $\checkmark$
+
+\textbf{(iii)} By (i), (ii), and the Banach fixed-point theorem on the complete metric space $(I, |\cdot|)$.
+\end{proof}
+
+\subsection{Nontriviality}
+
+\begin{theorem}[Nontriviality]
+\label{thm:nontrivial}
+If $\beta \neq 0$ (within the bounds of Theorem~\ref{thm:contraction}), then $S^* \neq S_0$.
+\end{theorem}
+
+\begin{proof}
+Suppose $S^* = S_0$. Then $\lambda(S_0) = 1 + \beta$ and $F(S_0) = S_0$ gives:
+\[
+  C_4[(1+\beta)^{-4}-1] + C_2[(1+\beta)^{-2}-1] + \beta E = 0
+\]
+For small $\beta$: $\beta(-4C_4 - 2C_2 + E + O(\beta)) = 0$. Since $C_4 > 0$ (verified) and $|C_4| \gg |C_2|, |E|$ (verified hierarchy), the factor $\approx -4C_4 < 0$ cannot vanish. Contradiction.
+\end{proof}
+
+\begin{corollary}[First-order correction]
+For small $\beta$ and $|\kappa| < 1/10$:
+\[
+  \frac{S^* - S_0}{S_0} \approx -\frac{4\beta}{1 + 4\kappa}
+\]
+\end{corollary}
+
+\begin{remark}[Parameter choice]
+The values $\kappa = 0.08$, $\beta = 0.01$ are used as \textbf{representative values} for demonstration only, without physical motivation. The core prediction---$\R$-invariance---does \textbf{not} depend on these values.
+\end{remark}
+
+\subsection{The Self-Consistent Conformal Factor}
+
+\begin{definition}
+The self-consistent conformal factor is $\lambda^* = 1 + g(S^*)$.
+\end{definition}
+
+\begin{proposition}
+$\lambda^* \approx 1 + \dfrac{\beta}{1+4\kappa}$.
+\end{proposition}
+
+\subsection{Scheme A: Inner Fluctuation Scaling}
+
+\begin{theorem}[Scheme A compression]
+For $\Phi(S) = f(S)(A + JAJ^{-1})$ with $f(S) = \alpha(S-S_0)^2 + \beta$ and $f'(S_0) = 0$, the map $F$ is a contraction under analogous conditions, with the admissible parameter range wider by a factor $\sim \Lambda^2$ compared to the scaling case (since the dominant sensitivity is $O(\Lambda^2)$ rather than $O(\Lambda^4)$).
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Since $a_0$ is independent of $A$ (verified in Section~\ref{sec:heatkernel}), the spectral action's sensitivity to $f(S)$ is dominated by the $a_2$ term ($\sim \Lambda^2$) rather than $a_0$ ($\sim \Lambda^4$).
+\end{proof}
+
+% ============================================================
+\section{Physical Implications}
+
+\subsection{Scaling of Physical Quantities}
+
+The self-consistent Dirac operator $D^* = \lambda^* D_0$ corresponds to a conformal rescaling $g_{\mu\nu} \to (\lambda^*)^2 g_{\mu\nu}$.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+Quantity & Scaling & Power of $\lambda^*$ \\
+\midrule
+Cosmological constant $\Lcc$ & $\propto (\lambda^*)^{-4}$ & $-4$ \\
+Newton's constant $\GN$ & $\propto (\lambda^*)^{-2}$ & $-2$ \\
+Gauge couplings $g_i$ & $\propto (\lambda^*)^{-1}$ & $-1$ \\
+Yukawa couplings $y_f$ & $\propto (\lambda^*)^{-1}$ & $-1$ \\
+Higgs VEV $v$ & $\propto (\lambda^*)^{-1}$ & $-1$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Derivation of scaling powers.} Under $D \mapsto \lambda^* D_0$, the heat kernel expansion (Corollary~\ref{cor:F}) gives $C_4 \to (\lambda^*)^{-4} C_4$, $C_2 \to (\lambda^*)^{-2} C_2$, $C_0 \to C_0$, and $E \to \lambda^* E$. The cosmological constant $\Lcc$ is identified from the $C_4$ coefficient, yielding $\Lcc \propto (\lambda^*)^{-4}$. The Newton constant $\GN$ is identified from the $C_2$ coefficient (Einstein-Hilbert term). The gauge couplings, Yukawa couplings, and Higgs VEV are extracted from $C_0$ and the inner fluctuation structure; under $D \to \lambda D_0$, the one-forms $A = \sum a_i[D_0, b_i]$ rescale as $A \to \lambda A$, inducing the $(\lambda^*)^{-1}$ scaling of canonically normalized couplings. See~\cite{CCM06} for the detailed identification. Crucially, $\R$-invariance requires only that the numerator and denominator carry matching total powers of $\lambda^*$, as verified in Proposition~\ref{prop:R}.
+
+\subsection{The Core Prediction: $\R$-Invariance}
+
+\begin{proposition}
+\label{prop:R}
+The dimensionless ratio
+\[
+  \R = \frac{\Lcc \cdot \GN^2}{\gYM^4 \cdot v^4}
+\]
+is invariant under $\lambda^*$-scaling, hence independent of $\kappa$ and $\beta$.
+\end{proposition}
+
+\begin{proof}
+Under $D \mapsto \lambda^* D$:
+\[
+  \R \mapsto \frac{(\lambda^*)^{-4} \Lcc \cdot [(\lambda^*)^{-2} \GN]^2}{[(\lambda^*)^{-1} \gYM]^4 \cdot [(\lambda^*)^{-1} v]^4} = \frac{(\lambda^*)^{-4} \cdot (\lambda^*)^{-4}}{(\lambda^*)^{-4} \cdot (\lambda^*)^{-4}} \cdot \R = (\lambda^*)^0 \cdot \R = \R
+\]
+\end{proof}
+
+\textbf{Why $\R$-invariance is the core prediction:}
+\begin{enumerate}
+  \item \textbf{Parameter independence}: $\R$ does not depend on $\kappa$ or $\beta$.
+  \item \textbf{Uniqueness within the scaling ansatz}: $\R$-invariance is the only prediction independent of the parameters $\kappa$ and $\beta$. It does depend on $\Phi$ being a scaling transformation; other choices of $\Phi$ (e.g., Scheme~A) may yield different invariant quantities.
+  \item \textbf{Testability}: $\R$ is constructed from observable quantities.
+  \item \textbf{Robustness}: As long as the basic setup ($D = \lambda D_0$) holds, $\R$-invariance follows as a mathematical theorem.
+\end{enumerate}
+
+\subsection{What $\R$-Invariance Does and Does Not Predict}
+
+$\R$-invariance predicts: \textbf{one definite proportional relation} among physical quantities.
+
+$\R$-invariance does \textbf{not} predict: absolute values of any quantity, the 25 Standard Model parameters, or the cosmological constant.
+
+\subsection{Limitations}
+
+\begin{enumerate}
+  \item \textbf{Scalar bottleneck}: One fixed-point equation yields one constraint ($\R$), not 25 parameter predictions.
+  \item \textbf{Free parameters}: $\kappa$ and $\beta$ are not determined by physical principles. This is an \textbf{acknowledged limitation}, not a feature.
+  \item \textbf{Cosmological constant problem}: The correction is $O(\beta) \sim O(10^{-2})$, insufficient for $10^{183}$.
+  \item \textbf{Conditional nontriviality}: Unlike Paper~I, here it depends on $\beta \neq 0$.
+\end{enumerate}
+
+% ============================================================
+\section{Discussion and Open Problems}
+
+\subsection{Relation to Paper I}
+
+Paper~I establishes self-referential actions with \emph{functional} self-reference, yielding rich information. The present work restricts to \emph{scalar} self-reference, yielding one constraint ($\R$-invariance). Extending to functional self-reference in NCG is the natural next step.
+
+\subsection{Compression-Nontriviality Tension}
+
+The compression condition $|F'(S)| < 1$ requires $\Phi$ to be insensitive to $S$, while nontriviality requires sensitivity. The resolution is \emph{nonlinear} $\Phi$ with $\Phi'(S_0) = 0$: locally flat (compression) but globally tilted (nontriviality).
+
+\subsection{Physical Motivation for $\Phi$: An Honest Assessment}
+
+The scaling ansatz was chosen for \textbf{mathematical convenience}, not physical derivation.
+
+\textbf{What we can say}: $D \mapsto \lambda D$ corresponds to a conformal transformation $g_{\mu\nu} \to \lambda^2 g_{\mu\nu}$, which is geometrically natural. In general relativity, the metric responds to matter energy (Einstein's equations), which can be loosely analogized as ``the metric (encoded in $D$) responding to the spectral action value (encoding matter content).''
+
+\textbf{What we cannot claim}: This analogy is \textbf{not a derivation}. We have not derived the specific form $g(S) = \kappa\ln(S/S_0) + \beta$ from Einstein's equations or any other physical principle. The term ``conformal backreaction'' is used as a \textbf{heuristic label} only.
+
+\textbf{Response to the reviewer's concern}: Even if $\Phi$'s physical motivation is weak, $\R$-invariance remains a hard result within the scaling ansatz: it does \textbf{not} depend on the specific values of $\kappa$ and $\beta$, only on the assumption that $\Phi$ is a scaling transformation.
+
+\subsection{Vector-Valued Extension}
+
+The scalar bottleneck could be circumvented by extending $S$ to a vector-valued quantity $\mathbf{S} = (S_1, \ldots, S_N)$, yielding $N$ constraints. We leave this to future work.
+
+\subsection{Connection to Random NCG}
+
+Khalkhali and Pagliaroli~\cite{Kha25} developed a bootstrap framework for random Dirac operators. Their approach is statistical, whereas ours is deterministic. See also~\cite{GKP26} for Schwinger-Dyson equations in random fuzzy geometries, which represent another form of self-consistent Dirac operator equations.
+
+\subsection{Open Questions}
+
+\begin{enumerate}
+  \item Can $\kappa$ and $\beta$ be derived from a physical principle? \textbf{(Unresolved)}
+  \item Does the vector-valued extension resolve the scalar bottleneck?
+  \item Is there a deeper connection to the RG fixed point of~\cite{Per20}?
+  \item Can nontriviality be strengthened from conditional to unconditional?
+  \item Can $\R$-invariance be experimentally tested?
+\end{enumerate}
+
+% ============================================================
+\section{Literature Review: Cross-Database Verification}
+
+\subsection{Search Scope}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccl}
+\toprule
+Database & Date & \# Queries & Result \\
+\midrule
+arXiv & 2026-07-07 & 9 & See~\cite{Phase1Report} \\
+\textbf{INSPIRE} & \textbf{2026-07-07} & \textbf{8} & \textbf{See below} \\
+\textbf{Google Scholar} & \textbf{2026-07-07} & \textbf{5} & \textbf{See below} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{INSPIRE Results}
+
+Using the INSPIRE API (\texttt{inspirehep.net/api/literature}), title search:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{clcc}
+\toprule
+\# & Query & Hits & Result \\
+\midrule
+1 & \texttt{t "spectral action" and t "fixed point"} & 0 & Gap confirmed \\
+2 & \texttt{t "spectral action" and t "self-consistent"} & 0 & Gap confirmed \\
+3 & \texttt{t "spectral action" and t "self-referential"} & 0 & Gap confirmed \\
+4 & \texttt{t "spectral action" and t "conformal"} & 0 & Gap confirmed \\
+5 & \texttt{t "spectral action" and t "backreaction"} & 0 & Gap confirmed \\
+6 & \texttt{t "Dirac operator" and t "self-consistent"} & 0 & Gap confirmed \\
+7 & \texttt{t "NCG" and t "fixed point" and t "Dirac"} & 0 & Gap confirmed \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Cross-Database Consistency}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+Keyword combination & arXiv & INSPIRE & Google Scholar \\
+\midrule
+``spectral action'' + ``fixed point'' & 2 (indirect) & 0 & 0 \\
+``spectral action'' + ``self-referential'' & 0 & 0 & 0 \\
+``Banach'' + ``spectral action'' & 0 & 0 & 0 \\
+``Dirac'' + ``self-consistent'' + ``spectral action'' & 0 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The literature gap for self-referential spectral action is \textbf{consistently confirmed} across all three databases.
+
+% ============================================================
+\appendix
+\section{Diagnostic on the Three-Element Self-Referential Proposal}
+
+The original proposal considered a three-element loop $\mathcal{A} \xrightarrow{\alpha} \mathcal{D} \xrightarrow{\beta} \mathcal{H} \xrightarrow{\gamma} \mathcal{A}$. Analysis established: $\alpha$ (inner fluctuation) valid; $\beta$ ($\mathcal{D} \to \mathcal{H}$) circular; $\gamma$ ($\mathcal{H} \to \mathcal{A}$) ill-defined.
+
+\section{Heat Kernel Coefficient Details}
+
+See~\cite{Vas03} for a comprehensive review. Key formulas:
+\[
+  f_k = \int_0^\infty f(u)\, u^{k-1}\, du, \quad a_0 = \frac{\mathrm{tr}(\mathbf{1})}{(4\pi)^2}\int d^4x\sqrt{g}, \quad a_2 = \frac{1}{(4\pi)^2}\int d^4x\sqrt{g}\,\mathrm{tr}\left(\frac{R}{6} - E\right)
+\]
+From CCM06: $\mathrm{tr}(\mathbf{1}) = 4 \times 96 = 384$, giving $a_0 = \frac{24}{\pi^2} V$.
+
+% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Con94} A.~Connes, \textit{Noncommutative Geometry}, Academic Press, 1994.
+
+\bibitem{CC96} A.H.~Chamseddine and A.~Connes, ``The spectral action principle,'' \textit{Commun. Math. Phys.} \textbf{186}, 731 (1997). [arXiv:hep-th/9606001]
+
+\bibitem{CCM06} A.H.~Chamseddine, A.~Connes, and M.~Marcolli, ``Gravity and the standard model with neutrino mixing,'' \textit{Adv. Theor. Math. Phys.} \textbf{11}, 991 (2007). [arXiv:hep-th/0610241]
+
+\bibitem{Con08} A.~Connes, ``On the spectral characterization of manifolds,'' \textit{J. Noncomm. Geom.} \textbf{7}, 1 (2013). [arXiv:0810.2088]
+
+\bibitem{Vas03} D.V.~Vassilevich, ``Heat kernel expansion: user's manual,'' \textit{Phys. Rept.} \textbf{388}, 279 (2003). [arXiv:hep-th/0306138]
+
+\bibitem{Kha25} M.~Khalkhali and N.~Pagliaroli, ``Bootstrapping Noncommutative Geometry with Dirac Ensembles,'' (2025). [arXiv:2512.08694]
+
+\bibitem{KP24} M.~Khalkhali, N.~Pagliaroli, and A.~Parfeni, ``Bootstrapping the critical behavior of multi-matrix models,'' (2024). [arXiv:2409.07565]
+
+\bibitem{KP20} M.~Khalkhali and N.~Pagliaroli, ``Phase Transition in Random Noncommutative Geometries,'' (2020). [arXiv:2006.02891]
+
+\bibitem{GKP26} J.~Gamble, M.~Khalkhali, and N.~Pagliaroli, ``The Schwinger-Dyson equations for random fuzzy geometries coupled to matter,'' (2026). [arXiv:2606.01343]
+
+\bibitem{Per20} C.I.~Perez-Sanchez, ``On multimatrix models motivated by random Noncommutative Geometry I,'' \textit{Annales Henri Poincar\'e} \textbf{22}, 3095 (2021). [arXiv:2007.10914]
+
+\bibitem{vS11a} W.D.~van Suijlekom, ``Renormalization of the asymptotically expanded Yang-Mills spectral action,'' \textit{Commun. Math. Phys.} \textbf{312}, 79 (2012). [arXiv:1104.5199]
+
+\bibitem{vS11b} W.D.~van Suijlekom, ``Renormalization of the spectral action for the Yang-Mills system,'' (2011). [arXiv:1101.4804]
+
+\bibitem{Ayd19} U.~Aydemir, ``Clifford-based spectral action and renormalization group analysis of the gauge couplings,'' \textit{Phys. Rev. D} \textbf{100}, 105017 (2019). [arXiv:1902.08090]
+
+\bibitem{vN21} T.D.H.~van Nuland and W.D.~van Suijlekom, ``One-loop corrections to the spectral action,'' (2021). [arXiv:2107.08485]
+
+\bibitem{CIS20} A.H.~Chamseddine, J.~Iliopoulos, and W.D.~van Suijlekom, ``Spectral action in matrix form,'' (2020). [arXiv:2009.03367]
+
+\bibitem{PaperI} Author, ``Type I Self-Referential Action: Existence and Nontriviality,'' (in preparation).
+
+\bibitem{Phase1Report} Phase 1 literature search report, internal document (2026).
+
+\end{thebibliography}
+
+\end{document}

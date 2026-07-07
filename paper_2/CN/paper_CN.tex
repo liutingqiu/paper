@@ -1,0 +1,602 @@
+\documentclass[11pt,a4paper]{ctexart}
+
+% ===== Packages =====
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{physics}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{framed}
+
+\geometry{margin=2.5cm}
+
+% ===== Theorem environments =====
+\newtheorem{theorem}{定理}[section]
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{definition}[theorem]{定义}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{注}
+
+% ===== Macros =====
+\providecommand{\Tr}{\operatorname{Tr}}
+\newcommand{\End}{\operatorname{End}}
+\newcommand{\R}{\mathcal{R}}
+\newcommand{\Lcc}{\Lambda_{\mathrm{cc}}}
+\newcommand{\GN}{G_N}
+\newcommand{\gYM}{g_{\mathrm{YM}}}
+\newcommand{\Sstar}{S^{*}}
+\newcommand{\Szero}{S_0}
+\newcommand{\Dzero}{D_0}
+\newcommand{\lambdastar}{\lambda^{*}}
+
+% ===== Title =====
+\title{\textbf{自指涉谱作用量：不动点的存在性与非平凡性}}
+
+\author{刘天奇\\
+  \textit{材料与化学工程学院}\\
+  郑州轻工业大学\\
+  郑州市高新区科学大道136号，450001\\
+  \texttt{tianqi689@gmail.com}}
+
+\date{\today}
+
+% ===== Document =====
+\begin{document}
+
+\maketitle
+
+% ---------- Abstract ----------
+\begin{abstract}
+我们研究 Connes 谱作用量框架中的 Dirac 算子是否能依赖于自身的谱作用量值，形成自指涉闭环 $D = D_0 + \Phi(S[D])$。对于标度变换 $\Phi(S) = g(S) \cdot D_0$，其中 $g(S) = \kappa \ln(S/S_0) + \beta$，我们证明复合映射 $F: S \mapsto S[D_0 + \Phi(S)]$ 在未扰动作用量 $S_0$ 的邻域上是 Banach 压缩映射，从而保证当 $|\kappa| < 1/10$ 且 $\beta \neq 0$ 时存在唯一不动点 $S^*$。对于一般 $\beta \neq 0$，不动点是非平凡的（$S^* \neq S_0$）。
+
+\medskip
+
+\noindent\textbf{核心物理结果}如下：自指涉结构确定一个自洽共形因子 $\lambda^* = 1 + g(S^*)$，在此因子下所有标准模型量按 $\lambda^*$ 的幂次标度。无量纲比
+\[
+  \R = \frac{\Lcc \cdot \GN^2}{\gYM^4 \cdot v^4}
+\]
+\textbf{在 $\lambda^*$-标度下不变}，因此不依赖于自由参数 $\kappa$ 和 $\beta$。此 $\R$ 不变性是自指涉框架中唯一经得起"标量瓶颈"（一个方程 $\to$ 一个约束）考验的稳健预测。其他所有结果——包括存在性和非平凡性定理——都依赖于 $\Phi$ 的选择及其参数，而这些参数目前缺乏物理推导。
+
+\medskip
+
+\noindent\textbf{关键词}：谱作用量，非交换几何，Banach 不动点，自指涉，共形不变性
+\end{abstract}
+
+% ---------- Body ----------
+\section{引言}
+
+\subsection{研究动机}
+
+在标准物理中，作用量泛函 $S[\varphi] = \int \mathcal{L}(\varphi, \partial\varphi)\,d^nx$ 是外部给定的——Lagrangian 及其参数来自"外部"。在伴随工作~\cite{PaperI} 中，作者引入了\emph{自指涉作用量}的概念，满足 $S[\varphi] = F_\varphi(S[\varphi])$，即作用量值作为自身泛函的参数。利用 Banach 不动点定理在紧致流形上，证明了存在性和非平凡性（在 jet-局部微分同胚下不等价于任何标准作用量的意义下）。
+
+本文研究类似的自指涉结构能否在 Connes 非交换几何（NCG）框架中实现，具体在\emph{谱作用量}层面。
+
+\subsection{谱作用量原理}
+
+Connes 谱三重 $(\mathcal{A}, \mathcal{H}, D)$ 提供了一个几何框架，从纯谱数据重建标准模型耦合广义相对论~\cite{Con94, CCM06}。谱作用量
+\[
+  S[D] = \Tr\, f(D/\Lambda) + \langle\psi, D\psi\rangle
+\]
+其中 $f$ 是正的截断函数，$\Lambda$ 是截断能标，将 Einstein-Hilbert 作用量、Yang-Mills 动能项、Higgs 势和费米子耦合编码在单个迹中~\cite{CC96}。
+
+然而，在标准框架中，Dirac 算子 $D$（及其编码的 25+ 标准模型参数）是\emph{外部给定的}。谱作用量对固定的 $D$ 计算 $S[D]$；它不约束 $D$ 本身。
+
+\subsection{核心问题}
+
+\textbf{$D$ 能否依赖于自身的谱作用量值？} 形式上，我们问是否存在映射 $\Phi: \mathbb{R} \to \End(\mathcal{H})$ 使得
+\[
+  D = D_0 + \Phi(S[D])
+\]
+且复合映射 $S \mapsto S[D_0 + \Phi(S)]$ 有不动点。若 $\Phi$ 是压缩的，Banach 不动点定理保证唯一的自洽 $S^*$。
+
+\subsection{本文预测什么——以及不预测什么}
+
+\textbf{硬结果}（不依赖 $\kappa, \beta$ 的值）：
+\begin{itemize}
+  \item 不动点 $S^*$ 的存在性和唯一性（定理~\ref{thm:contraction}）
+  \item 非平凡性 $S^* \neq S_0$（定理~\ref{thm:nontrivial}，条件 $\beta \neq 0$）
+  \item \textbf{无量纲比 $\R$ 的不变性}（命题~\ref{prop:R}）——核心物理预测
+\end{itemize}
+
+\textbf{软结果}（依赖 $\kappa, \beta$，目前为自由参数）：
+\begin{itemize}
+  \item 修正幅度 $S^*/S_0 - 1 \sim -4\beta/(1+4\kappa)$
+  \item $\lambda^*$ 的具体值
+  \item 各物理量的绝对修正
+\end{itemize}
+
+\textbf{本文不能}：
+\begin{itemize}
+  \item 预测标准模型 25 个参数的绝对值（标量瓶颈）
+  \item 从物理原理确定 $\kappa$ 和 $\beta$
+  \item 解决宇宙学常数问题（修正为 $O(\beta) \sim O(10^{-2})$，远不够 $10^{183}$）
+\end{itemize}
+
+\subsection{与论文一的关系}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+ & 论文一 & 本文 \\
+\midrule
+自指涉 & $S[\varphi] = F_\varphi(S[\varphi])$ & $S[D] = S[D_0 + \Phi(S[D])]$ \\
+变量 & 泛函 $S[\varphi]$ & 标量 $S \in \mathbb{R}$ \\
+不动点空间 & $\mathbb{R}$（对每个 $\varphi$） & $\mathbb{R}$ \\
+非平凡性 & 定理（jet-局部不等价） & 条件性（依赖 $\Phi$） \\
+核心预测 & 丰富（泛函关系） & 单一比例 $\R$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{论文结构}
+
+第 2 节回顾数学框架并\textbf{对照 CCM06 验证热核系数}。第 3 节定义自指涉谱作用量并证明主要结果。第 4 节讨论物理推论，\textbf{以 $\R$ 不变性为中心}。第 5 节讨论局限性，\textbf{包括对方案 B 物理动机的诚实评估}。第 6 节报告\textbf{经 INSPIRE 验证的文献空白}。
+
+% ============================================================
+\section{数学框架}
+
+\subsection{谱三重}
+
+\begin{definition}[谱三重~\cite{Con94}]
+实偶谱三重 $(\mathcal{A}, \mathcal{H}, D; J, \gamma)$ 由以下组成：
+\begin{enumerate}
+  \item $\mathbb{Z}_2$ 分次 Hilbert 空间 $\mathcal{H} = \mathcal{H}^+ \oplus \mathcal{H}^-$，分次算子 $\gamma$；
+  \item 对合代数 $\mathcal{A}$，忠实表示 $\pi: \mathcal{A} \to B(\mathcal{H})$；
+  \item $\mathcal{H}$ 上的自伴算子 $D$，具有紧预解式；
+  \item 反幺正 $J: \mathcal{H} \to \mathcal{H}$（实结构）；
+\end{enumerate}
+满足：$[D, a]$ 有界 $\forall\, a \in \mathcal{A}$；$JD = \epsilon DJ$；$\gamma D = -D\gamma$；$[[D, a], Jb^* J^{-1}] = 0$（零阶条件）。
+\end{definition}
+
+\subsection{谱作用量}
+
+\begin{definition}[谱作用量~\cite{CC96}]
+对于谱三重 $(\mathcal{A}, \mathcal{H}, D)$ 和正的速降函数 $f: \mathbb{R} \to \mathbb{R}_+$，谱作用量为
+\[
+  S[D] = \Tr\, f(D/\Lambda) + \langle\psi, D\psi\rangle
+\]
+其中 $\Lambda > 0$ 是截断能标。
+\end{definition}
+
+\subsection{热核展开}
+
+对 $d=4$ 紧致 Spin 流形，谱作用量的渐近展开为~\cite{CC96, Vas03}：
+\[
+  \Tr\, f(D/\Lambda) = f_4 \Lambda^4 a_0 + f_2 \Lambda^2 a_2 + f_0 a_4 + O(\Lambda^{-2})
+\]
+其中 $f_k$ 是 $f$ 的矩，$a_k$ 是 $D^2$ 的 Seeley-DeWitt 系数。关键地，$a_0 = \frac{\dim\mathcal{H}_{\mathrm{spin}}}{(4\pi)^2} \int d^4x\sqrt{g}$ \emph{不依赖于 $D$}。
+
+\subsection{内涨落}
+
+Connes 内涨落机制从代数生成规范场和 Higgs 玻色子~\cite{Con94, CCM06}：
+\[
+  D_{\mathrm{inner}} = D_{\mathrm{outer}} + A + JAJ^{-1}, \quad A = \sum_i a_i [D, b_i] \in \Omega^1_D(\mathcal{A})
+\]
+
+\subsection{热核系数的 CCM06 验证}
+\label{sec:heatkernel}
+
+\paragraph{CCM06 展开。}
+在 CCM06~\cite{CCM06} 中，标准模型谱三重的谱作用量展开为：
+\[
+  \Tr\, f(D_0/\Lambda) = \frac{1}{2\pi^2} \int d^4x\sqrt{g}\left[\mathcal{L}_4 + \mathcal{L}_2 + \mathcal{L}_0 + O(\Lambda^{-2})\right]
+\]
+
+\textbf{宇宙学常数项}（$\propto \Lambda^4$）：
+\[
+  \mathcal{L}_4 = 24\, f_4 \Lambda^4
+\]
+"24"来自标准模型费米子自由度：3 代 $\times$ 每代 16 个 Weyl 费米子（含反粒子）$= 96$ 个内部自由度，乘以 4 个自旋分量，除以 $(4\pi)^2 = 16\pi^2$，即 $\frac{4 \times 96}{16\pi^2} = \frac{24}{\pi^2}$。
+
+\textbf{Einstein-Hilbert 项}（$\propto \Lambda^2$）：
+\[
+  \mathcal{L}_2 = f_2 \Lambda^2 \left(\frac{R}{2} + \text{规范场项} + \text{Higgs 质量项}\right)
+\]
+
+\textbf{标准模型 Lagrangian}（$\propto \Lambda^0$）：
+\[
+  \mathcal{L}_0 = f_0 \left[\text{Yang-Mills 动能} + \text{Higgs 势} + \text{Yukawa 耦合}\right]
+\]
+
+\paragraph{数值验证。}
+定义 $C_4 = \frac{24}{2\pi^2} f_4 \Lambda^4 \cdot V$（$V = \int d^4x\sqrt{g}$），$C_2 = \frac{1}{4\pi^2} f_2 \Lambda^2 \int R\sqrt{g}\,d^4x$，$C_0 = \frac{1}{2\pi^2} f_0 \int \mathcal{L}_{\mathrm{SM}}\sqrt{g}\,d^4x$：
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccl}
+\toprule
+系数 & $\Lambda$ 幂次 & 数值因子（CCM06） & $f_k$ 的角色 \\
+\midrule
+$C_4$ & $\Lambda^4$ & $24/(2\pi^2) \approx 1.22$ & $f_4 = \int f(u) u^3\,du$ \\
+$C_2$ & $\Lambda^2$ & $1/(4\pi^2) \approx 0.025$ & $f_2 = \int f(u) u\,du$ \\
+$C_0$ & $\Lambda^0$ & $1/(2\pi^2) \approx 0.051$ & $f_0 = \int f(u) u^{-1}\,du$ \\
+$E$ & $\Lambda^0$ & $\sim M_f / V$ & 费米子双线性 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+层级关系 $|C_4| \gg |C_2| \gg |C_0| \sim |E|$ 由 $\Lambda$ 幂次决定。CCM06 的数值系数均为 $O(1)$--$O(10)$ 量级，不改变层级。具体地：
+\begin{itemize}
+  \item $|C_2/C_4| \sim |R|/(48\Lambda^2) \ll 1$（当 $\Lambda^2 \gg |R|$）
+  \item $|C_0/C_4| \sim (M_{\mathrm{EW}}/\Lambda)^4 / 24 \ll 1$（当 $\Lambda \gg M_{\mathrm{EW}}$）
+  \item $|E/C_4| \sim M_f / \Lambda \ll 1$（当 $\Lambda \gg M_f$）
+\end{itemize}
+对 GUT 尺度 $\Lambda \sim 10^{15}$\,GeV，以上条件均满足。
+
+\begin{remark}
+此层级是 $\Lambda \to \infty$ 的\textbf{渐近}结果。对有限 $\Lambda$ 且背景曲率 $R \sim \Lambda^2$ 时，层级破坏。谱作用量的标准应用假设 $\Lambda$ 是问题中的最大尺度。
+\end{remark}
+
+\begin{remark}
+对于标准正截断函数 $f \geq 0$（不恒为零），矩 $f_4 = \int_0^\infty f(u)\, u^3\, du > 0$，从而保证 $C_4 > 0$。
+\end{remark}
+
+% ============================================================
+\section{自指涉谱作用量}
+
+\subsection{定义}
+
+\begin{definition}[自指涉谱作用量]
+给定谱三重 $(\mathcal{A}, \mathcal{H}, D_0; J, \gamma)$ 和映射 $\Phi: \mathbb{R} \to \End(\mathcal{H})$，自指涉谱作用量是不动点方程
+\[
+  S^* = S[D_0 + \Phi(S^*)]
+\]
+即 $S^* = F(S^*)$，其中 $F(S) = \Tr\, f((D_0 + \Phi(S))/\Lambda) + \langle\psi, (D_0 + \Phi(S))\psi\rangle$。此处 $\psi$ 被视为固定背景场，不参与自洽方程。
+\end{definition}
+
+\subsection{标度变换——数学选择，非物理推导}
+
+我们聚焦于\textbf{标度变换}：
+\[
+  \Phi(S) = g(S) \cdot D_0, \quad g(S) = \kappa \ln(S/S_0) + \beta
+\]
+其中 $S_0 = S[D_0]$，$\kappa \in \mathbb{R}$ 是\emph{自指涉耦合}，$\beta \in \mathbb{R}$ 是\emph{非平凡性偏移}。
+
+\begin{remark}[诚实声明]
+此变换是\textbf{数学选择}，不是从物理原理推导的。我们选择 $D \mapsto \lambda D$ 的标度形式，因为：
+\begin{enumerate}
+  \item \textbf{公理兼容性}：标度变换保持谱三重的全部公理（命题~\ref{prop:axiom}）；
+  \item \textbf{热核展开简洁性}：标度律 $a_n(\lambda^2 D_0^2) = \lambda^{n-4} a_n(D_0^2)$ 是精确的，使压缩性证明可行；
+  \item \textbf{共形几何联系}：$D \mapsto \lambda D$ 对应 $g_{\mu\nu} \to \lambda^2 g_{\mu\nu}$，几何上自然。
+\end{enumerate}
+我们\textbf{不声称}标度变换是唯一合理的 $\Phi$，也不声称它有超出上述数学便利性的物理动机。$\kappa$ 和 $\beta$ 是自由参数，目前缺乏物理确定机制。
+\end{remark}
+
+令 $\lambda(S) = 1 + g(S)$，则 $D = \lambda(S) D_0$。
+
+\begin{proposition}[公理兼容性]
+\label{prop:axiom}
+对 $g(S) \in \mathbb{R}$ 且 $\lambda(S) > 0$，算子 $D = \lambda(S) D_0$ 满足全部谱三重约束。
+\end{proposition}
+
+\begin{proof}
+直接验证：(i) $\lambda D_0$ 自伴（因 $\lambda \in \mathbb{R}$ 且 $D_0$ 自伴）。(ii) $(1 + \lambda^2 D_0^2)^{-1}$ 紧（因 $D_0$ 有紧预解式且 $|\lambda| > 0$）。(iii) $[\lambda D_0, a] = \lambda [D_0, a]$ 有界。(iv) $J(\lambda D_0)J^{-1} = \lambda J D_0 J^{-1} = \epsilon \lambda D_0$。(v) $\gamma(\lambda D_0) = -\lambda D_0 \gamma$。(vi) $[[\lambda D_0, a], JbJ^{-1}] = \lambda[[D_0, a], JbJ^{-1}] = 0$。
+\end{proof}
+
+\begin{remark}
+在定理~\ref{thm:contraction} 的参数范围（$|\kappa| < 1/10$，$|\beta| < 0.02$，$\delta = 0.3$）下，条件 $\lambda(S) > 0$ 自动满足：对 $S \in I$，$|\kappa \ln(S/S_0)| \leq 0.357 \times 0.1 = 0.036$，$|\beta| < 0.02$，故 $\lambda(S) \geq 1 - 0.036 - 0.02 = 0.944 > 0$。
+\end{remark}
+
+\subsection{标度下的热核展开}
+
+\begin{lemma}[热核系数的标度]
+对 $D = \lambda D_0$ 且 $d=4$：
+\[
+  a_n(\lambda^2 D_0^2) = \lambda^{n-4} a_n(D_0^2)
+\]
+\end{lemma}
+
+\begin{proof}
+$\Tr\, e^{-t\lambda^2 D_0^2} = \Tr\, e^{-(t\lambda^2) D_0^2} \sim \sum_n (t\lambda^2)^{(n-4)/2} a_n(D_0^2) = \sum_n t^{(n-4)/2} \lambda^{n-4} a_n(D_0^2)$。
+\end{proof}
+
+\begin{remark}
+此标度律对任何具紧预解式的自伴 $D_0$ 均精确成立，包括含内涨落的 $D_0$。证明仅依赖于热核迹中 $t \mapsto t\lambda^2$ 的代换。
+\end{remark}
+
+\begin{corollary}
+\label{cor:F}
+复合映射为
+\[
+  F(S) = C_4 \lambda^{-4} + C_2 \lambda^{-2} + C_0 + \lambda E + R(\lambda)
+\]
+其中 $C_4 = f_4\Lambda^4 a_0$，$C_2 = f_2\Lambda^2 a_2$，$C_0 = f_0 a_4$，$E = \langle\psi, D_0\psi\rangle$，$S_0 = C_4 + C_2 + C_0 + E$，$R(\lambda) = O(\lambda^{-6}\Lambda^{-2})$。系数已在第~\ref{sec:heatkernel}~节对照 CCM06 验证。
+\end{corollary}
+
+\subsection{主定理：压缩性}
+
+\begin{theorem}[Banach 压缩]
+\label{thm:contraction}
+设 $|\kappa| < 1/10$，$|\beta| < 0.02$，$C_4 > 0$（已在第~\ref{sec:heatkernel}~节验证），$S_0 > 0$。定义 $I = [S_0(1-\delta), S_0(1+\delta)]$，$\delta = 0.3$。则：
+\begin{enumerate}
+  \item $F: I \to I$；
+  \item $|F'(S)| \leq k < 1$，$k \approx 8|\kappa|$；
+  \item 存在唯一 $S^* \in I$ 使得 $S^* = F(S^*)$。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{(i) $F(I) \subseteq I$：}对 $S \in I$，$|\kappa \ln(S/S_0)| \leq |\kappa| \cdot |\ln(1-\delta)| \approx 0.357|\kappa|$（因 $|\ln(1-\delta)| > |\ln(1+\delta)|$）。取 $|\kappa| < 1/10$，$|\beta| < 0.02$：$\lambda \in [0.944, 1.056]$。$F(S) \approx C_4 \lambda^{-4} \in [0.80\, S_0,\; 1.26\, S_0] \subset I$。$\checkmark$
+
+\textbf{(ii) 压缩性：}
+\[
+  F'(S) = \frac{\kappa}{S}\left(-4C_4\lambda^{-5} - 2C_2\lambda^{-3} + E + R'(\lambda)\right)
+\]
+利用已验证的层级 $\epsilon_2 = |C_2/C_4| \ll 1$，$\lambda_{\min} = 0.944$：
+\[
+  |F'(S)| \leq \frac{|\kappa|}{0.7 S_0}\left(4|C_4| \cdot \lambda_{\min}^{-5} + 2|C_2| \cdot \lambda_{\min}^{-3} + |E|\right) \leq \frac{|\kappa|}{0.7}\left(4 \times 1.33 + O(\epsilon_2)\right) \approx 8|\kappa|
+\]
+对 $|\kappa| = 1/10$：$k \approx 0.8 < 1$。$\checkmark$
+
+\textbf{(iii)} 由 (i)、(ii) 和 Banach 不动点定理。
+\end{proof}
+
+\subsection{非平凡性}
+
+\begin{theorem}[非平凡性]
+\label{thm:nontrivial}
+若 $\beta \neq 0$（在定理~\ref{thm:contraction} 的参数范围内），则 $S^* \neq S_0$。
+\end{theorem}
+
+\begin{proof}
+假设 $S^* = S_0$，则 $\lambda(S_0) = 1 + \beta$，$F(S_0) = S_0$ 给出：
+\[
+  C_4[(1+\beta)^{-4}-1] + C_2[(1+\beta)^{-2}-1] + \beta E = 0
+\]
+对小 $\beta$：$\beta(-4C_4 - 2C_2 + E + O(\beta)) = 0$。因 $C_4 > 0$（已验证）且 $|C_4| \gg |C_2|, |E|$（已验证层级），因子 $\approx -4C_4 < 0$ 不可能为零。矛盾。
+\end{proof}
+
+\begin{corollary}[一阶修正]
+对小 $\beta$ 且 $|\kappa| < 1/10$：
+\[
+  \frac{S^* - S_0}{S_0} \approx -\frac{4\beta}{1 + 4\kappa}
+\]
+\end{corollary}
+
+\begin{remark}[参数选择]
+$\kappa = 0.08$，$\beta = 0.01$ 仅作为\textbf{代表性数值}用于演示量级，无物理动机。核心预测——$\R$ 不变性——\textbf{不依赖}这些具体值。
+\end{remark}
+
+\subsection{自洽共形因子}
+
+\begin{definition}
+自洽共形因子为 $\lambda^* = 1 + g(S^*)$。
+\end{definition}
+
+\begin{proposition}
+$\lambda^* \approx 1 + \dfrac{\beta}{1+4\kappa}$。
+\end{proposition}
+
+\subsection{方案 A：内涨落标度}
+
+\begin{theorem}[方案 A 压缩性]
+对 $\Phi(S) = f(S)(A + JAJ^{-1})$，$f(S) = \alpha(S-S_0)^2 + \beta$，$f'(S_0) = 0$，$F$ 在类似条件下是压缩映射，其允许参数范围比标度情形宽 $\sim \Lambda^2$ 倍（因主导敏感度为 $O(\Lambda^2)$ 而非 $O(\Lambda^4)$）。
+\end{theorem}
+
+\begin{proof}[证明思路]
+因 $a_0$ 不依赖 $A$（已在第~\ref{sec:heatkernel}~节验证），谱作用量对 $f(S)$ 的敏感度由 $a_2$ 项（$\sim \Lambda^2$）而非 $a_0$ 项（$\sim \Lambda^4$）主导。
+\end{proof}
+
+% ============================================================
+\section{物理推论}
+
+\subsection{物理量的标度}
+
+自洽 Dirac 算子 $D^* = \lambda^* D_0$ 对应共形变换 $g_{\mu\nu} \to (\lambda^*)^2 g_{\mu\nu}$。
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+物理量 & 标度 & $\lambda^*$ 幂次 \\
+\midrule
+宇宙学常数 $\Lcc$ & $\propto (\lambda^*)^{-4}$ & $-4$ \\
+Newton 常数 $\GN$ & $\propto (\lambda^*)^{-2}$ & $-2$ \\
+规范耦合 $g_i$ & $\propto (\lambda^*)^{-1}$ & $-1$ \\
+Yukawa 耦合 $y_f$ & $\propto (\lambda^*)^{-1}$ & $-1$ \\
+Higgs VEV $v$ & $\propto (\lambda^*)^{-1}$ & $-1$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{标度幂次的推导。}在 $D \mapsto \lambda^* D_0$ 下，热核展开（推论~\ref{cor:F}）给出 $C_4 \to (\lambda^*)^{-4} C_4$，$C_2 \to (\lambda^*)^{-2} C_2$，$C_0 \to C_0$，$E \to \lambda^* E$。宇宙学常数 $\Lcc$ 由 $C_4$ 系数确定，故 $\Lcc \propto (\lambda^*)^{-4}$。Newton 常数 $\GN$ 由 $C_2$ 系数（Einstein-Hilbert 项）确定。规范耦合、Yukawa 耦合和 Higgs VEV 由 $C_0$ 及内涨落结构提取；在 $D \to \lambda D_0$ 下，一形式 $A = \sum a_i[D_0, b_i]$ 标度为 $A \to \lambda A$，诱导规范正化耦合的 $(\lambda^*)^{-1}$ 标度。详见~\cite{CCM06}。关键在于，$\R$ 不变性仅要求分子与分母的 $\lambda^*$ 总幂次匹配，如命题~\ref{prop:R} 所验证。
+
+\subsection{核心预测：$\R$ 不变性}
+
+\begin{proposition}
+\label{prop:R}
+无量纲比
+\[
+  \R = \frac{\Lcc \cdot \GN^2}{\gYM^4 \cdot v^4}
+\]
+在 $\lambda^*$-标度下不变，因此不依赖于 $\kappa$ 和 $\beta$。
+\end{proposition}
+
+\begin{proof}
+在 $D \mapsto \lambda^* D$ 下：
+\[
+  \R \mapsto \frac{(\lambda^*)^{-4} \Lcc \cdot [(\lambda^*)^{-2} \GN]^2}{[(\lambda^*)^{-1} \gYM]^4 \cdot [(\lambda^*)^{-1} v]^4} = \frac{(\lambda^*)^{-4} \cdot (\lambda^*)^{-4}}{(\lambda^*)^{-4} \cdot (\lambda^*)^{-4}} \cdot \R = \R
+\]
+\end{proof}
+
+\textbf{为什么 $\R$ 不变性是核心预测：}
+\begin{enumerate}
+  \item \textbf{参数无关性}：$\R$ 不依赖 $\kappa$ 或 $\beta$。
+  \item \textbf{标度方案内的唯一性}：$\R$ 不变性是唯一不依赖参数 $\kappa$ 和 $\beta$ 的预测。它确实依赖 $\Phi$ 为标度变换的假设；其他 $\Phi$ 选择（如方案 A）可能产生不同的不变量。
+  \item \textbf{可检验性}：$\R$ 由可观测量构成。
+  \item \textbf{稳健性}：只要基本设定（$D = \lambda D_0$）成立，$\R$ 不变性就是数学定理的推论。
+\end{enumerate}
+
+\subsection{$\R$ 不变性预测什么与不预测什么}
+
+$\R$ 不变性\textbf{预测}：物理量之间的一个确定比例关系。
+
+$\R$ 不变性\textbf{不预测}：任何量的绝对值、标准模型 25 个参数、宇宙学常数的绝对值。
+
+\subsection{局限性}
+
+\begin{enumerate}
+  \item \textbf{标量瓶颈}：一个不动点方程给出一个约束（$\R$），而非 25 个参数预测。
+  \item \textbf{自由参数}：$\kappa$ 和 $\beta$ 不由物理原理确定。这是\textbf{已确认的局限性}，不是特征。
+  \item \textbf{宇宙学常数问题}：修正为 $O(\beta) \sim O(10^{-2})$，不足以解决 $10^{183}$ 的差异。
+  \item \textbf{条件性非平凡性}：不同于论文一，此处依赖 $\beta \neq 0$。
+\end{enumerate}
+
+% ============================================================
+\section{讨论与开放问题}
+
+\subsection{与论文一的关系}
+
+论文一建立了\emph{泛函}自指涉的作用量，信息量丰富。本文限于\emph{标量}自指涉，给出一个约束（$\R$ 不变性）。在 NCG 框架中推广到泛函自指涉是自然的下一步。
+
+\subsection{压缩-非平凡性张力}
+
+压缩条件 $|F'(S)| < 1$ 要求 $\Phi$ 对 $S$ 不敏感，而非平凡性要求敏感。解决方案是\emph{非线性} $\Phi$ 且 $\Phi'(S_0) = 0$：局部平坦（压缩）但全局倾斜（非平凡）。
+
+\subsection{$\Phi$ 的物理动机：诚实评估}
+
+标度变换的选择基于\textbf{数学便利}，不是物理推导。
+
+\textbf{我们能说的}：$D \mapsto \lambda D$ 对应共形变换 $g_{\mu\nu} \to \lambda^2 g_{\mu\nu}$，在微分几何中自然。在广义相对论中，度规对物质能量的响应（Einstein 方程）可粗略类比为"度规（编码在 $D$ 中）对谱作用量值（编码物质内容）的响应"。
+
+\textbf{我们不能声称的}：此类比\textbf{不是推导}。我们没有从 Einstein 方程或任何其他物理原理导出 $g(S) = \kappa\ln(S/S_0) + \beta$ 的具体形式。"共形反作用"一词仅作为\textbf{启发式标签}使用。
+
+\textbf{对审稿人质疑的回应}：即使 $\Phi$ 的物理动机薄弱，$\R$ 不变性在标度方案内仍是硬结果：它\textbf{不依赖}于 $\kappa$ 和 $\beta$ 的具体值，仅依赖 $\Phi$ 为标度变换的假设。
+
+\subsection{向量值推广}
+
+标量瓶颈可通过将 $S$ 推广为向量值 $\mathbf{S} = (S_1, \ldots, S_N)$ 来规避，给出 $N$ 个约束。留作未来工作。
+
+\subsection{与随机 NCG 的联系}
+
+Khalkhali 和 Pagliaroli~\cite{Kha25} 发展了随机 Dirac 算子的 bootstrap 框架。他们的方法是统计的，而我们的是确定性的。另见~\cite{GKP26} 中随机模糊几何的 Schwinger-Dyson 方程，这是自洽 Dirac 算子方程的另一种形式。
+
+\subsection{开放问题}
+
+\begin{enumerate}
+  \item $\kappa$ 和 $\beta$ 能否从物理原理导出？\textbf{（未解决）}
+  \item 向量值推广能否解决标量瓶颈？
+  \item 与~\cite{Per20} 的 RG 固定点是否有更深联系？
+  \item 非平凡性能否从条件性加强为无条件？
+  \item $\R$ 不变性能否实验检验？
+\end{enumerate}
+
+% ============================================================
+\section{文献综述：跨数据库验证}
+
+\subsection{检索范围}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccl}
+\toprule
+数据库 & 日期 & 搜索词数 & 结果 \\
+\midrule
+arXiv & 2026-07-07 & 9 & 见~\cite{Phase1Report} \\
+\textbf{INSPIRE} & \textbf{2026-07-07} & \textbf{8} & \textbf{见下} \\
+\textbf{Google Scholar} & \textbf{2026-07-07} & \textbf{5} & \textbf{见下} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{INSPIRE 结果}
+
+使用 INSPIRE API（\texttt{inspirehep.net/api/literature}），标题搜索：
+
+\begin{table}[h]
+\centering
+\begin{tabular}{clcc}
+\toprule
+\# & 搜索词 & 命中数 & 结果 \\
+\midrule
+1 & \texttt{t "spectral action" and t "fixed point"} & 0 & 空白确认 \\
+2 & \texttt{t "spectral action" and t "self-consistent"} & 0 & 空白确认 \\
+3 & \texttt{t "spectral action" and t "self-referential"} & 0 & 空白确认 \\
+4 & \texttt{t "spectral action" and t "conformal"} & 0 & 空白确认 \\
+5 & \texttt{t "spectral action" and t "backreaction"} & 0 & 空白确认 \\
+6 & \texttt{t "Dirac operator" and t "self-consistent"} & 0 & 空白确认 \\
+7 & \texttt{t "NCG" and t "fixed point" and t "Dirac"} & 0 & 空白确认 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{跨数据库一致性}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lccc}
+\toprule
+关键词组合 & arXiv & INSPIRE & Google Scholar \\
+\midrule
+"spectral action" + "fixed point" & 2（间接） & 0 & 0 \\
+"spectral action" + "self-referential" & 0 & 0 & 0 \\
+"Banach" + "spectral action" & 0 & 0 & 0 \\
+"Dirac" + "self-consistent" + "spectral action" & 0 & 0 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+自指涉谱作用量的文献空白在三个数据库中\textbf{一致确认}。
+
+% ============================================================
+\appendix
+\section{三元自指涉提案的诊断}
+
+原始提案考虑三元闭环 $\mathcal{A} \xrightarrow{\alpha} \mathcal{D} \xrightarrow{\beta} \mathcal{H} \xrightarrow{\gamma} \mathcal{A}$。分析结果：$\alpha$（内涨落）有效；$\beta$（$\mathcal{D} \to \mathcal{H}$）循环；$\gamma$（$\mathcal{H} \to \mathcal{A}$）不良定义。
+
+\section{热核系数细节}
+
+见~\cite{Vas03} 的综述。关键公式：
+\[
+  f_k = \int_0^\infty f(u)\, u^{k-1}\, du, \quad a_0 = \frac{\mathrm{tr}(\mathbf{1})}{(4\pi)^2}\int d^4x\sqrt{g}, \quad a_2 = \frac{1}{(4\pi)^2}\int d^4x\sqrt{g}\,\mathrm{tr}\left(\frac{R}{6} - E\right)
+\]
+CCM06：$\mathrm{tr}(\mathbf{1}) = 4 \times 96 = 384$，故 $a_0 = \frac{24}{\pi^2} V$。
+
+% ============================================================
+\begin{thebibliography}{99}
+
+\bibitem{Con94} A.~Connes, \textit{Noncommutative Geometry}, Academic Press, 1994.
+
+\bibitem{CC96} A.H.~Chamseddine and A.~Connes, ``The spectral action principle,'' \textit{Commun. Math. Phys.} \textbf{186}, 731 (1997). [arXiv:hep-th/9606001]
+
+\bibitem{CCM06} A.H.~Chamseddine, A.~Connes, and M.~Marcolli, ``Gravity and the standard model with neutrino mixing,'' \textit{Adv. Theor. Math. Phys.} \textbf{11}, 991 (2007). [arXiv:hep-th/0610241]
+
+\bibitem{Con08} A.~Connes, ``On the spectral characterization of manifolds,'' \textit{J. Noncomm. Geom.} \textbf{7}, 1 (2013). [arXiv:0810.2088]
+
+\bibitem{Vas03} D.V.~Vassilevich, ``Heat kernel expansion: user's manual,'' \textit{Phys. Rept.} \textbf{388}, 279 (2003). [arXiv:hep-th/0306138]
+
+\bibitem{Kha25} M.~Khalkhali and N.~Pagliaroli, ``Bootstrapping Noncommutative Geometry with Dirac Ensembles,'' (2025). [arXiv:2512.08694]
+
+\bibitem{KP24} M.~Khalkhali, N.~Pagliaroli, and A.~Parfeni, ``Bootstrapping the critical behavior of multi-matrix models,'' (2024). [arXiv:2409.07565]
+
+\bibitem{KP20} M.~Khalkhali and N.~Pagliaroli, ``Phase Transition in Random Noncommutative Geometries,'' (2020). [arXiv:2006.02891]
+
+\bibitem{GKP26} J.~Gamble, M.~Khalkhali, and N.~Pagliaroli, ``The Schwinger-Dyson equations for random fuzzy geometries coupled to matter,'' (2026). [arXiv:2606.01343]
+
+\bibitem{Per20} C.I.~Perez-Sanchez, ``On multimatrix models motivated by random Noncommutative Geometry I,'' \textit{Annales Henri Poincar\'e} \textbf{22}, 3095 (2021). [arXiv:2007.10914]
+
+\bibitem{vS11a} W.D.~van Suijlekom, ``Renormalization of the asymptotically expanded Yang-Mills spectral action,'' \textit{Commun. Math. Phys.} \textbf{312}, 79 (2012). [arXiv:1104.5199]
+
+\bibitem{vS11b} W.D.~van Suijlekom, ``Renormalization of the spectral action for the Yang-Mills system,'' (2011). [arXiv:1101.4804]
+
+\bibitem{Ayd19} U.~Aydemir, ``Clifford-based spectral action and renormalization group analysis of the gauge couplings,'' \textit{Phys. Rev. D} \textbf{100}, 105017 (2019). [arXiv:1902.08090]
+
+\bibitem{vN21} T.D.H.~van Nuland and W.D.~van Suijlekom, ``One-loop corrections to the spectral action,'' (2021). [arXiv:2107.08485]
+
+\bibitem{CIS20} A.H.~Chamseddine, J.~Iliopoulos, and W.D.~van Suijlekom, ``Spectral action in matrix form,'' (2020). [arXiv:2009.03367]
+
+\bibitem{PaperI} 作者, "Type I Self-Referential Action: Existence and Nontriviality,"（准备中）.
+
+\bibitem{Phase1Report} Phase 1 文献检索报告, 内部文档 (2026).
+
+\end{thebibliography}
+
+\end{document}

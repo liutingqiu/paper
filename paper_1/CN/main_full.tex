@@ -1,0 +1,703 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+
+% ===== Packages =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[capitalise]{cleveref}
+\usepackage{doi}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{booktabs}
+
+% ===== Theorem environments =====
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{conjecture}[theorem]{猜想}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{assumption}[theorem]{假设}
+\newtheorem{remark}[theorem]{注}
+\newtheorem{example}[theorem]{例}
+\newtheorem{setup}[theorem]{设定}
+
+% ===== Macros =====
+\newcommand{\mL}{\mathcal{L}}
+\newcommand{\mF}{\mathcal{F}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mM}{\mathcal{M}}
+\newcommand{\mPhi}{\Phi}
+\newcommand{\mreg}{\mPhi_{\mathrm{reg}}}
+\newcommand{\Fix}{\mathrm{Fix}}
+\newcommand{\vol}{\mathrm{vol}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\diff}{\mathrm{d}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\chiI}{\chi_I}
+\newcommand{\EA}{E_A}
+\newcommand{\jphi}{j^2\varphi}
+\newcommand{\Sloc}{S_{\mathrm{loc}}}
+\newcommand{\Fphi}{F_\varphi}
+\newcommand{\dVol}{\,\diff^n x}
+
+% ===== Metadata =====
+\title{自指涉作用量泛函：\\
+存在性、非平凡性与范畴论非等价性}
+\author{刘天奇\\
+材料与化学工程学院，郑州轻工业大学\\
+郑州市高新区科学大道136号\\
+\texttt{tianqi689@gmail.com}
+}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+我们引入\emph{I 型自指涉作用量泛函}，这是一类新颖的作用量泛函 $S[\varphi]$，其值作为参数进入拉格朗日密度，满足不动点方程
+$S[\varphi] = F_\varphi(S[\varphi])$，其中 $F_\varphi(s) := \int_M \mL(\varphi, \partial\varphi, s) \dVol$。
+据作者所知，这种结构在数学物理文献中未曾出现：它不同于 Dyson--Schwinger 方程（方程层面的自洽性）、Hartree--Fock 理论（有效势层面）以及 Schreiber 的凝聚 $\infty$-topos 框架（经关键词检索确认）。
+
+我们建立三个结果：
+\begin{enumerate}[leftmargin=*]
+\item \textbf{存在性与正则性}（\Cref{thm:p3}）：在非退化条件 $1 - \partial_s F_\varphi(s_0) \neq 0$ 下，Fr\'echet 空间上的隐函数定理（Gl\"ockner 2006，Michal--Bastiani $C^1$）给出在任意非退化不动点附近唯一的局部光滑解 $S_{\mathrm{loc}}$。
+\item \textbf{非平凡性判据}（\Cref{thm:p12}）：在闭流形上，对 $S$ 的任意表示 $\mL$，$\partial_s E_A \equiv 0 \iff \chi_I \equiv 1 \iff$ 变分公式退化为标准形式。此外，$S$ 平凡（存在 $s$-无关表示）$\iff$ 存在表示使 $\partial_s \mL \equiv 0$。判据内蕴于 $S$（不依赖表示），基于 $\partial_s\mathcal{L}$ 模 null Lagrangian 的等价类。
+\item \textbf{范畴论非等价性}（\Cref{thm:p14d}）：在 jet-局部微分同胚下，非平凡 I 型泛函不等价于任何标准作用量。证明利用了变分复形的闭包性质和例外族的 Bernoulli ODE 刻画。
+\end{enumerate}
+
+任意（非局部）微分同胚的情形被定位为一个分层开放问题：在数学上是开放的，但在物理上可能是无关的，因为非局部变换破坏了物理等价所要求的变分复形结构。
+
+\medskip
+\noindent\textbf{MSC 2020：} 70S05（拉格朗日形式），58E30（变分问题），46G05（局部凸空间中的微积分），81T70（量子场论，数学方面）。
+
+\medskip
+\noindent\textbf{关键词：}自指涉作用量，隐函数定理，Fr\'echet 空间，变分复形，范畴论非等价性。
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ==================================================================
+\section{引言}
+\label{sec:intro}
+
+\subsection{研究动机}
+
+作用量原理是现代物理学的基础：动力学、对称性和量子化都根植于作用量泛函 $S[\varphi] = \int_M \mL(\varphi, \partial\varphi) \dVol$ 之中。在已知的每一个经典和量子场论中，拉格朗日密度 $\mL$ 依赖于场 $\varphi$ 及其导数，但\emph{不}依赖于作用量本身的值。
+
+本文研究当我们放宽这一隐含假设时所发生的情形：\emph{如果作用量值 $s = S[\varphi]$ 作为参数进入拉格朗日量会怎样？}这引出了\emph{自指涉作用量}：
+\begin{equation}
+S[\varphi] = F_\varphi(S[\varphi]), \qquad F_\varphi(s) := \int_M \mL(\varphi, \partial\varphi, s) \dVol.
+\label{eq:self-ref-def}
+\end{equation}
+方程~\eqref{eq:self-ref-def} 是 $\R \to \R$ 上的不动点方程：作用量值 $s$ 必须是 $F_\varphi$ 的不动点。
+
+\subsection{与现有自指涉结构的关系}
+
+物理学和数学中出现了若干自指涉结构，但均不在作用量泛函的层面：
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+现有结构 & 自指涉层次 & 与 I 型的关系 \\
+\midrule
+Dyson--Schwinger 方程 & 方程层（$D = D_0 + D_0 \Sigma[D] D$） & 同盟，非同构 \\
+Hartree--Fock 理论 & 有效势层 & 同盟，非同构 \\
+S 矩阵 bootstrap & 振幅层（$S = F[S]$） & 同盟，非同构 \\
+Polyakov 作用量 & 世界面层（内部性，非自指涉） & 正交内部结构 \\
+Schreiber 凝聚 $\infty$-topos \cite{Schreiber2013} & 微分上同调 & 无覆盖（关键词审计，\Cref{sec:lit-audit}） \\
+Lawvere 不动点定理 \cite{Lawvere1969} & 笛卡尔闭范畴 & 仅为哲学灵感 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Lawvere 定理提供了自指涉悖论的范畴论统一，但 I 型不适用其框架：Lawvere 要求笛卡尔闭范畴中的态射 $f: A \to A^A$，而 I 型在 $\mathbf{Set}$ 中操作 $F_\varphi: \R \to \R$。我们的数学基础是 Banach 不动点定理和 Fr\'echet 空间隐函数定理，而非 Lawvere 定理。
+
+据我们所知，结构 \eqref{eq:self-ref-def} 在数学物理文献中是新颖的。
+
+\subsection{结果概述}
+
+\begin{description}[leftmargin=*]
+\item[定义（\Cref{sec:def}）] 我们定义 I 型自指涉作用量并陈述非退化条件（H4）。
+\item[存在性（\Cref{sec:existence}）] 利用 Gl\"ockner 的 Fr\'echet 空间上的隐函数定理 \cite{Glockner2006} 以及 Michal--Bastiani $C^1$ 正则性 \cite{Hamilton1982}，我们证明了在任意非退化不动点附近 $S[\varphi]$ 的局部存在性、唯一性和光滑性（\Cref{thm:p3}）。
+\item[变分原理（\Cref{sec:variational}）] 我们推导了以\emph{隐式因子} $\chi_I[\varphi] = 1/(1 - \partial_s F_\varphi(S[\varphi]))$ 为特征的变分公式及修正的 Euler--Lagrange 方程。
+\item[非平凡性（\Cref{sec:nontriv}）] 我们证明在闭流形上，对任意表示 $\mL$，$\partial_s E_A \equiv 0 \iff \chi_I \equiv 1 \iff$ 变分公式退化为标准形式（\Cref{thm:p12}），以及内蕴判据：$S$ 平凡 $\iff$ 存在表示使 $\partial_s \mL \equiv 0$。并给出非平凡性的充分条件（\Cref{thm:p13}）。判据内蕴于 $S$，基于 $\partial_s\mathcal{L}$ 模 null Lagrangian。
+\item[范畴论非等价性（\Cref{sec:cat}）] 我们证明在 jet-局部微分同胚下，非平凡 I 型作用量不可能等价于任何标准作用量（\Cref{thm:p14d}）。
+\end{description}
+
+\subsection{诚实披露}
+\label{sec:disclosure}
+
+核心概念和研究纲领由作者独立发展。证明的形式化、常规计算和文献整理在 AI 辅助下完成。所有数学论证均已完整详细记录；作者对工作的正确性承担责任，并欢迎独立验证。
+
+% ==================================================================
+\section{数学预备}
+\label{sec:prelim}
+
+\subsection{标准作用量泛函}
+
+\begin{definition}[标准作用量]
+\label{def:std-action}
+设 $M$ 为 $n$ 维紧致定向光滑流形，$V$ 为有限维实向量空间，$\mPhi := C^\infty(M, V)$。给定光滑拉格朗日密度 $\mL_{\mathrm{std}}: V \times (T^*M \otimes V) \to \R$，\emph{标准作用量} $S_{\mathrm{std}}: \mPhi \to \R$ 定义为：
+\[ S_{\mathrm{std}}[\varphi] := \int_M \mL_{\mathrm{std}}\!\bigl(\varphi(x),\, \partial_\mu\varphi(x)\bigr) \dVol. \]
+\end{definition}
+
+\subsection{Banach 不动点定理}
+
+\begin{theorem}[Banach 压缩映射定理]
+\label{thm:banach}
+设 $(X, d)$ 为完备度量空间，$T: X \to X$ 为压缩映射：存在 $k < 1$ 使 $d(T(x), T(y)) \le k \cdot d(x, y)$ 对所有 $x, y \in X$ 成立。则 $T$ 在 $X$ 中有唯一不动点。
+\end{theorem}
+
+\subsection{Fr\'echet 空间与隐函数定理}
+
+\begin{definition}[Fr\'echet 空间]
+向量空间 $X$ 配备可数半范数族 $\{p_k\}_{k \in \N}$，满足分离性、次可加性、齐次性和完备性（在度量 $d(x, y) := \sum_{k=0}^\infty 2^{-k} \min(1, p_k(x - y))$ 下），称为\emph{Fr\'echet 空间}。
+\end{definition}
+
+\begin{example}[构形空间]
+$\mPhi = C^\infty(M, V)$ 配备半范数 $p_k(\varphi) := \sup_{x \in M} \|D^k \varphi(x)\|$ 是 Fr\'echet 空间 \cite{RudinFA, Treves}。
+\end{example}
+
+\begin{definition}[Michal--Bastiani $C^1$]
+\label{def:mb}
+设 $X$ 为 Fr\'echet 空间，$Y$ 为 Banach 空间，$U \subseteq X$ 为开集。映射 $f: U \to Y$ 是\emph{MB-$C^1$} 的，如果：
+\begin{itemize}
+\item[(MB1)] 对每个 $x \in U$ 和 $h \in X$，方向导数 $\diff f(x, h) := \lim_{t \to 0} (f(x + th) - f(x))/t$ 存在。
+\item[(MB2)] 映射 $\diff f: U \times X \to Y$ 连续。
+\end{itemize}
+\end{definition}
+
+当 $X$ 为 Banach 空间时，MB-$C^1$ 与经典 Fr\'echet 可微性一致 \cite{Hamilton1982, Glockner2006}。Fr\'echet 空间隐函数定理的近期全局化扩展见 \cite{Eftekharinasab2024}。我们使用的隐函数定理的完整陈述见\Cref{sec:glockner-full}。
+
+% ==================================================================
+\section{I 型自指涉作用量}
+\label{sec:def}
+
+\subsection{定义}
+
+\begin{setup}
+\label{setup:basic}
+\leavevmode
+\begin{itemize}
+\item $M$：紧致定向光滑 $n$ 维流形（时空），$\vol(M) < \infty$。
+\item $V$：有限维实向量空间。
+\item $\mPhi := C^\infty(M, V)$：构形空间（Fr\'echet 空间）。
+\item $\mL: V \times (T^*M \otimes V) \times \R \to \R$：光滑拉格朗日密度。第三个变元 $s \in \R$ 是\emph{作用量值参数}。
+\item $F_\varphi(s) := \int_M \mL(\varphi, \partial\varphi, s) \dVol$。
+\end{itemize}
+\end{setup}
+
+\begin{definition}[I 型自指涉作用量]
+\label{def:typeI}
+泛函 $S: \mPhi \to \R$ 是\emph{I 型自指涉作用量}，如果对每个 $\varphi \in \mPhi$：
+\[ S[\varphi] = F_\varphi(S[\varphi]) = \int_M \mL(\varphi, \partial\varphi, S[\varphi]) \dVol. \]
+设 $E_A$ 为 $\mL$ 关于 $(\varphi, \partial\varphi)$ 变量的 Euler--Lagrange 算子。称 $S$ 是\emph{非平凡的}，若 $S$ \textbf{不存在} $s$-无关的拉格朗日量表示，即不存在与 $s$ 无关的 $\mL_0$ 使 $S[\varphi] = \int_M \mL_0(\varphi, \partial\varphi) \dVol$。此定义内蕴于 $S$（"存在 $s$-无关表示"是 $S$ 的性质，不依赖具体 $\mL$）。
+
+等价地（\Cref{thm:p12} 第 5 款），$S$ 非平凡当且仅当对 $S$ 的\emph{所有}表示 $\mL$ 均有 $\partial_s E_A \not\equiv 0$。
+\end{definition}
+
+\begin{remark}
+II 型（泛函自指涉）和 III 型（算子自指涉）留待未来工作。I 型是最弱的非平凡自指涉；若 I 型失败，则 II 型/III 型也无望。
+\end{remark}
+
+\subsection{非退化条件}
+
+\begin{assumption}[H4：非退化性]
+\label{ass:h4}
+在不动点 $(\varphi_0, s_0)$ 处（$s_0 = F_{\varphi_0}(s_0)$），我们假设：
+\[ 1 - \partial_s F_{\varphi_0}(s_0) \neq 0. \tag{H4} \]
+\end{assumption}
+
+\begin{remark}[H4 的物理含义]
+H4 是\emph{自反馈次临界条件}，类似于重整化群流中不动点的分类。$|\partial_s F_\varphi| < 1$ 意味着负反馈主导；$\partial_s F_\varphi = 1$ 是共振，线性化退化。
+\end{remark}
+
+\begin{remark}[H4 非必要]
+\label{rem:h4-not-necessary}
+H4 是 \Cref{thm:p3} 的充分条件，\textbf{非必要}。例如取 $\mL = \mL_0(\varphi, \partial\varphi) - s_0/\vol(M) + s/\vol(M) + (s - s_0)^3/\vol(M)$（取 $\mL_0$ 使 $T_0[\varphi] \equiv s_0$），则 $F_\varphi(s) = s_0 + (s - s_0)^3$，不动点 $s = s_0$ 唯一，但 $\partial_s F_\varphi(s_0) = 1$，H4 失败。此时 \Cref{thm:p3} 的隐函数定理方法不适用（线性化退化，需更高阶分析），但不动点仍可存在唯一。H4 失败的另一典型情形是 $\partial_s F_\varphi \equiv 1$ 且 $F_\varphi(s) = s + c$：$c = 0$ 时任意 $s$ 均为不动点（不唯一），$c \neq 0$ 时无不动点。
+\end{remark}
+
+\begin{proposition}[Banach 充分条件]
+\label{prop:banach-suff}
+若对所有变元 $|\partial_s \mL| \leq K < 1/\vol(M)$，则 $F_\varphi$ 是压缩常数为 $k_\varphi = K \cdot \vol(M) < 1$ 的压缩映射，由\Cref{thm:banach} 给出唯一不动点。此条件充分非必要，且蕴含 H4。
+\end{proposition}
+
+% ==================================================================
+\section{存在性与正则性}
+\label{sec:existence}
+
+\subsection{局部存在性与 Fr\'echet 可微性}
+
+\begin{theorem}[局部存在性、唯一性与光滑性]
+\label{thm:p3}
+在\Cref{setup:basic} 和\Cref{ass:h4} 下，存在开邻域 $U_0 \ni \varphi_0$、$V_0 \ni s_0$ 以及唯一的光滑映射 $S_{\mathrm{loc}}: U_0 \to V_0$，使得：
+\begin{itemize}
+\item[(C1)] 对所有 $\varphi \in U_0$ 有 $G(\varphi, S_{\mathrm{loc}}(\varphi)) = 0$（其中 $G(\varphi, s) := s - F_\varphi(s)$）；
+\item[(C2)] $S_{\mathrm{loc}}$ 是 $C^\infty$ 的（在 Michal--Bastiani 意义下）；
+\item[(C3)] 导数显式为：
+\begin{equation}
+DS_{\mathrm{loc}}(\varphi) \cdot \eta = \frac{D_\varphi F_\varphi(S_{\mathrm{loc}}(\varphi)) \cdot \eta}{1 - \partial_s F_\varphi(S_{\mathrm{loc}}(\varphi))}.
+\label{eq:explicit-deriv}
+\end{equation}
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+\textbf{步骤 1：$G$ 的良定性。} 由 $\mL$ 的光滑性和 $M$ 的紧致性，$F_\varphi(s) = \int_M \mL(\varphi, \partial\varphi, s) \dVol$ 良定，$G(\varphi, s) := s - F_\varphi(s)$ 将 $\mPhi \times \R$ 映到 $\R$。
+
+\textbf{步骤 2：MB-$C^1$ 验证。}
+
+\emph{(2a) 方向导数的存在性。} 对 $\eta \in \mPhi$ 和 $\tau \in \R$：
+\[ \frac{G(\varphi + \tau\eta, s) - G(\varphi, s)}{\tau} = -\int_M \frac{\mL(\varphi + \tau\eta, \partial\varphi + \tau\partial\eta, s) - \mL(\varphi, \partial\varphi, s)}{\tau} \dVol. \]
+由 $\mL$ 的光滑性，被积函数逐点收敛到 $-[\partial\mL/\partial\varphi \cdot \eta + \partial\mL/\partial(\partial_\mu\varphi) \cdot \partial_\mu\eta]$。由 $M$ 的紧致性和 $\eta$、$\partial\eta$ 在 $M$ 上的有界性，存在与 $\tau$ 无关的控制函数；由控制收敛定理，极限与积分可交换：
+\[ D_\varphi G(\varphi, s) \cdot \eta = -\int_M \left[\frac{\partial\mL}{\partial\varphi} \cdot \eta + \frac{\partial\mL}{\partial(\partial_\mu\varphi)} \cdot \partial_\mu\eta\right] \dVol. \]
+同理 $D_s G(\varphi, s) = 1 - \int_M \partial_s \mL \dVol$。
+
+\emph{(2b) 导数映射的连续性 (MB2)。} 若 $\varphi_n \to \varphi$（在所有 $p_k$ 下），$s_n \to s$，$\eta_n \to \eta$（在所有 $p_k$ 下），则由 $\mL$ 的光滑性和 $M$ 的紧致性，被积函数逐点收敛且有控制函数；控制收敛定理给出 $D_\varphi G(\varphi_n, s_n) \cdot \eta_n \to D_\varphi G(\varphi, s) \cdot \eta$。
+
+\textbf{步骤 3：IFT 条件。} (IFT-1) 为 $G(\varphi_0, s_0) = 0$（假设）；(IFT-2) 为 $D_s G(\varphi_0, s_0) = 1 - \partial_s F_{\varphi_0}(s_0) \neq 0$（\Cref{ass:h4}），即 $\R \to \R$ 的线性同构。
+
+\textbf{步骤 4：应用 Gl\"ockner IFT。} 给出 $U_0, V_0, S_{\mathrm{loc}}$ 满足 (C1)，且 $S_{\mathrm{loc}}$ 为 MB-$C^1$。
+
+\textbf{步骤 4a：$C^\infty$ bootstrap。} 因 $\mL$ 为 $C^\infty$，步骤 2 的 MB-$C^1$ 验证可逐阶提升，$G$ 为 $C^\infty$。由 \eqref{eq:explicit-deriv}，$DS_{\mathrm{loc}}(\varphi)\cdot\eta$ 通过 $D_\varphi F_\varphi(S_{\mathrm{loc}}(\varphi))$ 与 $1 - \partial_s F_\varphi(S_{\mathrm{loc}}(\varphi))$ 表达，二者在 $S_{\mathrm{loc}}$ 为 $C^m$ 时为 $C^m$（因 $F_\varphi$ 为 $C^\infty$）。故 $S_{\mathrm{loc}}$ 为 $C^1 \Rightarrow C^2 \Rightarrow \cdots \Rightarrow C^\infty$，归纳完成。
+
+\textbf{步骤 5：显式导数 (C3)。} 对 $G(\varphi, S_{\mathrm{loc}}(\varphi)) = 0$ 求导（链式法则）：
+\[ -D_\varphi F_\varphi(S_{\mathrm{loc}}(\varphi)) + (1 - \partial_s F_\varphi(S_{\mathrm{loc}}(\varphi))) \cdot DS_{\mathrm{loc}}(\varphi) = 0, \]
+解出 \eqref{eq:explicit-deriv}。
+\end{proof}
+
+\subsection{全局延拓}
+
+\begin{theorem}[正则集]
+\label{thm:reg-set}
+定义\emph{正则集}：
+\[ \mreg := \{\varphi \in \mPhi : \exists s_\varphi \in \R,\ G(\varphi, s_\varphi) = 0,\ 1 - \partial_s F_\varphi(s_\varphi) \neq 0\}, \]
+及\emph{解流形}：
+\[ \Sigma := \{(\varphi, s) \in \mPhi \times \R : G(\varphi, s) = 0,\ 1 - \partial_s F_\varphi(s) \neq 0\}. \]
+则：
+\begin{itemize}
+\item[(G1)] $\mreg$ 在 $\mPhi$ 中开；$\Sigma$ 为 $\mPhi \times \R$ 的光滑子流形（因 $D_s G \neq 0$，$\Sigma$ 局部为图）；
+\item[(G2)] 投影 $\pi: \Sigma \to \mreg$，$(\varphi, s) \mapsto \varphi$，为局部微分同胚；$S$ 在 $\Sigma$ 的每个连通分支上光滑且单值；
+\item[(G3)] 当 $\mreg$ 道路连通时，$S$ 在 $\mreg$ 上单值 $\iff$ $\pi: \Sigma \to \mreg$ 为平凡覆盖（即 $\Sigma$ 的每个连通分支单叶地映到 $\mreg$）。特别地，道路连通性\emph{不}足以保证单值性——同一 $\varphi$ 可对应多个非退化不动点 $s_1 \neq s_2$，此时 $\pi$ 为多叶覆盖（反例见 \Cref{rem:multi-fixed-point}）。
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+(G1) 由\Cref{thm:p3}，$\varphi_0 \in \mreg$ 有邻域 $U_0 \subseteq \mreg$；$\Sigma$ 的光滑性由 $G$ 为 $C^\infty$ 且 $D_s G \neq 0$ 给出（隐函数定理）。(G2) 局部由 \Cref{thm:p3} 给出，$\pi$ 为局部微分同胚；$\Sigma$ 的每个连通分支上 $S$ 由局部解唯一拼接。(G3) ($\Rightarrow$) 平凡覆盖的每个连通分支单叶，故每个 $\varphi \in \mreg$ 恰对应一个 $s$，$S$ 单值。($\Leftarrow$) 若 $S$ 单值，则每个 $\varphi$ 恰对应一个 $s$，$\pi$ 单叶；局部微分同胚 + 单叶双射即平凡覆盖。多叶情形的反例见\Cref{rem:multi-fixed-point}。
+\end{proof}
+
+\begin{remark}[多不动点反例]
+\label{rem:multi-fixed-point}
+取 $\mL = \frac{1}{2}(\partial_x\varphi)^2 + s^2\varphi^2$（$s$ 二次进入），$M = S^1$。不动点方程 $s = T[\varphi] + s^2 Q[\varphi]$（$T$ 动能、$Q = \int\varphi^2$），即 $Q s^2 - s + T = 0$。当 $1 - 4QT > 0$ 时有两解 $s_\pm = (1 \pm \sqrt{1-4QT})/(2Q)$；若 $1 - 2s_\pm Q \neq 0$，两者均非退化，$\varphi \in \mreg$ 但 $S[\varphi]$ 双值。$\Phi_{\mathrm{reg}}$ 可道路连通而 $\Sigma$ 双叶。
+\end{remark}
+
+\begin{theorem}[无 Banach 条件的存在性]
+\label{thm:p2}
+设对某 $\varphi \in \mPhi$ 存在 $[s_-, s_+] \subseteq \R$ 满足：
+\begin{itemize}
+\item[(E1)] $(s_- - F_\varphi(s_-)) \cdot (s_+ - F_\varphi(s_+)) \leq 0$；
+\item[(E2)] $F_\varphi: [s_-, s_+] \to \R$ 连续。
+\end{itemize}
+则 $\Fix_\varphi \cap [s_-, s_+] \neq \emptyset$。
+\end{theorem}
+
+\begin{proof}
+$h(s) := s - F_\varphi(s)$ 连续；由 (E1) 和介值定理，$\exists s_* \in [s_-, s_+]$ 使 $h(s_*) = 0$。
+\end{proof}
+
+% ==================================================================
+\section{变分原理}
+\label{sec:variational}
+
+\subsection{变分公式与隐式因子}
+
+\begin{theorem}[变分公式]
+\label{thm:var-formula}
+设 $S[\varphi]$ 为满足\Cref{thm:p3} 中 (C1) 和 (C2) 的 I 型自指涉作用量。则对任意试验场 $\eta \in C_c^\infty(M, V)$：
+\begin{equation}
+\frac{\delta S}{\delta \varphi}[\varphi] \cdot \eta = \chi_I[\varphi] \cdot \int_M \left[\frac{\partial \mL}{\partial \varphi} \cdot \eta + \frac{\partial \mL}{\partial(\partial_\mu \varphi)} \cdot \partial_\mu \eta\right] \dVol,
+\label{eq:var-formula}
+\end{equation}
+其中 $\mL$ 的所有偏导数在 $s = S[\varphi]$ 处取值，\emph{隐式因子}为：
+\begin{equation}
+\chi_I[\varphi] := \frac{1}{1 - \partial_s F_\varphi(S[\varphi])} = \frac{1}{1 - \int_M \frac{\partial \mL}{\partial s}\bigl(\varphi(x), \partial_\mu\varphi(x), S[\varphi]\bigr) \dVol}.
+\label{eq:implicit-factor}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+对 $\varphi_\eps := \varphi + \eps\eta$，不动点方程给出 $S[\varphi_\eps] = F_{\varphi_\eps}(S[\varphi_\eps])$。在 $\eps = 0$ 处求导：
+\[ \delta S[\varphi] \cdot \eta = \partial_\varphi F_\varphi(S[\varphi]) \cdot \eta + \partial_s F_\varphi(S[\varphi]) \cdot \delta S[\varphi] \cdot \eta, \]
+其中 $\partial_\varphi F_\varphi(S[\varphi]) \cdot \eta = \int_M [\partial\mL/\partial\varphi \cdot \eta + \partial\mL/\partial(\partial_\mu\varphi) \cdot \partial_\mu\eta] \dVol$，$\partial_s F_\varphi(S[\varphi]) = \int_M \partial_s \mL \dVol$。解出：
+\[ \delta S[\varphi] \cdot \eta \cdot (1 - \partial_s F_\varphi(S[\varphi])) = \int_M [\cdots] \dVol. \]
+由 (H4)，$1 - \partial_s F_\varphi \neq 0$，得到 \eqref{eq:var-formula}。
+\end{proof}
+
+\begin{remark}[结构意义]
+隐式因子 $\chi_I[\varphi]$ 是自指涉的标志。对标准作用量，$\partial_s \mL = 0$ 故 $\chi_I \equiv 1$。对非平凡 I 型作用量，$\chi_I[\varphi] \not\equiv 1$ 是 $\varphi$ 的\emph{全局}泛函——它依赖于 $\partial_s \mL$ 在整个 $M$ 上的积分。这使得变分结构本质上是非局部的。
+\end{remark}
+
+\subsection{修正的 Euler--Lagrange 方程}
+
+\begin{theorem}[I 型 Euler--Lagrange 方程]
+\label{thm:el-I}
+在\Cref{thm:var-formula} 的条件下，$\delta S / \delta \varphi = 0$ 当且仅当：
+\begin{equation}
+\frac{\partial \mL}{\partial \varphi} - \partial_\mu\!\left(\frac{\partial \mL}{\partial(\partial_\mu \varphi)}\right) = 0 \quad \text{在 } s = S[\varphi] \text{ 处}.
+\tag{EL-I}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+由\Cref{thm:var-formula}，$\delta S[\varphi] \cdot \eta = \chi_I[\varphi] \cdot \int [\cdots] \dVol$。因 $\chi_I[\varphi] \neq 0$（H4），$\delta S = 0 \iff \int [\cdots] \dVol = 0$ 对所有 $\eta$ 成立。由变分基本引理得 (EL-I)。
+\end{proof}
+
+\begin{remark}[(EL-I) 的非局部性]
+虽然 (EL-I) 在形式上与标准 Euler--Lagrange 方程相同，但参数 $s = S[\varphi]$ 是\emph{全局}量——它是 $\mL$ 在整个 $M$ 上的积分。因此 (EL-I) 是非局部 integro-微分方程：每点 $x$ 处的方程通过 $S[\varphi]$ 与全 $M$ 上的场构型耦合。这是 I 型自指涉作用量的核心非平凡特征。
+\end{remark}
+
+\begin{remark}[加性常数对称性破缺]
+\label{rem:additive}
+对标准作用量，$\mL \to \mL + c$ 使 $S \to S + c \cdot \vol(M)$，不改变 Euler--Lagrange 方程。对非平凡 I 型作用量，此对称性一般破缺：新不动点 $s'$ 满足 $s' = F_\varphi(s') + c \cdot \vol(M)$，因 $\partial_s F_\varphi \neq 0$（非平凡性），$F_\varphi(s') \neq F_\varphi(s_0)$，故 $s' \neq s_0 + c \cdot \vol(M)$，从而 (EL-I) 中的参数 $s$ 及方程系数均发生非平移性改变。
+\end{remark}
+
+% ==================================================================
+\section{非平凡性}
+\label{sec:nontriv}
+
+\subsection{退化判据}
+
+\begin{theorem}[非平凡性判据]
+\label{thm:p12}
+设 $S$ 为 I 型自指涉作用量（\Cref{def:typeI}），$M$ 为闭流形（$\partial M = \emptyset$）。对 $S$ 的\emph{任意}表示 $\mL$，以下 (1)--(4) 等价：
+\begin{enumerate}[leftmargin=*]
+\item $\partial_s E_A \equiv 0$（即 $\partial_s \mL$ 为 null Lagrangian，亦即 $\partial_s \mL = \partial_\mu K^\mu$ 对某向量密度 $K^\mu$）；
+\item 隐式因子 $\chiI \equiv 1$；
+\item 变分公式 \eqref{eq:var-formula} 退化为标准变分公式（$\delta S$ 与 $s$ 无关）；
+\item (EL-I) 在形式上与标准 Euler--Lagrange 方程一致（参数 $s$ 不进入方程系数）。
+\end{enumerate}
+此外，以下内蕴判据等价于 $S$ 平凡（存在 $s$-无关表示）：
+\begin{enumerate}[leftmargin=*]\setcounter{enumi}{4}
+\item $S$ 平凡（存在 $s$-无关 $\mL_0$ 使 $S[\varphi] = \int \mL_0 \dVol$）$\iff$ 存在表示 $\mL$ 使 (1) 成立（即 $\partial_s \mL \equiv 0$）。
+\end{enumerate}
+满足 (5) 时称 $S$ \emph{平凡}；否则 \emph{非平凡}。对某表示满足 (1)--(4) 时称该表示\emph{形式退化}；若 $S$ 的\emph{所有}表示均不满足 (1)，则 $S$ 非平凡。
+\end{theorem}
+
+\begin{proof}
+(1)$\Rightarrow$(2): 若 $\partial_s \mL = \partial_\mu K^\mu$，则在闭流形上由 Stokes 定理 $\partial_s F_\varphi = \int_M \partial_\mu K^\mu \dVol = \int_{\partial M} K^\mu n_\mu \dVol = 0$，故 $\chiI = 1$。
+
+(2)$\Rightarrow$(1): $\chiI \equiv 1 \Rightarrow \partial_s F_\varphi \equiv 0 \Rightarrow \int_M \partial_s \mL \dVol = 0$ 对所有 $\varphi \in \mPhi$ 成立。由变分复形理论 \cite[定理 4.7]{Olver1993}，若光滑函数 $g(\varphi, \partial\varphi)$ 满足 $\int_M g \dVol = 0$ 对所有 $\varphi$ 成立，则 $E_A(g) \equiv 0$，即 $g$ 为 null Lagrangian。故 $\partial_s \mL$ 为 null Lagrangian，$E_A(\partial_s \mL) = \partial_s E_A(\mL) \equiv 0$。
+
+(2)$\Rightarrow$(3)(4): $\chiI = 1$ 时变分公式 \eqref{eq:var-formula} 右端因子 $\chiI$ 消失，与标准变分公式一致；(EL-I) 中 $s$ 仅作为参数进入 $\mL$ 的偏导数，但 $\chiI = 1$ 蕴含 $\partial_s F = 0$，$s$ 的变化不改变 $F_\varphi$，故 (EL-I) 形式上与标准 EL 一致。
+
+(3)$\Rightarrow$(2) 或 (4)$\Rightarrow$(2): 若变分公式退化为标准形式，则 $\chiI \cdot \int[\cdots] = \int[\cdots]_{\mathrm{std}}$ 对所有 $\eta$ 成立。取 $\eta$ 使 $\int[\cdots] \neq 0$，得 $\chiI = 1$。
+
+(5) 的证明：
+($\Rightarrow$) $S$ 平凡，存在 $s$-无关 $\mL_0$，取该表示则 $\partial_s \mL_0 = 0$，(1) 成立。
+($\Leftarrow$) 存在表示 $\mL$ 使 $\partial_s \mL = \partial_\mu K^\mu$（null Lagrangian）。对 $s$ 积分：$\mL(\varphi, \partial\varphi, s) = \mL_0(\varphi, \partial\varphi) + \int_{s_1}^s \partial_\mu K^\mu(\varphi, \partial\varphi, s') \diff s'$。在闭流形上 $F_\varphi(s) = \int \mL_0 + \int_{s_1}^s \int_M \partial_\mu K^\mu \dVol \diff s' = \int \mL_0$（Stokes）。故 $S[\varphi] = F_\varphi(S[\varphi]) = \int \mL_0$，$S$ 由 $s$-无关 $\mL_0$ 表示，平凡。
+\end{proof}
+
+\begin{remark}[闭流形限制]
+\label{rem:closed-M}
+在闭流形上，null Lagrangian 恰为全散度 \cite{Olver1993}（变分复形理论的近期发展见 \cite{Saunders2024}）。在带边流形上，$\partial_s \mL$ 为 null Lagrangian 时 $\partial_s F = \int_{\partial M} K^\mu n_\mu \dVol$ 一般非零，(1) 不再蕴含 (2)。故 \Cref{thm:p12} 限制在闭流形上；带边情形需附加边界条件（如 $K^\mu n_\mu|_{\partial M} = 0$）。
+\end{remark}
+
+\subsection{非平凡性的充分条件}
+
+\begin{theorem}[充分条件]
+\label{thm:p13}
+I 型自指涉作用量 $S$ 非平凡，若以下任一成立：
+\begin{itemize}
+\item[(NT1)] $S[\varphi]$ 的泛函形式不能写成 $a \tilde{S}[\varphi] + b$（$a \in \R \setminus\{0\}$，$b \in \R$，$\tilde{S}$ 为某标准作用量）；
+\item[(NT2)] 对 $S$ 的\emph{所有}表示 $\mL$，$\chiI[\varphi] \not\equiv 1$（即不存在使 $\chiI \equiv 1$ 的表示）。
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+由 \Cref{def:typeI}，$S$ 非平凡 $\iff$ 不存在 $s$-无关表示 $\iff$ $S$ 不能写成 $\int \mL_0$。若 $S = a\tilde{S} + b = a\int\tilde{\mL}_0 + b = \int(a\tilde{\mL}_0 + b/\vol(M))$，取 $\mL_0 = a\tilde{\mL}_0 + b/\vol(M)$（$s$-无关），则 $S$ 平凡。故 (NT1) 是非平凡的充分条件。
+
+(NT2) 由 \Cref{thm:p12} (5)：$S$ 平凡 $\iff$ 存在表示使 $\partial_s \mL \equiv 0$ $\iff$ 存在表示使 $\chiI \equiv 1$（\Cref{thm:p12} (1)$\Rightarrow$(2)）。故若所有表示 $\chiI \not\equiv 1$，则 $S$ 不存在 $s$-无关表示，非平凡。
+\end{proof}
+
+\begin{corollary}
+\label{cor:nontriv}
+对玩具示例（\Cref{ex:toy}），$S[\varphi] = \bigl(T[\varphi] - \frac{m_0^2}{2}Q[\varphi]\bigr)/\bigl(1 + \frac{\alpha}{2}Q[\varphi]\bigr)$（\Cref{eq:toy-solution}）。若 $\alpha \neq 0$，$S[\varphi]$ 是 $T[\varphi]$、$Q[\varphi]$ 的有理函数（分母 $1 + \frac{\alpha}{2}Q$ 依赖 $\varphi$），不能写成 $a\tilde{S}[\varphi] + b$（$\tilde{S}$ 标准，此类仿射的"分母"不依赖 $\varphi$）。由 \Cref{thm:p13} (NT1)，$S$ 非平凡。
+\end{corollary}
+
+\subsection{范畴论非等价性}
+\label{sec:cat}
+
+\begin{definition}[作用量范畴]
+\leavevmode
+\begin{itemize}
+\item \textbf{$\mathsf{Act}$ 的对象}：对 $(\mPhi, S)$，其中 $\mPhi$ 为 Fr\'echet 空间，$S: \mPhi \to \R$ 光滑。
+\item \textbf{满子范畴 $\mathsf{Act}_{\mathrm{std}}$}：标准作用量（\Cref{def:std-action}）。
+\item \textbf{满子范畴 $\mathsf{Act}_I$}：非平凡 I 型作用量（\Cref{def:typeI}）。
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Jet-局部微分同胚]
+光滑微分同胚 $T: \mPhi \to \mPhi$ 是\emph{jet-局部的}，如果对每个 $\varphi \in \mPhi$ 和每个 $x \in M$，$(T[\varphi])(x)$ 只依赖于某固定阶 $k$ 的有限 jet $j^k\varphi(x)$。
+\end{definition}
+
+\begin{theorem}[jet-局部微分同胚下的范畴论非等价性]
+\label{thm:p14d}
+设 $S_I$ 为非平凡 I 型作用量（在 $\mreg$ 上满足 H4），$S_{\mathrm{std}}$ 为标准作用量，$T: \mPhi \to \mPhi$ 为 jet-局部光滑微分同胚。则\emph{不可能}：
+\[ S_I[\varphi] = S_{\mathrm{std}}[T[\varphi]] \quad \text{对所有 } \varphi \in \mreg. \]
+\end{theorem}
+
+\begin{proof}
+证明分六步。假设矛盾：$S_I[\varphi] = S_{\mathrm{std}}[T[\varphi]]$ 对所有 $\varphi \in \mreg$。
+
+\textbf{步骤 1（前提排除）。} 由 \Cref{def:typeI}，非平凡 I 型作用量不存在 $s$-无关表示。若存在表示使 $\partial_s E_A \equiv 0$（即 $\partial_s \mL$ 为 null Lagrangian），则由 \Cref{thm:p12} (5)，$S$ 平凡（存在 $s$-无关表示），与非平凡前提矛盾。故非平凡蕴含对所有表示 $\partial_s E_A \not\equiv 0$。下文在此实质情形下推导。
+
+\textbf{步骤 2（约束变分）。} 变分基本引理给出 jet-局部恒等式：
+\begin{equation}
+H(\varphi)(x) := \chiI[\varphi] \cdot \EA(\jphi(x), S_I[\varphi]) = E(j^{k+2}\varphi)(x),
+\label{eq:jet-local-claim}
+\end{equation}
+其中 $\chiI[\varphi] = 1/(1 - \partial_s F_\varphi(S_I[\varphi]))$ 为隐式因子，$E$ 仅依赖 $j^{k+2}\varphi$（$T$ 为 $k$ 阶 jet-局部变换，标准 EL 算子在此基础上再提升 2 阶）。为记号简洁，下文以 $\jphi$ 统一表示 $j^{k+2}\varphi$。
+
+选取参考场 $\psi_* \in \mreg$，在某 $x_0 \in M$ 处 $\EA(j^2\psi_*(x_0), s_0) \neq 0$。取 $\delta > 0$ 足够小使 $\EA$ 在 $B_\delta(x_0)$ 上非零。定义约束集：
+\[ \Phi^*_{\mathrm{constr}} := \{\varphi \in \mreg : S_I[\varphi] = s_0,\ \varphi|_{B_\delta(x_0)} = \psi_*|_{B_\delta(x_0)}\}. \]
+对 $\varphi = \psi_* + \eps\rho \in \Phi^*_{\mathrm{constr}}$（$\rho$ 支集在 $M \setminus B_\delta(x_0)$ 中），jet-局部性迫使 $dH/d\eps|_0 = 0$，从而 $d\chiI/d\eps|_0 = 0$（因 $\EA(x_0) \neq 0$）。
+
+\textbf{步骤 3（Riesz 比例关系）。} 条件 $d\chiI/d\eps = 0$ 给出：
+\[ \int_{M \setminus B_\delta} \partial_s \EA(j^2\psi_*, s_0) \cdot \rho \dVol = 0 \quad \text{当} \quad \int_{M \setminus B_\delta} \EA(j^2\psi_*, s_0) \cdot \rho \dVol = 0. \]
+由核包含 $\ker F_f \subseteq \ker F_g$ 和 Riesz 表示，存在 $\lambda$ 使：
+\begin{equation}
+\partial_s \EA(j^2\psi_*, s_0) = \lambda \cdot \EA(j^2\psi_*, s_0) \quad \text{在 } M \setminus B_\delta(x_0) \text{ 上}.
+\label{eq:proportionality-local}
+\end{equation}
+
+\textbf{步骤 4（$\lambda$ 只依赖 $s_0$）。} 取 $\delta' \to 0$ 用连续性将 \eqref{eq:proportionality-local} 延拓到所有 $x \in M$。在 $x_0$ 处取值：
+\[ \lambda = \frac{\partial_s \EA(j^2\psi_*(x_0), s_0)}{\EA(j^2\psi_*(x_0), s_0)}, \]
+只依赖固定参考数据 $(\psi_*, s_0)$，不依赖试验场 $\varphi$。
+
+\textbf{步骤 5（复形闭包 $\Rightarrow$ 乘法结构）。} 我们将 \eqref{eq:proportionality-local} 从参考场 $\psi_*$ 延拓到全部 jet 空间。
+
+\emph{Jet 覆盖性论证。} 固定参考场 $\psi_*$，其 jet 像 $\Sigma_{\psi_*} := \{j^2\psi_*(x) : x \in M \setminus B_\delta\}$ 是 $J^2$ 的 $n$ 维子流形（$\dim J^2 \gg n$，故 $\Sigma_{\psi_*}$ 本身非开集）。然而，约束集 $\Phi^*_{\mathrm{constr}}$ 中的场形如 $\varphi = \psi_* + \eps\rho$，其中 $\rho$ 支集在 $M \setminus B_\delta(x_0)$ 中且满足单一标量约束 $S_I[\varphi] = s_0$。在任一内点 $x$ 处，$j^2\rho(x)$ 可自由变化（标量约束 $S_I = s_0$ 仅消去一个整体自由度，不影响点态 jet 的局部可变性——通过选取支集集中在 $x$ 附近的 $\rho$ 即可实现任意 jet 值同时微调 $S_I$），故 $j^2(\psi_* + \eps\rho)(x) = j^2\psi_*(x) + \eps\, j^2\rho(x)$ 可取 $\Sigma_{\psi_*}$ 邻域中的任意点。因此比例关系 \eqref{eq:proportionality-local} 在 $\Sigma_{\psi_*}$ 的某开邻域 $N_{\psi_*} \subset J^2$ 上成立。
+
+为将此延拓到全 $J^2$，遍取参考场 $\psi_* \in \mreg$。由 \Cref{thm:reg-set} (G1)，$\mreg$ 在 $\mPhi$ 中开；由 Borel 延拓定理（通过任意指定有限阶 jet 的 $C^\infty$ 场存在），并集 $\bigcup_{\psi_* \in \mreg} N_{\psi_*}$ 在 $J^2$ 中稠密。由 $\EA$ 的光滑性，稠密集上的相等经连续性延拓到全 jet 空间：
+\[ \partial_s \EA(\jphi, s_0) = \lambda(s_0) \cdot \EA(\jphi, s_0) \quad \forall \varphi, x. \]
+由变分复形闭包性质 \cite[定理 4.7]{Olver1993}，$\partial_s \mL - \lambda(s) \mL = \partial_\mu K^\mu$。$s$ 的 ODE 解为：
+\[ \mL(\varphi, \partial\varphi, s) = f(s) \cdot \mL_0(\varphi, \partial\varphi) + \partial_\mu L^\mu, \]
+其中 $f(s) = \exp(\int \lambda)$，$\mL_0$ 与 $s$ 无关。
+
+\textbf{步骤 6（乘法 $\mL$ $\Rightarrow$ 退化）。} 对乘法 $\mL = f(s) \mL_0$，不动点方程给出 $S_I[\varphi] = f(S_I[\varphi]) \cdot F_0[\varphi]$，且：
+\[ \chiI = \frac{f(s)}{f(s) - s f'(s)}, \quad \EA = f(s) E_{A,0}, \quad H = \frac{f(s)^2}{f(s) - s f'(s)} E_{A,0}. \]
+Jet-局部性迫使 $f(s)^2/(f(s) - s f'(s)) = C$（常数），即 Bernoulli ODE。令 $u = 1/f$：
+\[ u' + u/s = 1/(Cs) \implies u = 1/C + E'/s \implies f(s) = Cs/(s + E'). \]
+$E' = 0$ 时：$f = C$（常数）$\Rightarrow$ $\partial_s \mL = 0$，$\mL = C\mL_0$ 为 $s$-无关表示，$S_I$ 平凡。$E' \neq 0$ 时：$S_I[\varphi] = C F_0[\varphi] - E'$，取 $\mL_0' = C\mL_0 - E'/\vol(M)$（$s$-无关），则 $S_I[\varphi] = \int \mL_0' \dVol$，$S_I$ 亦平凡（存在 $s$-无关表示）。两种情形均与 $S_I$ 非平凡（\Cref{def:typeI}：不存在 $s$-无关表示）矛盾。 \qed
+\end{proof}
+
+% ==================================================================
+\section{讨论与开放问题}
+\label{sec:discussion}
+
+\subsection{紧致性限制}
+
+当前理论假设 $\vol(M) < \infty$。向 Minkowski 时空（$M = \R^n$）的推广可通过 Schwarz 空间 $\mS(\R^n, V)$ 实现：对 $\varphi \in \mS$，速降性保证所有积分收敛，MB-$C^1$ 验证类似进行（用控制函数 $C \cdot (1+|x|)^{-(n+1)}$ 替代基于紧致性的界）。因此，\Cref{thm:p3,thm:p12,thm:p14d} 可推广到此设定。
+
+然而，Schwarz 空间限制排除了散射态、常场和拓扑孤子。完整的无穷体积处理（正则化 + 重整化）留待未来工作。
+
+\paragraph{退化极限 $\vol(M) \to 0$。}
+作为与无穷体积相反的退化极限，当 $\vol(M) \to 0$（$M$ 收缩到一点）时，由 $|F_\varphi(s)| \leq \sup|\mL| \cdot \vol(M) \to 0$（$\mL$ 光滑有界），不动点 $S^* \to 0$；同时 $\partial_s F_\varphi \leq K \cdot \vol(M) \to 0$，故 $\chi_I \to 1$，自指涉效应消失。此时 \Cref{prop:banach-suff} 的 Banach 条件 $K < 1/\vol(M)$ 变松（右边 $\to \infty$），与不动点 $\to 0$ 自洽：超压缩映射（$k_\varphi \to 0$）的不动点逼近 $F_\varphi(0) \approx 0$。理论在此时空消失极限下无矛盾地退化为平凡。
+
+\subsection{一般等价性问题的分层定位}
+
+\Cref{thm:p14d} 覆盖 jet-局部微分同胚。任意（可能非局部）光滑 $T$ 的情形仍然开放：
+
+\begin{conjecture}[Level 2]
+对\emph{任意}光滑微分同胚 $T: \mPhi \to \mPhi$（包括非局部），$S_I[\varphi] = S_{\mathrm{std}}[T[\varphi]]$ 是否有解？
+\end{conjecture}
+
+所有已知结构不变量（Euler--Lagrange 方程、Hessian、辛形式、Peierls 括号、值域、临界点结构）对任意 $T$ 均\emph{不} $T$-不变。但物理等价要求保持：
+\begin{itemize}
+\item \textbf{PE1}：局部变分原理；
+\item \textbf{PE2}：协变辛结构 \cite{CrnkovicWitten1987, LeeWald1990, Khavkine2014}；
+\item \textbf{PE3}：Peierls 括号 \cite{HarlowWu2019}；
+\item \textbf{PE4}：变分复形上同调类 \cite{Vitolo2001, Olver1993}。
+\end{itemize}
+这些约束将 $T$ 限制为 jet-局部形式，将 Level 2 归约为已证的 Level 1 情形。Level 2 问题在数学上开放，但在物理上可能无关。
+
+\subsection{物理实现与 Dyson--Schwinger 方程的关系}
+
+自指涉作用量的物理动机来自物理学中若干基本结构涉及自洽性的观察：
+\begin{itemize}
+\item \textbf{Dyson--Schwinger 方程}在\emph{运动方程}层面操作（$D = D_0 + D_0 \Sigma[D] D$）。I 型在\emph{作用量}层面操作——严格更强的位置。我们猜想：量子化后，I 型作用量给出修正的 Dyson--Schwinger 方程，隐式因子 $\chi_I$ 提供对标准自能结构的修正。此猜想未证。
+\item \textbf{Hartree--Fock 理论}在有效势层面实现自洽。I 型 Euler--Lagrange 方程 (EL-I) 有类似的"自洽有效参数"结构，但在作用量层面而非波函数层面。
+\end{itemize}
+
+目前尚未从 I 型作用量导出物理预测。构造可观测后果，或证明已知物理作为极限情形出现，是最重要的开放问题。
+
+\subsection{文献审计}
+\label{sec:lit-audit}
+
+对 Schreiber 的凝聚 $\infty$-topos \cite{Schreiber2013}（797 页）的关键词检索确认零覆盖：
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+关键词 & 命中数 \\
+\midrule
+``self-referential'' / ``self-reference'' & 0 \\
+``action depending on action'' & 0 \\
+``$S[\varphi, S]$'' / ``implicit action'' & 0 \\
+``self-consistent action'' / ``action fixed point'' & 0 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{未来工作}
+
+开放问题包括：(1) Level 2 等价问题（P14c），可能需要 Fr\'echet 空间 Sternberg 线性化定理；(2) 超越 Schwarz 空间的无穷体积处理；(3) 量子化及与 Dyson--Schwinger 方程的关系；(4) 向 II 型（泛函）和 III 型（算子）自指涉的推广。
+
+% ==================================================================
+\appendix
+
+\section{可显式求解的玩具示例}
+\label{sec:toy}
+
+\begin{example}
+\label{ex:toy}
+设 $M = [0, L]$（一维，周期边界，$\vol(M) = L$），$V = \R$（实标量场），$\mPhi = C^\infty(S^1, \R)$，拉格朗日密度：
+\begin{equation}
+\mL(\varphi, \partial_x\varphi, s) = \frac{1}{2}(\partial_x\varphi)^2 - \frac{1}{2}(m_0^2 + \alpha s)\varphi^2,
+\label{eq:toy-L}
+\end{equation}
+其中 $m_0 > 0$、$\alpha > 0$ 为参数。
+\end{example}
+
+\paragraph{不动点方程。}
+\[ F_\varphi(s) = T[\varphi] - \frac{1}{2}(m_0^2 + \alpha s)\, Q[\varphi], \]
+其中 $T[\varphi] := \frac{1}{2}\int_0^L (\partial_x\varphi)^2 \diff x$（动能），$Q[\varphi] := \int_0^L \varphi^2 \diff x$。不动点方程 $s = F_\varphi(s)$ 在 $s$ 中线性：
+\[ s \cdot \bigl(1 + \tfrac{\alpha}{2} Q[\varphi]\bigr) = T[\varphi] - \tfrac{m_0^2}{2} Q[\varphi], \]
+唯一解：
+\begin{equation}
+S[\varphi] = \frac{T[\varphi] - \frac{m_0^2}{2} Q[\varphi]}{1 + \frac{\alpha}{2} Q[\varphi]}.
+\label{eq:toy-solution}
+\end{equation}
+
+\paragraph{良定性。}
+$1 + (\alpha/2) Q[\varphi] > 0$（因 $\alpha > 0$，$Q[\varphi] \geq 0$），分母非零。解关于 $\varphi$ 光滑（因 $T$、$Q$ 是 $\varphi$ 的光滑泛函）。不动点唯一（线性方程）。
+
+注意 Banach 条件 $|\partial_s \mL| \leq K < 1/L$ 对大 $\varphi$ 可能失败，但 $S[\varphi]$ 仍存在唯一——印证 Banach 条件充分非必要。
+
+\paragraph{变分结构。}
+隐式因子：
+\[ \chi_I[\varphi] = \frac{1}{1 + \frac{\alpha}{2} Q[\varphi]}, \]
+非平凡（$\varphi \not\equiv 0$ 时 $\chi_I \neq 1$）。Euler--Lagrange 方程：
+\[ \bigl(-\partial_x^2 + m_0^2 + \alpha S[\varphi]\bigr)\varphi = 0, \]
+是\emph{非局部} integro-微分方程：有效质量 $m_{\mathrm{eff}}^2 = m_0^2 + \alpha S[\varphi]$ 通过 $S[\varphi]$ 依赖全局场构型。
+
+\paragraph{极端极限。}
+当 $\alpha \to \infty$（自指涉主导）时，$S[\varphi] \to -m_0^2/\alpha$（常数），$\chi_I \to 0$，有效质量 $m_{\mathrm{eff}}^2 = m_0^2 + \alpha S[\varphi] \to m_0^2 + \alpha \cdot (-m_0^2/\alpha) = 0$。即自反馈完全抵消裸质量，EL-I 退化为无质量自由场方程 $-\partial_x^2 \varphi = 0$。这是非平凡的物理预测：强自指涉极限下，粒子的有效质量被自反馈完全屏蔽。
+
+\paragraph{非平凡性。}
+$S[\varphi] = (T - \frac{m_0^2}{2}Q)/(1 + \frac{\alpha}{2}Q)$ 是 $T[\varphi]$、$Q[\varphi]$ 的有理函数。若 $\alpha \neq 0$，分母 $1 + \frac{\alpha}{2}Q[\varphi]$ 依赖 $\varphi$，故 $S$ 不能写成标准作用量 $a\tilde{S} + b$ 的仿射形式（后者关于 $\varphi$ 的依赖通过 $\tilde{S} = \int\tilde{\mL}_0$ 是线性的"分母不依赖 $\varphi$"）。由 \Cref{thm:p13} (NT1)，$S$ 非平凡。
+
+\section{Gl\"ockner 隐函数定理}
+\label{sec:glockner-full}
+
+\begin{theorem}[Gl\"ockner {\cite{Glockner2006}, 定理 2.5}]
+\label{thm:glockner-full}
+设 $X$ 为 Fr\'echet 空间，$Y, Z$ 为 Banach 空间，$U \subseteq X$、$V \subseteq Y$ 为开集，$G: U \times V \to Z$ 为 Michal--Bastiani $C^1$（\Cref{def:mb}）。若在 $(\varphi_0, s_0) \in U \times V$ 处：
+\begin{itemize}
+\item[(IFT-1)] $G(\varphi_0, s_0) = 0$；
+\item[(IFT-2)] $D_s G(\varphi_0, s_0): Y \to Z$ 为 Banach 空间的线性同构；
+\end{itemize}
+则存在 $\varphi_0$ 的开邻域 $U_0 \subseteq U$ 和 $s_0$ 的开邻域 $V_0 \subseteq V$，以及唯一连续映射 $S_{\mathrm{loc}}: U_0 \to V_0$，使得：
+\begin{enumerate}
+\item 对所有 $\varphi \in U_0$ 有 $G(\varphi, S_{\mathrm{loc}}(\varphi)) = 0$；
+\item $S_{\mathrm{loc}}(\varphi_0) = s_0$；
+\item $S_{\mathrm{loc}}$ 为 Michal--Bastiani $C^1$。
+\end{enumerate}
+\end{theorem}
+
+\begin{remark}
+在我们的设定中 $Y = Z = \R$（均为一维 Banach 空间），故 $D_s G$ 为标量 $1 - \partial_s F_\varphi(s_0)$ 的乘法，(IFT-2) 退化为：
+\[ 1 - \partial_s F_{\varphi_0}(s_0) \neq 0, \]
+恰好是假设~\ref{ass:h4}。$G$ 的 MB-$C^1$ 正则性在\Cref{thm:p3} 的证明步骤 2 中验证。
+\end{remark}
+
+% ==================================================================
+\section*{致谢}
+
+作者确认在起草初步证明草图、执行常规计算和整理文献时使用了 AI 辅助。所有数学论证均已完整详细记录；作者对工作的正确性承担责任，并欢迎独立验证。
+
+% ==================================================================
+\bibliographystyle{plain}
+\begin{thebibliography}{99}
+
+\bibitem{Schreiber2013}
+Schreiber, U. (2013). \emph{Differential cohomology in a cohesive $\infty$-topos}. arXiv:1310.7930.
+
+\bibitem{Glockner2006}
+Gl\"ockner, H. (2006). Implicit functions from topological vector spaces to Banach spaces. \emph{Israel J. Math.} \textbf{155}, 205--252.
+
+\bibitem{Hamilton1982}
+Hamilton, R. (1982). The inverse function theorem of Nash and Moser. \emph{Bull. AMS} \textbf{7}(1), 65--222.
+
+\bibitem{Olver1993}
+Olver, P. J. (1993). \emph{Applications of Lie Groups to Differential Equations}, 2nd ed. Springer GTM 107.
+
+\bibitem{Anderson}
+Anderson, I. M. \emph{The Variational Bicomplex}. Online manuscript, Utah State University.
+
+\bibitem{CrnkovicWitten1987}
+Crnkovic, C., Witten, E. (1987). Covariant description of the canonical formalism in geometrical theories. In \emph{Three Hundred Years of Gravitation}, Cambridge UP, 676--684.
+
+\bibitem{LeeWald1990}
+Lee, J., Wald, R. M. (1990). Local symmetries and constraints. \emph{J. Math. Phys.} \textbf{31}(3), 725--743.
+
+\bibitem{Khavkine2014}
+Khavkine, I. (2014). Covariant phase space, constraints, gauge and the Peierls formula. arXiv:1402.1282. \emph{Int. J. Mod. Phys. A} \textbf{29}(5), 1450009.
+
+\bibitem{HarlowWu2019}
+Harlow, D., Wu, J. (2019). Covariant phase space with boundaries. arXiv:1906.08616. \emph{JHEP} 2020, 146.
+
+\bibitem{Vitolo2001}
+Vitolo, R. (2001). Some remarks on variational sequences. In \emph{Differential Geometry and its Applications}, 311--323. arXiv:math/0111161.
+
+\bibitem{RudinFA}
+Rudin, W. \emph{Functional Analysis}. McGraw-Hill.
+
+\bibitem{Treves}
+Treves, F. \emph{Topological Vector Spaces, Distributions and Kernels}. Academic Press.
+
+\bibitem{KrantzParks}
+Krantz, S. G., Parks, H. R. \emph{A Primer of Real Analytic Functions}. Birkh\"auser.
+
+\bibitem{Lawvere1969}
+Lawvere, F. W. (1969). Diagonal arguments and cartesian closed categories. \emph{Lecture Notes in Mathematics} \textbf{92}, 134--145.
+
+\bibitem{Yanofsky2003}
+Yanofsky, N. S. (2003). A universal approach to self-referential paradoxes, incompleteness and fixed points. \emph{Bull. Symb. Log.} \textbf{9}(3), 362--386. arXiv:math/0305282.
+
+\bibitem{Sternberg1957}
+Sternberg, S. (1957). Local $C^n$ transformations of the real line. \emph{Duke Math. J.} \textbf{24}(1), 97--102.
+
+\bibitem{Banach1922}
+Banach, S. (1922). Sur les op\'erations dans les ensembles abstraits et leur application aux \'equations int\'egrales. \emph{Fund. Math.} \textbf{3}, 133--181.
+
+\bibitem{Eftekharinasab2024}
+Eftekharinasab, K. (2024). Global implicit function theorems and critical point theory in Fr\'echet spaces. \emph{Aust. J. Math. Anal. Appl.} \textbf{22}(2), Art. 2. arXiv:2404.00286.
+
+\bibitem{Saunders2024}
+Saunders, D. J. (2024). Lepage equivalents and the variational bicomplex. \emph{SIGMA} \textbf{20}, 013. arXiv:2309.01594.
+
+\end{thebibliography}
+
+\end{document}

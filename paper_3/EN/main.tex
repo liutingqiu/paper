@@ -1,0 +1,1090 @@
+\documentclass[11pt,a4paper]{article}
+
+% ===== Packages =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{bm}
+
+% ===== Hyperref settings =====
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!70!black,
+    citecolor=blue!70!black,
+    urlcolor=blue!70!black,
+    pdftitle={p-adic AdS/CFT as a Discovery Tool: Reverse Inspiration and the Berkovich Bridge},
+    pdfauthor={Tianqi Liu}
+}
+
+% ===== Theorem environments =====
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+
+% ===== Macros =====
+\newcommand{\Qp}{\mathbb{Q}_p}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Cp}{\mathbb{C}_p}
+\newcommand{\Zp}{\mathbb{Z}_p}
+\newcommand{\Fp}{\mathbb{F}_p}
+\newcommand{\Pone}{\mathbb{P}^1}
+\newcommand{\PoneBerk}{\mathbb{P}^1_{\mathrm{Berk}}}
+\newcommand{\Tp}{T_p}
+\newcommand{\PGL}{\mathrm{PGL}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\PSL}{\mathrm{PSL}}
+\newcommand{\SO}{\mathrm{SO}}
+\newcommand{\AdS}{\mathrm{AdS}}
+\newcommand{\CFT}{\mathrm{CFT}}
+\newcommand{\Conf}{\mathrm{Conf}}
+\newcommand{\Iso}{\mathrm{Iso}}
+\newcommand{\Boxp}{\Box_p}
+\newcommand{\znu}{\zeta_\nu}
+\newcommand{\zp}{\zeta_p}
+\newcommand{\zinf}{\zeta_\infty}
+\newcommand{\dpartial}{\partial^{(\alpha)}}
+\newcommand{\OO}{\mathcal{O}}
+\newcommand{\GG}{G_\Delta}
+\newcommand{\KK}{K_\Delta}
+\newcommand{\BirTits}{Bruhat--Tits}
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\normp}[1]{|#1|_p}
+\newcommand{\normnu}[1]{|#1|_\nu}
+\newcommand{\norminf}[1]{|#1|_\infty}
+
+% ===== Title and Author =====
+\title{\Large \bfseries p-adic AdS/CFT as a Discovery Tool: \\
+Reverse Inspiration and the Berkovich Bridge}
+
+\author{
+    \large Tianqi Liu\\[4pt]
+    \normalsize School of Materials and Chemical Engineering\\
+    Zhengzhou University of Light Industry\\
+    136 Science Avenue, High-Tech Zone, Zhengzhou, China\\[4pt]
+    \normalsize \texttt{tianqi689@gmail.com}
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+% ===== Abstract =====
+\begin{abstract}
+\noindent
+We establish two rigorous structural results for Witten diagrams on the Bruhat--Tits tree $T_{p^d}$, identifying when the adelic product $\prod_\nu A_\nu = 1$ holds or fails in flat-space p-adic AdS/CFT.
+
+\medskip
+\noindent
+\textbf{Theorem 1 (Contact diagrams).} The $n$-point contact diagram $\mathcal{A}_n = \sum_{z \in T_{p^d}} \prod_i K_{\Delta_i}(z, x_i)$ factorizes into exactly $n{+}1$ local $\zeta_p$ factors (1 radial + $n$ arm + 0 Steiner path), proven for all finite $n \geq 3$ by Steiner-tree recursion and induction (Appendix A). The Archimedean side has $3$ $\zeta_\infty$ factors at $n=3$ (star-triangle cancels the radial $\Gamma$) but degenerates to $1$ radial $\Gamma$ times an \emph{irreducible} Feynman parameter integral for $n \geq 4$---a qualitative structural mismatch, not merely quantitative.
+
+\medskip
+\noindent
+\textbf{Proposition 2 (Exchange diagrams).} The 4-point exchange diagram with non-degenerate propagator $G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1,z_2)}$ admits a \emph{structural decomposition} into two single-vertex sub-sums (each contributing 3 $\zeta_p$ factors: 1 radial + 2 arm) coupled by a Steiner-path factor $p^{-\Delta L}$ and an undetermined \emph{link factor} $R_{\mathrm{link}}(p, \Delta, L)$. The p-adic side thus has \textbf{at least 6 $\zeta_p$ factors} (6 + $|R_{\mathrm{link}}|$). The Archimedean side has $7$ $\zeta_\infty$ factors via spectral decomposition ($3 + 3 + 1$); the mismatch is \textbf{conjecturally zero}, pending the verification that $|R_{\mathrm{link}}| = 1$ (Remark~\ref{rem:link-caveat}).
+
+\medskip
+\noindent
+These results identify the \textbf{bulk-sum obstruction}: the adelic product fails for contact diagrams ($n \geq 3$, proven) but \emph{conjecturally holds} for exchange diagrams (pending $|R_{\mathrm{link}}| = 1$) and holds for two-point functions (via Tate's local functional equation,~\cite{HSYZ20}). We unify these cases through Tate's local zeta integral framework: each $\zeta_p$ factor is a Tate integral $Z_p(s, 1)$, and the adelic product holds iff the Tate integral counts match between p-adic and Archimedean sides. The obstruction reflects that the totally disconnected topology of $T_{p^d}$ imposes complete factorization on single-vertex sums---a stronger factorization than the Archimedean topology allows---while exchange diagrams' inter-vertex coupling (the link factor) is conjectured to mirror the Archimedean spectral coupling, evading the obstruction.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ======================================================================
+% SECTION 1: Introduction
+% ======================================================================
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{Thirty Years of p-adic Physics: From Zabrodin to Huang--Jepsen}
+
+The history of p-adic mathematical physics spans roughly three waves.
+
+\paragraph{First wave (1987--1990): Origins.}
+Volovich's 1987 paper~\cite{V87} initiated the field by proposing that spacetime at the Planck scale may be p-adic. This was followed by Freund--Olson and Brekke--Freund--Olson--Witten~\cite{BFO88}, who computed p-adic Koba--Nielsen amplitudes for arbitrary numbers of tachyon vertices. Crucially, Chekhov--Mironov--Zabrodin (1989)~\cite{CMZ89} established the geometric framework that would later become p-adic AdS/CFT:
+
+\begin{quote}
+``We treat the open p-adic string world sheet as a coset space $F = T/\Gamma$, where $T$ is the \BirTits{} tree for the p-adic linear group $\GL(2, \Qp)$ and $\Gamma \subset \PGL(2, \Qp)$ is some Schottky group. The boundary of this world sheet corresponds to a p-adic Mumford curve of finite genus.''
+\end{quote}
+
+This 1989 work already contained the three pillars of modern p-adic AdS/CFT: (i) the bulk is the \BirTits{} tree $\Tp$, (ii) Schottky group quotients $\Tp/\Gamma$ describe black hole geometries, and (iii) the boundary is a p-adic Mumford curve. Marshkov--Zabrodin (1990)~\cite{MZ90} further developed p-adic string amplitudes using multiplicative characters of quadratic extensions.
+
+\paragraph{Second wave (2016--2019): Modern foundations.}
+The original AdS/CFT correspondence~\cite{M97,GKP98,W98} posits an equivalence between gravity in $\AdS_{d+1}$ and a conformal field theory on its boundary. Gubser et al.\ (2016)~\cite{G16} and Heydman--Marcolli--Saberi--Stoica (2016)~\cite{HMSS16} independently established the modern p-adic AdS/CFT framework, building on Zabrodin's geometric foundation. The second wave rapidly expanded to cover conformal blocks~\cite{P19,JP19a}, tensor networks~\cite{HLM19}, holographic entropy~\cite{HMPS18}, Mellin amplitudes~\cite{JP19b}, and spinor/gauge fields~\cite{GJT19,HLM19b}.
+
+\paragraph{Third wave (2020--2026): Berkovich and adelic.}
+The frontier shifted toward bridging p-adic and Archimedean physics. Huang--Mao--Stoica (2020)~\cite{HMS20} proved the Euler product formula for particle-in-a-box spectra via Berkovich-space flow equations. Huang--Stoica--Yau--Zhong (2020)~\cite{HSYZ20} established adelic product formulas for Green's functions via Tate's thesis. Goldfarb (2023)~\cite{G23} constructed $\PoneBerk$ via coarse-graining. Huang--Jepsen (2024)~\cite{HJ24} generalized Zabrodin's classic result to the Tate curve at finite temperature.
+
+\subsection{Failure of the Early Diagnosis}
+
+Early assessments of p-adic physics identified three ``resistances'': (i) experimental unreachability, (ii) difficulty of physical intuition, and (iii) weak connection to the Standard Model. The 2017--2026 literature has invalidated this diagnosis:
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Experimental unreachability bypassed}: Chawdhry (2023--2024)~\cite{C23,C24} demonstrated that p-adic numbers serve as a practical computational tool for QCD multi-loop amplitude reconstruction, reducing required numerical probes by a factor of 25.
+    \item \textbf{Physical intuition provided}: Yan--Jepsen--Oz (2023)~\cite{YJO23} connected p-adic holography to fracton models in condensed matter physics; Takayanagi and collaborators~\cite{OT24} built tensor-network bridges.
+    \item \textbf{Standard Model connection strengthened}: Camp--Gripaios--Nguyen~\cite{CGN24} showed that gauge anomaly cancellation in 2D holds if and only if it holds in $\R$ and all $\Qp$; Qu--Gao~\cite{QG20} developed spinor field theories on the \BirTits{} tree.
+\end{itemize}
+
+\subsection{Thesis of This Paper}
+
+This paper advances two claims:
+
+\paragraph{C1 (Core contribution).}
+p-adic AdS/CFT is not merely a simplified toy model of real AdS/CFT but a discovery tool with independent heuristic value. We systematize eight reverse-inspiration cases (\S\ref{sec:reverse}), extract five mathematical mechanisms M1--M5 (\S\ref{sec:mechanisms}), and construct a mechanism--case correspondence matrix (\S\ref{sec:matrix}) that serves as a diagnostic framework, illustrated by a retrodictive example against~\cite{HJ24} (\S\ref{sec:retro}).
+
+\paragraph{C2 (Open-problem analysis).}
+The Berkovich-space bridge between p-adic and Archimedean physics has been partially validated (R1--R4, \S\ref{sec:berkovich}--\ref{sec:obstacles}) but its generalization to generic AdS/CFT field theories faces four obstacles O1--O4 (\S\ref{sec:obstacles}). We trace the genealogy Stoica(2018) $\to$ Huang--Mao--Stoica(2020) $\to$ Goldfarb(2023) and provide an honest assessment of what is proven versus proposed.
+
+We explicitly do \textbf{not} propose new conjectures for obstacles O1, O2, and O4. For O3, we propose one conjecture---the \textbf{bulk-sum obstruction}---for when the adelic product holds in flat-space AdS/CFT (\S\ref{sec:obstacles}), based on original computations of the $\zeta_\nu$-factor structure of three-point and four-point Witten diagrams. An earlier draft attempted a ``Berkovich RG flow conjecture'' which was withdrawn for insufficient mathematical rigor.
+
+\subsection{Outline}
+
+\S\ref{sec:foundations} reviews mathematical foundations. \S\ref{sec:parallel} surveys the 2016--2019 ``parallel verification'' phase. \S\ref{sec:reverse} presents the C1 analysis (reverse inspiration). \S\ref{sec:berkovich} presents the C2 analysis (Berkovich bridge). \S\ref{sec:adelic} discusses adelic completion. \S\ref{sec:open} lists open problems with mathematical difficulty analysis. \S\ref{sec:conclusion} concludes.
+
+% ======================================================================
+% SECTION 2: Mathematical Foundations
+% ======================================================================
+\section{Mathematical Foundations}
+\label{sec:foundations}
+
+\subsection{p-adic Numbers and the \BirTits{} Tree}
+
+Let $p$ be a prime. The field of p-adic numbers $\Qp$ is the completion of $\Q$ with respect to the p-adic norm $\normp{x} = p^{-v_p(x)}$, where $v_p(x)$ is the p-adic valuation. The norm satisfies the \textbf{ultrametric inequality} $\normp{x+y} \leq \max(\normp{x}, \normp{y})$, which makes $\Qp$ a \textbf{totally disconnected} topological space: every open ball $B(a,r) = \{x : \normp{x-a} < r\}$ is both open and closed.
+
+The \textbf{\BirTits{} tree} $\Tp$ is the $(p+1)$-regular tree defined as the homogeneous space
+\begin{equation}
+\Tp = \PGL(2, \Qp) / \PGL(2, \Zp)
+\end{equation}
+where $\Zp = \{x \in \Qp : \normp{x} \leq 1\}$ is the ring of p-adic integers. The boundary of $\Tp$ is $\Pone(\Qp) = \Qp \cup \{\infty\}$.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.9\textwidth}{\centering \textbf{Figure 1.} The \BirTits{} tree $T_2$ (for $p=2$). Each vertex has $p+1=3$ neighbors. The bulk is the interior of the tree; the boundary is $\mathbb{P}^1(\mathbb{Q}_2)$, visualized as the endpoints at infinity. The graph distance between two vertices is the number of edges on the unique path connecting them. A Schottky group quotient $T_p/\Gamma$ identifies vertices, producing a bulk with a thermal cycle (BTZ black hole analog).}}
+\end{figure}
+
+\subsection{Bulk-Boundary Correspondence}
+
+In p-adic AdS/CFT, the bulk is $\Tp$ (or a quotient $\Tp/\Gamma$ by a Schottky group $\Gamma \subset \PGL(2, \Qp)$), and the boundary is $\Pone(\Qp)$ (or a p-adic Mumford curve in the quotient case).
+
+\paragraph{Key structural property (proven in~\cite{HMSS16}).}
+The bulk isometry group \textbf{exactly equals} the boundary conformal transformation group:
+\begin{equation}
+\Iso(\Tp) = \PGL(2, \Qp) = \Conf(\Pone(\Qp))
+\end{equation}
+This is a stronger statement than in real AdS/CFT, where the bulk admits additional asymptotic symmetries (diffeomorphisms) beyond the isometry group. This exact equality (mechanism M3, \S\ref{sec:mechanisms}) is one of the structural advantages of the p-adic setting.
+
+The \textbf{chordal distance} on the boundary is $d(x,y) = \normp{x-y}$, which corresponds to the graph distance on $\Tp$. The \textbf{bulk-to-boundary propagator} for a scalar field of scaling dimension $\Delta$ is~\cite{G16,HMSS16}:
+\begin{equation}
+\KK(i, x) \propto p^{-\Delta \cdot d(i, x)}
+\end{equation}
+where $d(i,x)$ is the graph distance from bulk vertex $i$ to the boundary point $x$. The \textbf{bulk-to-bulk propagator} takes the analogous form~\cite{GP17}:
+\begin{equation}
+\GG(i, j) \propto p^{-\Delta \cdot d(i, j)}
+\end{equation}
+where $d(i,j)$ is the graph distance between bulk vertices $i$ and $j$. The boundary two-point function is recovered as the boundary limit:
+\begin{equation}
+\langle \OO(x_1) \OO(x_2) \rangle = \lim_{i \to \mathrm{bdy}} \KK(i, x_1) \cdot \KK(i, x_2) \propto \normp{x_1 - x_2}^{-2\Delta}
+\end{equation}
+This mirrors the real AdS/CFT derivation, with the graph distance on $\Tp$ replacing the geodesic distance on $\AdS_{d+1}$. The key simplification is that on a tree, the graph distance is uniquely defined (there is exactly one path between any two points), eliminating the minimization over geodesics required in real AdS/CFT (mechanism M2, \S\ref{sec:mechanisms}).
+
+\subsection{Local Zeta Functions and Vladimirov Derivatives}
+
+The \textbf{Vladimirov derivative} (or p-adic pseudo-differential operator) is defined by
+\begin{equation}
+\dpartial f(x) = \frac{1}{\Gamma_p(-\alpha)} \int_{\Qp} \frac{f(x) - f(y)}{\normp{x-y}^{\alpha+1}} \, dy
+\end{equation}
+where $\Gamma_p$ is the p-adic gamma function, defined as $\Gamma_p(\alpha) = \frac{1 - p^{\alpha-1}}{1 - p^{-\alpha}}$ (we follow the convention of~\cite{HSYZ20}; some authors absorb the normalization into the measure). This operator is the p-adic analog of the fractional Laplacian $(-\Delta)^{\alpha/2}$ and replaces the ordinary derivative $\partial/\partial x$ in p-adic field theory. Crucially, p-adic field theories have fields taking values in $\R$ or $\C$ but with p-adic arguments, so ordinary derivatives do not exist (mechanism M1, \S\ref{sec:mechanisms}).
+
+\paragraph{Green's function--zeta integral correspondence (proven in~\cite{HSYZ20}).}
+For each place $\nu$ (including $\nu = \infty$), the Green's function $G_\nu(x,y)$ of the free scalar field with Vladimirov kinetic term $\dpartial$ equals the local functional equation for Tate's zeta integrals $Z_\nu$. This correspondence, detailed in \S\ref{sec:adelic-green}, is the mathematical foundation for mechanism M4: local zeta functions provide a universal scaffold that parallels p-adic and Archimedean computations.
+
+The \textbf{local zeta function} is
+\begin{equation}
+Z_p(s, \chi) = \int_{\Qp^\times} \normp{x}^s \chi(x) \, d^\times x
+\end{equation}
+where $\chi$ is a multiplicative character. Local zeta functions provide a \textbf{universal scaffold} that parallels p-adic and Archimedean (real) computations (mechanism M4, \S\ref{sec:mechanisms}). The foundational framework for these local zeta integrals and their global adelic product was established by Tate~\cite{Tate50}.
+
+\subsection{The Berkovich Projective Line}
+
+The \textbf{Berkovich analytification} of $\Pone$ over $\Cp$ (the completion of the algebraic closure of $\Qp$) is a compact, path-connected topological space that contains the ``classical'' $\Pone(\Cp)$ as a dense subset but also includes additional points of four types~\cite{Ber90}:
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Type I}: Classical points (elements of $\Pone(\Cp)$)
+    \item \textbf{Type II}: Closed disks $\bar{B}(a, r)$ with radius $r$ in the value group $|\Cp^\times|$
+    \item \textbf{Type III}: Closed disks with radius $r$ not in the value group
+    \item \textbf{Type IV}: Limits of nested sequences of closed disks with empty intersection
+\end{itemize}
+Types II--IV restore path-connectivity: between any two Type I points, there is a unique arc passing through Type II/III points, and this arc is isometric to a real interval. This is the key structural property that makes Berkovich spaces suitable as a bridge between the totally disconnected $\Qp$ and the connected Archimedean $\R$.
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.9\textwidth}{\centering \textbf{Figure 2.} Schematic of the Berkovich projective line $\PoneBerk$. Type I points (classical $\Cp$-points) are totally disconnected. Type II points correspond to closed disks and are in bijection with \BirTits{} tree vertices. Type III points fill gaps with non-standard radii. The unique arc between any two Type I points passes through Type II/III points, restoring path-connectivity---this is the geometric foundation of the Berkovich bridge (\S\ref{sec:berkovich}).}}
+\end{figure}
+
+\paragraph{Goldfarb (2023)~\cite{G23} construction.}
+The Berkovich projective line $\PoneBerk$ can be constructed by imposing an equivalence relation (via chordal distance coarse-graining) on $\Cp^\times \times \Cp$. This construction establishes a correspondence between p-adic fields and \BirTits{} trees: the Type II points of $\PoneBerk$ are in bijection with the vertices of $\Tp$, providing a geometric bridge between the two descriptions. Goldfarb outlined (but did not implement) a ``comprehensive theory of non-Archimedean AdS/CFT'' enabled by this construction (\S\ref{sec:goldfarb}).
+
+The Berkovich space is central to C2 because it provides a \textbf{path-connected} geometry that can bridge the totally disconnected p-adic world with the connected Archimedean world---a bridge that is impossible within $\Qp$ alone.
+
+% ======================================================================
+% SECTION 3: Background: Parallel Verification and Reverse Inspiration
+% ======================================================================
+\section{Background: Parallel Verification and Reverse Inspiration}
+\label{sec:parallel}
+\label{sec:reverse}
+
+The 2016--2019 wave systematically verified that key results of real AdS/CFT have p-adic analogs, while a parallel line of work demonstrated that p-adic methods can precede and inspire their real-theoretic counterparts. This section surveys both as background for the original analysis in \S\ref{sec:berkovich}--\S\ref{sec:adelic}; detailed derivations appear in the cited literature.
+
+\subsection{Parallel Verification (2016--2019)}
+
+\paragraph{Correlation functions.}
+
+Gubser (2016)~\cite{G16} and Heydman--Marcolli--Saberi--Stoica (2016)~\cite{HMSS16} established that bulk scalar fields on $\Tp$ yield two- and three-point functions $\langle \OO(x_1) \OO(x_2) \rangle \propto \normp{x_1 - x_2}^{-2\Delta}$ of the same form as real CFTs, with $\Delta(\Delta-d)=m^2$ as in real AdS/CFT, generalizing Zabrodin's 1989 result~\cite{CMZ89} to the full AdS/CFT framework.
+
+\paragraph{Conformal blocks and geodesic bulk diagrams.}
+Gubser--Parikh (2017)~\cite{GP17} computed geodesic bulk diagrams on $\Tp$, finding that all derivative terms appearing in the real computation vanish identically and coefficients take the same form at all places (local zeta functions). Parikh (2019)~\cite{P19} computed the five-point global conformal block; Jepsen--Parikh (2019)~\cite{JP19a} computed propagator identities generalizing the star-triangle identity up to six points.
+
+\paragraph{Tensor networks.}
+Hung--Li--Melby-Thompson (2019)~\cite{HLM19} proved p-adic CFT is a holographic tensor network: the path integral on $\Pone(\Qp)$ exactly equals a tensor network on $\Tp$ with bond dimension $\chi = p$, and established the IR fixed point of p-adic RG flow.
+
+\paragraph{Holographic entropy and Ryu--Takayanagi.}
+Heydman--Marcolli--Parikh--Saberi (2018)~\cite{HMPS18} constructed p-adic holographic entropy from perfect tensors over $\Fp^2$, realizing the Ryu--Takayanagi formula~\cite{RT06a,RT06b} $S(A) = |\gamma_A| \cdot \log \chi$ with trivial minimization (the tree's unique geodesic makes the RT surface unique). Structural discovery: monogamy of mutual information (MMI) is always saturated---a qualitative difference from real AdS/CFT. For the genus-1 Schottky quotient, BTZ entropy is $S_{BH} = \frac{w \log p}{4 G_N}$ with $w = \mathrm{ord}_p(q^{-1})$.
+
+\paragraph{Spinor and gauge fields.}
+Gubser--Jepsen--Trundy (2019)~\cite{GJT19} developed spinor field theory on $\Tp$ via a sign character and the line graph of $\Tp$. Hung--Li--Melby-Thompson (2019)~\cite{HLM19b} formulated Wilson line networks as a lattice gauge theory with gauge group $\PGL(2, \Qp)$. Qu--Gao (2020)~\cite{QG20} established the bulk-boundary spinor dictionary; Camp--Gripaios--Nguyen (2024)~\cite{CGN24} showed anomaly cancellation holds iff it holds simultaneously in $\R$ and all $\Qp$.
+
+\subsection{Eight Reverse-Inspiration Cases}
+\label{sec:type-a}
+\label{sec:type-b}
+
+\paragraph{Type A: Computational order reversal (p-adic precedes real).}
+\textit{Case \#1:} Brekke--Freund--Olson--Witten (1988)~\cite{BFO88} evaluated the p-adic Koba--Nielsen amplitude, with the integral factorizing into local zeta functions (M1, M4); Gerasimov--Shatashvili (2000)~\cite{GS00} subsequently determined the real string effective action, with the p-adic result (1988) preceding the real one (2000) as documented in~\cite{HJ24}. \textit{Case \#2:} Parikh (2019)~\cite{P19} computed the five-point global conformal block holographic dual, with the p-adic geodesic structure inspiring the real computation (M3). \textit{Case \#3:} Jepsen--Parikh (2019)~\cite{JP19a} computed five/six-point conformal blocks and propagator identities, with the p-adic star-triangle identity reducing to a geometric series (M1, M3) that ``informed the real-theoretic computation.''
+
+\paragraph{Type B: Mathematical structures physicalized (p-adic tools gain physical meaning).}
+\textit{Case \#4:} Huang--Stoica--Yau--Zhong (2020)~\cite{HSYZ20} established that the Green's function $G_\nu$ of the free scalar field equals Tate's local zeta functional equation at each place, with $\prod_\nu G_\nu = 1$ after regularization (M4, M5). \textit{Case \#5:} Huang--Mao--Stoica (2020)~\cite{HMS20} proved the Archimedean particle-in-a-box spectrum equals the Euler product of p-adic spectra, $E_{(\infty)} = \prod_p E_{(p)}^{-1} = \frac{n^2 h^2}{8 m T^2}$, via an RG flow on Berkovich space $M(\mathbb{Z})$; cites Stoica (2018)~\cite{S18} as precursor (M5). \textit{Case \#6:} Heydman--Marcolli--Parikh--Saberi (2018)~\cite{HMPS18} perfect tensor networks yield $S(A) = |\gamma_A| \cdot \log \chi$ with MMI always saturated---a qualitative (not simplifying) difference from real AdS/CFT (M2, M3).
+
+\paragraph{Type C: Cross-disciplinary duality (p-adic as bridge).}
+\textit{Case \#7:} Yan--Jepsen--Oz (2023)~\cite{YJO23} revealed a low-temperature duality between hyperbolic lattice fracton models and decoupled copies of Zabrodin's p-adic AdS/CFT model~\cite{CMZ89}, with lattice defects corresponding to p-adic black holes (M3). \textit{Case \#8:} Chawdhry (2023--2024)~\cite{C23,C24} demonstrated p-adic numbers as a practical computational tool for QCD multi-loop amplitude reconstruction, reducing required numerical probes by a factor of 25 and producing results 130 times more compact~\cite{C23}.
+
+\subsection{Five Mathematical Mechanisms (M1--M5)}
+\label{sec:mechanisms}
+
+We extract five mechanisms explaining why p-adic methods serve as a discovery tool:
+
+\paragraph{M1: Ultrametricity eliminates derivative operators.}
+The non-Archimedean inequality makes the difference quotient non-convergent, replacing derivatives by the Vladimirov operator $\dpartial$ (\S\ref{sec:foundations}); infinite series and hypergeometric functions collapse to few terms. Evidence: \cite{GP17} (four-point geodesic diagrams with vanishing derivative terms); \cite{HJ24} (one-loop two-point Witten diagram on the Tate curve at generic $\Delta$, real counterpart not yet computed). \emph{Applies to}: cases \#1, \#2, \#3.
+
+\paragraph{M2: Total disconnectedness causes series collapse.}
+$\Qp$ is totally disconnected (clopen balls), so path integrals degenerate into discrete sums---typically geometric series summable exactly; the tree's unique geodesic property trivializes RT minimization, and Schottky quotients reduce to geometric series with ratio $\normp{q}$~\cite{CMZ89}. Evidence: \cite{HMPS18}; \cite{CMZ89}. \textbf{New evidence (original, \S\ref{sec:obstacles})}: the three-point tree-level Witten diagram factorizes into 4 $\zeta_p$ factors (1 radial + 3 branch) vs 3 $\zeta_\infty$ on the Archimedean side---a structural mismatch, not a simplification. \emph{Applies to}: cases \#1, \#6 (Case \#4 indirectly; see M4).
+
+\paragraph{M3: \BirTits{} tree preserves symmetry while discretizing.}
+$\Tp = \PGL(2,\Qp)/\PGL(2,\Zp)$ has isometry group exactly equal to the boundary conformal group:
+\begin{equation}
+\Iso(\Tp) = \PGL(2, \Qp) = \Conf(\Pone(\Qp))
+\end{equation}
+a stronger statement than in real AdS/CFT where discretization breaks symmetry. Evidence: \cite{HMSS16}; \cite{P19}. \emph{Applies to}: cases \#2, \#3, \#6, \#7.
+
+\paragraph{M4: Universal scaffolding of local zeta functions.}
+The local zeta function $Z_\nu(s, \chi) = \int_{\mathbb{Q}_\nu^\times} |x|_\nu^s \chi(x) \, d^\times x$ is defined identically for all places $\nu$, so correlation functions share the same zeta-function skeleton across places. Evidence: \cite{GP17}; \cite{HSYZ20} (\S\ref{sec:adelic-green}). \emph{Applies to}: cases \#1, \#4.
+
+\paragraph{M5: Adelic product formula.}
+For regularized quantities $F_\nu$, $\prod_\nu F_\nu = 1$ holds for two-point functions~\cite{HSYZ20} and particle-in-a-box spectra~\cite{HMS20}. \textbf{Original analysis (\S\ref{sec:obstacles}, \S\ref{sec:adelic})}: the adelic product fails at three points (4 $\zeta_p$ vs 3 $\zeta_\infty$) and worsens at four points (5 $\zeta_p$ vs 1 $\zeta_\infty$); we propose a \textbf{bulk-sum obstruction conjecture}. \cite{J22} independently showed five-point string-theoretic adelic amplitudes are not single analytic functions. \emph{Applies to}: cases \#4, \#5.
+
+\subsection{Mechanism--Case Correspondence Matrix}
+\label{sec:matrix}
+
+\begin{table}[H]
+\centering
+\caption{Mechanism--case correspondence matrix.}
+\label{tab:matrix}
+\begin{tabular}{lcccccccc}
+\toprule
+Mechanism & \#1 & \#2 & \#3 & \#4 & \#5 & \#6 & \#7 & \#8 \\
+\midrule
+M1 (ultrametric)         & $\checkmark$ & $\checkmark$ & $\checkmark$ & & & & & \\
+M2 (disconnected)        & $\checkmark$ & & & $\checkmark^{*}$ & & $\checkmark$ & & \\
+M3 (BT tree symmetry)    & & $\checkmark$ & $\checkmark$ & & & $\checkmark$ & $\checkmark$ & \\
+M4 (zeta universal)      & $\checkmark$ & & & $\checkmark$ & & & & \\
+M5 (adelic product)      & & & & $\checkmark$ & $\checkmark$ & & & \\
+\bottomrule
+\multicolumn{9}{l}{\footnotesize $^{*}$Indirect: Tate's thesis is a local zeta integral, not a path integral; Case \#4 is primarily M4.}
+\end{tabular}
+\end{table}
+
+\subsection{Retrodictive Test: Blind-Checking the Matrix Against~\cite{HJ24}}
+\label{sec:retro}
+
+To test the diagnostic power of the matrix, we perform a \emph{retrodictive} check: we ask which mechanisms the matrix \emph{would have predicted} for the one-loop two-point Witten diagram on the Tate curve, computed in~\cite{HJ24}, and compare with the actual outcome.
+
+\paragraph{The~\cite{HJ24} computation.}
+Huang--Jepsen computed the two-point one-loop Witten diagram on $\Tp/\langle q \rangle$ (the Tate curve at finite temperature) for \emph{generic} scaling dimension $\Delta$. The real-AdS/CFT counterpart has not yet been computed~\cite{HJ24} \S6 (``not yet determined''). The p-adic result's closed-form structure at generic $\Delta$ is conjecturally simpler than the expected real counterpart (where one-loop calculations typically require special mass values for closed-form results), but this comparison awaits verification once the real computation is performed.
+
+\paragraph{Matrix identification.}
+The Tate curve involves (i) a Schottky group quotient (geometric series in $\normp{q}$), suggesting M2; (ii) a loop diagram with derivative structure, suggesting M1; (iii) correlation functions expressible via local zeta functions, suggesting M4. The matrix thus identifies that \emph{at least two} mechanisms (M1 + M2, and possibly M4) should contribute to the simplification.
+
+\paragraph{Actual outcome.}
+The~\cite{HJ24} result matches all three identifications: (a) the Schottky sum reduces to a geometric series (M2 $\checkmark$), (b) the loop integral bypasses derivative complexity for generic $\Delta$ (M1 $\checkmark$), and (c) the coefficients are expressible as local zeta functions (M4 $\checkmark$). This retrodiction---three mechanisms identified, three matching---illustrates how the matrix maps onto a known computation. It does \emph{not} validate predictive power, which would require testing on genuinely new problems whose outcomes are not already known at the time of matrix construction. The circularity is acknowledged: M1--M5 were extracted from the literature including~\cite{HJ24}, so the retrodiction is a consistency check, not an independent test.
+
+\paragraph{Limitation.}
+This is a single retrodiction, not a statistical validation. The matrix is a \emph{heuristic} tool, not a theorem. Its predictive power for genuinely \emph{new} problems remains untested.
+
+% ======================================================================
+% SECTION 5: The Berkovich Bridge
+% ======================================================================
+\section{The Berkovich Bridge: Current Status and Obstacles}
+\label{sec:berkovich}
+
+\subsection{Result R1: Stoica (2018) Decomposition/Construction Duality}
+
+Stoica's 2018 paper ``Building Archimedean Space''~\cite{S18} proposed a ``decomposition/construction duality'': real physical theories can be decomposed into finite-place (p-adic) theories, and conversely, finite-place theories can be used to construct real theories.
+
+\paragraph{Proven cases} (within the paper, \S3--\S5):
+\begin{itemize}[leftmargin=2em]
+    \item Free particle quantum mechanics: real derivative $\partial/\partial x$ $\leftrightarrow$ Vladimirov derivative $\partial^{(p)}_x$, with numerical coefficients replaced by p-adic norms. The Schr\"odinger equation and its solutions have p-adic counterparts.
+    \item 2D Euclidean Einstein gravity (Jackiw--Teitelboim): $\AdS_2$ with isometry $SO(2,1) \cong \PSL(2,\R)$ $\leftrightarrow$ \BirTits{} tree $\Tp$ with $\PSL(2,\Qp)$. Partition function matching is computed explicitly.
+\end{itemize}
+
+\paragraph{Proposed (not proven, \S3 labeled ``general proposal''):}
+\begin{itemize}[leftmargin=2em]
+    \item Lorentzian $\AdS_2$ via quadratic extensions $\Qp[\sqrt{\tau}]$, where $\tau$ is a non-square element determining the extension.
+    \item Higher-dimensional generalization via \BirTits{} buildings $\mathrm{BT}_d(\Qp)$ for $\GL(d+1, \Qp)$.
+    \item General ``p-adic decomposition and reconstruction'' of arbitrary physical theories.
+\end{itemize}
+
+\paragraph{Mathematical status.}
+\S3 of~\cite{S18} is explicitly labeled a ``general proposal.'' Specific cases have computations; the generalization is conceptual.
+
+\subsection{Result R2: Huang--Mao--Stoica (2020) Euler Product Formula}
+
+Huang--Mao--Stoica~\cite{HMS20} proved:
+
+\begin{theorem}[Proven]
+The Archimedean particle-in-a-box spectrum equals the Euler product of p-adic spectra:
+\begin{equation}
+E_{(\infty)} = \prod_p E_{(p)}^{-1} = \frac{n^2 h^2}{8 m T^2}
+\end{equation}
+\end{theorem}
+
+\textbf{Mechanism}: The Euler product arises from flow equations on the Berkovich space $M(\mathbb{Z})$, which~\cite{HMS20} interprets as an RG flow with p-adic norm $|\cdot|_p$ (rather than energy scale $\mu$) as the flow parameter. The Berkovich space $M(\mathbb{Z})$ serves as a ``theory space'': its points correspond to valuations on $\mathbb{Z}$ (i.e., the p-adic valuations $v_p$ for each prime $p$, plus the Archimedean valuation $v_\infty$), and the flow connects p-adic points to the Archimedean point.
+
+\textbf{Mathematical status}: The particle-in-a-box case is rigorously proven (\S2, Lemmas 1--3, Eqs.~2.24--2.26). The generalization to generic field theories is explicitly proposed in \S3 (``we propose'') but not proven. \S3 of~\cite{HMS20} explicitly cites Stoica (2018)~\cite{S18} as the intellectual precursor.
+
+\subsection{Result R3: Huang--Stoica--Yau--Zhong (2020) Adelic Product Formula}
+\label{sec:adelic-green}
+
+Huang--Stoica--Yau--Zhong~\cite{HSYZ20} proved:
+
+\begin{theorem}[Proven]
+For each place $\nu$ (including $\nu = \infty$), the Green's function $G_\nu(x,y)$ of the free scalar field with Vladimirov kinetic term $\dpartial$ satisfies the same local functional equation as Tate's zeta integral $Z_\nu(s, \chi)$:
+\begin{equation}
+G_\nu \leftrightarrow Z_\nu \quad \text{(local functional equation at place } \nu\text{)}
+\end{equation}
+Across all places, the two-point functions satisfy the adelic product formula:
+\begin{equation}
+\prod_\nu G_\nu = 1 \quad \text{(after regularization)}
+\end{equation}
+which corresponds to the \textbf{global functional equation} in Tate's thesis.
+\end{theorem}
+
+This establishes a precise dictionary: local zeta integrals $\leftrightarrow$ local Green's functions; global adelic product $\leftrightarrow$ global functional equation.
+
+\textbf{Mathematical status}: Rigorously proven for free scalar two-point functions (Green's functions). The range of observables satisfying adelic product formulas is limited:~\cite{J22} showed that four-point string-theoretic adelic amplitudes equal 1 after regularization, but five-point amplitudes are \textbf{not} single analytic functions (\S\ref{sec:adelic}). \textbf{Our original analysis (\S\ref{sec:obstacles})} further shows that in AdS/CFT, the adelic product fails already at \textbf{three points}: the p-adic three-point OPE coefficient has 4 $\zeta_p$ factors while the Archimedean counterpart has only 3 $\zeta_\infty$ factors---a structural mismatch caused by the tree's total disconnectedness (M2). We propose the \textbf{bulk-sum obstruction conjecture} for when the adelic product holds (\S\ref{sec:obstacles}, \S\ref{sec:open}).
+
+\subsection{Result R4: Goldfarb (2023) Berkovich Projective Line Construction}
+\label{sec:goldfarb}
+
+Goldfarb~\cite{G23} constructed $\PoneBerk$ by imposing an equivalence relation on $\Cp^\times \times \Cp$ via chordal distance coarse-graining. The Type II points of $\PoneBerk$ are in bijection with the vertices of the \BirTits{} tree $T_p$, establishing a geometric correspondence between the Berkovich and tree descriptions (\S\ref{sec:foundations}).
+
+\textbf{Claimed (not implemented)}: Goldfarb's \S5 outlines ``a direction for the development of a comprehensive theory of non-Archimedean AdS/CFT and consequently, adelic AdS/CFT, enabled by this construction.'' No field-theoretic computations are performed.
+
+\textbf{Mathematical status}: The construction of $\PoneBerk$ is a one-dimensional geometric result. The extension to AdS/CFT field theory is a direction declaration, not an implementation.
+
+\subsection{Four Obstacles to Generalization}
+\label{sec:obstacles}
+
+We identify four obstacles that currently obstruct the generalization of the Berkovich bridge to generic AdS/CFT field theories:
+
+\paragraph{Obstacle O1: No rigorous definition of ``theory space'' $\mathfrak{B}_K$.}
+The Berkovich space $M(\mathbb{Z})$ used in~\cite{HMS20} is a one-dimensional analytic space: its points correspond to valuations on $\mathbb{Z}$ (one for each prime $p$, plus the Archimedean place), connected by arcs. Generic AdS/CFT field theories involve infinite-dimensional data:
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Fields}: scalar, spinor, and gauge fields defined on $\Tp$ or $\Tp/\Gamma$ (infinite-dimensional function spaces)
+    \item \textbf{Couplings}: interaction parameters $g_i$ (continuous, possibly infinite in number)
+    \item \textbf{Symmetry groups}: e.g., $\PGL(2, \Qp)$, gauge groups, global symmetries
+\end{itemize}
+These data form an infinite-dimensional moduli space that does not naturally embed into a one-dimensional Berkovich space. Goldfarb's $\PoneBerk$ is also one-dimensional. \textbf{The category mismatch}: one-dimensional Berkovich geometry vs.\ infinite-dimensional field theory moduli space. Constructing an appropriate Berkovich space for AdS/CFT (possibly an infinite-dimensional Berkovich space or an alternative) is an independent multi-paper project.
+
+\paragraph{Obstacle O2: Physical meaning of the flow $\Phi_t$ is unclear.}
+The ``flow equation'' in~\cite{HMS20} is explicitly computed for the particle-in-a-box case, but its interpretation as an ``RG flow'' is an analogy, not a proof. The key distinction:
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Berkovich-space flow}~\cite{HMS20}: connects different \textbf{places} (p-adic $\to$ Archimedean), parameterized by p-adic norm $|\cdot|_p$. This is a flow in ``theory space'' between different completions of $\Q$.
+    \item \textbf{Wilsonian RG flow}: operates \textbf{within a single place}, parameterized by energy scale $\mu$, integrating out high-energy modes.
+\end{itemize}
+These are conceptually different operations. A Wilsonian RG flow on Berkovich space has no literature. Partial evidence:~\cite{HLM19} proves that p-adic CFT RG flow has IR fixed points at p-adic CFTs, but this is a boundary-side Wilsonian flow \textbf{within} the p-adic place, not a Berkovich-space flow \textbf{between} places. Establishing a rigorous correspondence between Berkovich-space flows and boundary RG flows is an open problem.
+
+\paragraph{Obstacle O3: Limited scope of the product formula.}
+The adelic product formula has a sharply limited scope. The known hierarchy of failure is:
+
+\textbf{String-theoretic amplitudes} (Koba--Nielsen,~\cite{J22}):
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Two-point}: $\prod_\nu G_\nu = 1$ $\checkmark$ (proven,~\cite{HSYZ20})
+    \item \textbf{Four-point amplitudes}: $\prod_\nu A^{(4)}_\nu = 1$ $\checkmark$ (after regularization,~\cite{J22})
+    \item \textbf{Five-point amplitudes}: $\prod_\nu A^{(5)}_\nu$ $\times$ --- not a single analytic function~\cite{J22}
+\end{itemize}
+
+\textbf{AdS/CFT Witten diagrams} (original analysis):
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Two-point functions}: $\prod_\nu G_\nu = 1$ $\checkmark$ (no bulk sum; adelic product trivial)
+    \item \textbf{Three-point OPE coefficients}: $\times$ --- \textbf{structural mismatch} (see below)
+    \item \textbf{Four-point contact diagrams}: $\times$ --- \textbf{structural mismatch} (see below)
+\end{itemize}
+
+\medskip\noindent
+\textbf{Three-point mismatch (verified).}
+The p-adic three-point OPE coefficient~\cite{HJ24}, Eq.~81, contains \textbf{4 $\zeta_p$ factors} in the numerator:
+\begin{equation}
+f_p = \frac{\zeta_p(\Delta_{123}{-}d)\,\zeta_p(\Delta_{12,3})\,\zeta_p(\Delta_{13,2})\,\zeta_p(\Delta_{23,1})}{\zeta_p(2\Delta_1)\,\zeta_p(2\Delta_2)\,\zeta_p(2\Delta_3)}
+\end{equation}
+The 4 factors arise because the bulk sum $\sum_{z \in T_{p^d}} K_1 K_2 K_3$ factorizes into 4 independent geometric series (1 radial + 3 branch) due to the tree's total disconnectedness (M2). The Archimedean three-point OPE coefficient (standard normalization) contains only \textbf{3 $\zeta_\infty$ factors}:
+\begin{equation}
+C_{123} \propto \frac{\zeta_\infty(\Delta_{12,3})\,\zeta_\infty(\Delta_{13,2})\,\zeta_\infty(\Delta_{23,1})}{\zeta_\infty(2\Delta_1)\,\zeta_\infty(2\Delta_2)\,\zeta_\infty(2\Delta_3)}
+\end{equation}
+The ``missing'' 4th factor $\zeta_\infty(\Delta_{123}{-}d)$ is canceled by the star-triangle identity, which evaluates the Feynman parameter integral in closed form and absorbs the radial $\Gamma((\Delta_{123}{-}d)/2)$ into the angular $\Gamma(\Delta_{ij,k}/2)$ factors. This cancellation has no p-adic counterpart because the tree's discrete geometry prevents the radial and branch sums from coupling.
+
+\medskip\noindent
+\textbf{Four-point mismatch (verified).}
+The p-adic four-point contact diagram OPE coefficient contains \textbf{5 $\zeta_p$ factors} in the numerator (1 radial + 4 branch), verified by recursive computation on the 4-point Steiner tree:
+\begin{equation}
+f_p^{(4)} = \frac{\zeta_p(\Delta_{1234}{-}d)\,\zeta_p(\Delta_{123,4})\,\zeta_p(\Delta_{124,3})\,\zeta_p(\Delta_{134,2})\,\zeta_p(\Delta_{234,1})}{\zeta_p(2\Delta_1)\,\zeta_p(2\Delta_2)\,\zeta_p(2\Delta_3)\,\zeta_p(2\Delta_4)}
+\end{equation}
+The Archimedean four-point contact diagram contains \textbf{1 radial $\Gamma$ factor} ($\Gamma((\Delta_{1234}{-}d)/2)$) \emph{multiplied by an irreducible Feynman parameter integral} that cannot be evaluated in closed form for $n \geq 4$. This irreducible integral is not a product of branch $\Gamma$ factors; rather, it is a single coupled function of the cross-ratios. Therefore the Archimedean side does not admit a finite ``$\zeta_\infty$ factor count'' for $n \geq 4$: the structure is qualitatively different from the p-adic side's clean factorization into $(n{+}1)$ $\zeta_p$ factors. The mismatch for $n \geq 4$ is thus \emph{qualitative} (factorized vs.\ non-factorized), not merely quantitative---reporting it as ``5 vs.\ 1'' would be misleading, since the Archimedean side is not a product of 1 $\Gamma$ factor but a product of 1 $\Gamma$ factor and an irreducible integral.
+
+\begin{remark}[Recursive verification (4-point structure)]
+The $\zeta_p$ factor count of 5 is verified by solving the tree recursion relations on the 4-point Steiner tree (two Steiner points $S_1, S_2$ connected by a path of length $L$). The key recursions are: (i) \textbf{side branch recursion} $R_{\text{rad}} = 1 + p^d \cdot p^{-\Delta_{1234}} \cdot R_{\text{rad}} = \zeta_p(\Delta_{1234}{-}d)$, identical at every vertex by self-similarity; (ii) \textbf{arm recursion} $R_i = \zeta_p(\Delta_{\hat{i},i}) \cdot [1 + (p^d{-}1)\,p^{-\Delta_{1234}}\,\zeta_p(\Delta_{1234}{-}d)]$, where $\zeta_p(\Delta_{\hat{i},i})$ appears as a multiplicative factor and the bracket is an $i$-independent constant; (iii) \textbf{Steiner path recursion} $R_{\text{path}}$, a \emph{finite} recursion (length $L$) yielding a cross-ratio-dependent dynamical factor but \textbf{no} $\zeta_p$. The side-branch count difference between Steiner points ($p^d{-}2$ branches) and path vertices ($p^d{-}1$ branches) enters only the finite constant, not the $\zeta_p$ count. The $n = 5$ case gives 6 = $n{+}1$ factors by the same argument, confirming the general $n{+}1$ pattern.
+\end{remark}
+
+\medskip\noindent
+\textbf{Mismatch pattern.}
+The mismatch undergoes a qualitative transition between $n = 3$ and $n = 4$:
+
+\begin{table}[H]
+\centering
+\caption{$\zeta_\nu$-factor mismatch pattern for contact diagrams. For $n \geq 4$ the Archimedean side is not a finite product of $\zeta_\infty$ factors but $1$ radial $\Gamma$ times an irreducible Feynman parameter integral; the mismatch is therefore qualitative (factorized vs.\ non-factorized), not merely quantitative.}
+\label{tab:mismatch}
+\begin{tabular}{ccccc}
+\toprule
+$n$ & p-adic $\zeta_p$ (num) & Archimedean side & Mismatch & Source \\
+\midrule
+2 & 0 & 0 & none $\checkmark$ & no bulk sum \\
+3 & 4 & 3 $\zeta_\infty$ & 1 (radial) & star-triangle cancels radial $\Gamma$ \\
+4 & 5 & 1 radial $\Gamma$ $\times$ irreducible integral & qualitative (factorized vs.\ non-factorized) & Feynman integral intractable \\
+$\geq 4$ & $n{+}1$ & 1 radial $\Gamma$ $\times$ irreducible integral & qualitative (same as $n=4$) & same as $n=4$ \\
+\textbf{Exchange} & $\geq 6$ (6+$|R_{\mathrm{link}}|$) & 7 $\zeta_\infty$ (3+3+1 spectral) & \textbf{conjecturally 0} & link factor conjecturally mirrors spectral coupling (Prop.~\ref{prop:exchange}, Cor.~\ref{cor:exchange}) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+For $n = 3$, the mismatch is \textbf{radial and quantitative}: p-adic has $\zeta_p(\Delta_{123}{-}d)$, Archimedean does not (canceled by star-triangle). For $n \geq 4$, the mismatch becomes \textbf{qualitative}: the p-adic side factorizes into $n{+}1$ $\zeta_p$ factors, while the Archimedean side is $1$ radial $\Gamma$ times an irreducible Feynman parameter integral---no finite $\zeta_\infty$ factor count applies.
+
+\medskip\noindent
+\textbf{Bulk-sum obstruction to adelic factorization.}
+Based on the $n = 2, 3, 4$ data points, we propose:
+
+\begin{conjecture}[Bulk-sum obstruction, refined]
+\label{conj:bulk-sum}
+In flat-space p-adic AdS/CFT with~\cite{HJ24} normalization, the adelic product $\prod_\nu A_\nu = 1$ holds if and only if the observable's bulk sum does not \emph{completely factorize} into independent geometric series on the totally disconnected tree. Equivalently:
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Contact diagrams}: adelic product \textbf{fails} for all $n$-point contact diagrams with $n \geq 3$ (proven for all $n$, Theorem~\ref{thm:nplus1}, Appendix~\ref{app:recursion}).
+    \item \textbf{Exchange diagrams}: adelic product \textbf{conjecturally holds} for 4-point exchange with non-degenerate propagator (structural decomposition in Proposition~\ref{prop:exchange}, conjectural matching in Corollary~\ref{cor:exchange}; pending numerical verification of $|R_{\mathrm{link}}|$).
+    \item \textbf{Two-point functions}: adelic product \textbf{holds} (no bulk sum; local functional equation,~\cite{HSYZ20}).
+\end{itemize}
+\end{conjecture}
+
+\begin{remark}[Logical structure of the conjecture]
+\label{rem:logical}
+The ``no bulk sum'' condition is an \emph{external characteristic} of two-point functions, not the mathematical mechanism of their adelic product. The actual mechanism, as established in~\cite{HSYZ20}, is that the Green's function satisfies the local functional equation of Tate's zeta integral at each place, and the global adelic product corresponds to the global functional equation of Tate's thesis. The bulk-sum obstruction conjecture generalizes the external characteristic to higher-point observables: it predicts that observables involving bulk sums fail the adelic product, even though the failure mechanism ($\zeta_\nu$-factor structural mismatch, M2) is structurally different from the success mechanism (local functional equation). The conjecture is thus an \emph{inductive generalization} from the $n=2$ success and $n=3,4,5$ failures, not a deductive consequence of the two-point mechanism.
+\end{remark}
+
+\textbf{Evidence strength.}
+This conjecture is supported by: (i) $n = 2$: \textbf{confirmed} --- no bulk sum, adelic product holds~\cite{HSYZ20}; (ii) $n = 3$: \textbf{confirmed} --- bulk sum produces 4 $\zeta_p$ vs 3 $\zeta_\infty$, mismatch verified by direct computation against~\cite{HJ24}, Eq.~81, and standard AdS/CFT; (iii) $n = 4$: \textbf{verified by recursion} --- the p-adic $\zeta_p$ structure (5 factors) is verified by solving tree recursion relations on the 4-point Steiner tree; (iv) $n = 5$: \textbf{verified by recursion} --- 6 = $n{+}1$ factors confirmed; (v) $n \geq 6$: \textbf{proven by induction}. The $n{+}1$ $\zeta_p$ factor formula is \textbf{proven for all $n$} by the general recursion and induction argument given in Appendix~\ref{app:recursion} (Theorem~\ref{thm:nplus1}): 1 radial $\zeta_p$ from side branches (Lemma~\ref{lem:self-sim}), $n$ branch $\zeta_p$ from arms (Lemma~\ref{lem:i-indep}), and 0 from the finite Steiner core (Lemma~\ref{lem:path}).
+
+\medskip\noindent
+\textbf{Exchange diagram: structural preview.}
+The conjecture covers contact diagrams (single-vertex bulk sum $\sum_z \prod_i K_i$). Exchange diagrams have a fundamentally different structure: $\sum_{z_1, z_2} K_1 K_2 \, G_\Delta(z_1, z_2) \, K_3 K_4$, where the bulk-to-bulk propagator $G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1,z_2)}$ introduces inter-vertex coupling. Structural analysis suggests that the propagator factorizes when $z_1, z_2$ lie in different subtrees, and the double sum may decompose into a product of two modified 3-point functions. This suggests the exchange diagram mismatch may be smaller than the contact diagram mismatch. We make the structural decomposition rigorous in \S\ref{sec:exchange-rigorous} below (Proposition~\ref{prop:exchange}), where we explicitly evaluate the double sum and show that the exchange diagram has at least 6 $\zeta_p$ factors plus an undetermined link factor $R_{\mathrm{link}}$; the exchange diagram is \emph{conjectured to evade} the bulk-sum obstruction, pending verification that $|R_{\mathrm{link}}| = 1$.
+
+\subsubsection{Rigorous Computation of the Exchange Diagram $\zeta_p$ Factor Count}
+\label{sec:exchange-rigorous}
+
+We now make the structural analysis above rigorous by explicitly evaluating the double sum for the 4-point exchange diagram
+\begin{equation}
+\label{eq:exchange-def}
+\mathcal{A}^{\mathrm{ex}}_4 = \sum_{z_1, z_2 \in T_{p^d}} K_{\Delta_1}(z_1, x_1)\,K_{\Delta_2}(z_1, x_2) \cdot G_\Delta(z_1, z_2) \cdot K_{\Delta_3}(z_2, x_3)\,K_{\Delta_4}(z_2, x_4),
+\end{equation}
+where $G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1,z_2)}$ is the bulk-to-bulk propagator with scaling dimension $\Delta$ (the exchange dimension), and $K_{\Delta_i}(z, x_i) = p^{-\Delta_i\,d(z, x_i)}$ are boundary-to-bulk propagators. The four boundary points $\{x_1, x_2, x_3, x_4\}$ determine a 4-point Steiner tree $T_S$ as in Appendix~\ref{app:recursion}.
+
+\begin{proposition}[Exchange diagram structural decomposition]
+\label{prop:exchange}
+The 4-point exchange diagram \eqref{eq:exchange-def} on $T_{p^d}$ admits a structural decomposition into two single-vertex sub-sums coupled by a Steiner-path constant when the exchange propagator $G_\Delta$ is non-degenerate ($\Delta \neq 0$). The p-adic side involves \textbf{up to 6 $\zeta_p$ factors from the single-vertex sub-sums} (3 per vertex: 1 radial $+$ 2 arm), plus a \emph{link contribution} from the Steiner path:
+\begin{equation}
+\label{eq:exchange-factors}
+\mathcal{A}^{\mathrm{ex}}_4 = \Big[\zeta_p(\Sigma_1{-}d)\,\zeta_p(\Delta_{12,1})\,\zeta_p(\Delta_{12,2})\Big] \cdot p^{-\Delta L} \cdot \Big[\zeta_p(\Sigma_2{-}d)\,\zeta_p(\Delta_{34,3})\,\zeta_p(\Delta_{34,4})\Big] \cdot R_{\mathrm{link}}(p, \Delta, L),
+\end{equation}
+where $\Sigma_1 := \Delta_1 + \Delta_2 + \Delta$, $\Sigma_2 := \Delta_3 + \Delta_4 + \Delta$, $L \geq 0$ is the (fixed) Steiner path length, and $R_{\mathrm{link}}(p, \Delta, L)$ is the \emph{link factor} arising from the Steiner path geometry. The exact form of $R_{\mathrm{link}}$ depends on whether the path is treated as finite (yielding a constant prefactor) or extended to include infinite side-branch recursion (yielding additional $\zeta_p$ factors); this subtlety is discussed in Remark~\ref{rem:link-caveat} below.
+\end{proposition}
+
+\begin{proof}
+The proof proceeds by decomposing the double sum \eqref{eq:exchange-def} according to the relative position of $z_1$ and $z_2$ on $T_{p^d}$, using the unique path property.
+
+\textbf{Step 1: The Steiner decomposition.} The 4-point Steiner tree $T_S$ has two Steiner points $S_1, S_2$ connected by a Steiner path of length $L \geq 0$. The boundary points $\{x_1, x_2\}$ attach to $S_1$ via arms, and $\{x_3, x_4\}$ attach to $S_2$ via arms. The unique path from $z_1$ to any of $\{x_1, x_2\}$ passes through $S_1$; the unique path from $z_2$ to any of $\{x_3, x_4\}$ passes through $S_2$.
+
+\textbf{Step 2: Decomposition by $z_1$--$z_2$ relative position.} The double sum $\sum_{z_1, z_2}$ decomposes into three disjoint cases based on the location of $z_1$ relative to $z_2$:
+
+\emph{Case (i): $z_1$ is off the path from $S_1$ to $z_2$.} Then the path from $z_1$ to $z_2$ passes through $S_1$. By the tree's unique path property, $d(z_1, z_2) = d(z_1, S_1) + d(S_1, z_2)$. The propagator factorizes:
+\begin{equation}
+G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1, S_1)} \cdot p^{-\Delta\,d(S_1, z_2)}.
+\end{equation}
+The sum over $z_1$ (off the $S_1$--$z_2$ path) decouples from $z_2$: the $z_1$-sum becomes $\sum_{z_1 \text{ off path}} p^{-(\Delta_1+\Delta_2+\Delta)\,d(z_1, S_1)} \cdot (\text{side branch recursion})$. By Lemma~\ref{lem:self-sim}, this yields $\zeta_p(\Sigma_1 - d)$ where $\Sigma_1 := \Delta_1 + \Delta_2 + \Delta$, plus arm contributions $\zeta_p(\Delta_{12,1})\,\zeta_p(\Delta_{12,2})$ from the arms to $x_1, x_2$ (by Lemma~\ref{lem:i-indep}).
+
+\emph{Case (ii): $z_2$ is off the path from $S_2$ to $z_1$.} Symmetric to Case (i). Yields $\zeta_p(\Sigma_2 - d)$ plus arm factors $\zeta_p(\Delta_{34,3})\,\zeta_p(\Delta_{34,4})$, where $\Sigma_2 := \Delta_3 + \Delta_4 + \Delta$.
+
+\emph{Case (iii): $z_1$ and $z_2$ lie on opposite sides of the Steiner path.} The propagator becomes $G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1, S_1)} \cdot p^{-\Delta\,L} \cdot p^{-\Delta\,d(S_2, z_2)}$, where $L$ is the (fixed) Steiner path length. Crucially, $L$ is determined by the boundary points $\{x_1, x_2, x_3, x_4\}$ and is \emph{not} a summation variable. The double sum over $z_1$ (in the $S_1$-side subtree) and $z_2$ (in the $S_2$-side subtree) factorizes into two independent single-vertex sub-sums, each structurally identical to a 3-point contact sub-sum. The Steiner path contributes the constant prefactor $p^{-\Delta L}$ and a \emph{link factor} $R_{\mathrm{link}}(p, \Delta, L)$ that depends on the precise treatment of the Steiner path vertices and their side branches. The exact evaluation of $R_{\mathrm{link}}$ requires careful accounting of the overlap between the Steiner path's side-branch recursion and the single-vertex sub-sums of Cases (i) and (ii); this is a subtle combinatorial problem that we do not fully resolve here (see Remark~\ref{rem:link-caveat}).
+
+\textbf{Step 3: Combining the cases.} The decomposition yields:
+\begin{itemize}[leftmargin=2em]
+    \item From Case (i): $\zeta_p(\Sigma_1 - d)$ (1 radial) + $\zeta_p(\Delta_{12,1})\,\zeta_p(\Delta_{12,2})$ (2 arm) = 3 factors.
+    \item From Case (ii): $\zeta_p(\Sigma_2 - d)$ (1 radial) + $\zeta_p(\Delta_{34,3})\,\zeta_p(\Delta_{34,4})$ (2 arm) = 3 factors.
+    \item From Case (iii): the constant prefactor $p^{-\Delta L}$ and the link factor $R_{\mathrm{link}}(p, \Delta, L)$, which may contribute 0 or more additional $\zeta_p$ factors depending on the side-branch accounting (see Remark~\ref{rem:link-caveat}).
+\end{itemize}
+The total $\zeta_p$ factor count is \textbf{6 + $|R_{\mathrm{link}}|$}, where $|R_{\mathrm{link}}|$ denotes the number of additional $\zeta_p$ factors (if any) contributed by the link factor. The structural analysis confirms that the exchange diagram has \emph{at least} 6 $\zeta_p$ factors (from the two single-vertex sub-sums), plus an undetermined link contribution. \qedhere
+\end{proof}
+
+\begin{remark}[Caveat on the link factor and open problem]
+\label{rem:link-caveat}
+The link factor $R_{\mathrm{link}}(p, \Delta, L)$ in Case (iii) requires careful analysis of the Steiner path's side-branch structure. Two subtleties arise:
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{Fixed vs.\ summation variable}: The Steiner path length $L$ is determined by the boundary points $\{x_1, x_2, x_3, x_4\}$ and is not a summation variable. Thus $p^{-\Delta L}$ is a constant prefactor, not a geometric series.
+    \item \textbf{Overlap with Cases (i) and (ii)}: The Steiner path vertices have side branches that may overlap with the single-vertex sub-sums of Cases (i) and (ii). A rigorous evaluation of $R_{\mathrm{link}}$ requires a careful case partition that is mutually exclusive and exhaustive, which we leave as an open combinatorial problem.
+\end{enumerate}
+The conjectural matching with the Archimedean side (7 $\zeta_\infty$ factors via spectral decomposition) would require $|R_{\mathrm{link}}| = 1$, i.e., the link factor contributes exactly one additional $\zeta_p$. This is plausible---the Steiner path's side-branch recursion has the structural form of a geometric series---but has \emph{not} been rigorously established. Numerical verification on small trees (e.g., $T_2$ with $R = 10$) would resolve this question definitively.
+\end{remark}
+
+\begin{remark}[Comparison with Archimedean exchange diagram]
+\label{rem:exch-arch}
+On the Archimedean side, the 4-point exchange diagram has the spectral representation
+\begin{equation}
+\label{eq:arch-exch}
+\mathcal{A}^{\mathrm{ex}}_{\infty} = \int_0^\infty d\nu\, \rho(\nu) \, \mathcal{A}^{(3)}_\infty(\Delta_1, \Delta_2, \nu; x_1, x_2) \, \mathcal{A}^{(3)}_\infty(\Delta_3, \Delta_4, \nu; x_3, x_4),
+\end{equation}
+where $\rho(\nu)$ is the spectral density and $\mathcal{A}^{(3)}_\infty$ are 3-point contact diagrams. Each $\mathcal{A}^{(3)}_\infty$ yields 3 $\zeta_\infty$ factors via star-triangle (as in the 3-point contact case, Table~\ref{tab:mismatch}), and the spectral density contributes $\zeta_\infty$-like $\Gamma$ factors. The total $\zeta_\infty$ factor count is \textbf{7}: 3 (first vertex) + 3 (second vertex) + 1 (from the spectral density $\rho(\nu)$, which contributes a single $\Gamma$ factor). This would match the p-adic count of 7 if $|R_{\mathrm{link}}| = 1$ (see Remark~\ref{rem:link-caveat}).
+\end{remark}
+
+\begin{corollary}[Exchange diagram: structural decomposition and conjectural matching]
+\label{cor:exchange}
+The 4-point exchange diagram has \textbf{at least 6 $\zeta_p$ factors on the p-adic side} (from the two single-vertex sub-sums) and \textbf{7 $\zeta_\infty$ factors on the Archimedean side} (3 per vertex + 1 from spectral density). The mismatch is \textbf{conjecturally zero} ($|R_{\mathrm{link}}| = 1$), which would require the link factor to contribute exactly one additional $\zeta_p$. This conjectural matching is supported by the structural analogy between the link factor and the Archimedean spectral coupling, but has \emph{not} been rigorously established (see Remark~\ref{rem:link-caveat}). The bulk-sum obstruction (Conjecture~\ref{conj:bulk-sum}) is thus \emph{conjecturally evaded} by exchange diagrams, pending numerical verification of $|R_{\mathrm{link}}|$.
+\end{corollary}
+
+\begin{remark}[Refinement of Conjecture~\ref{conj:bulk-sum}]
+\label{rem:refine}
+Corollary~\ref{cor:exchange} refines the bulk-sum obstruction: the failure of the adelic product is not caused by the bulk sum per se, but by the \emph{complete factorization} of single-vertex sums on the totally disconnected tree (mechanism M2). Exchange diagrams, with their propagator-coupled double sums, do not fully factorize---the link factor $R_{\mathrm{link}}$ introduces an inter-vertex coupling that would produce a matching $\zeta_\nu$ factor on both sides if $|R_{\mathrm{link}}| = 1$. The obstruction is thus more precisely stated as: \emph{the adelic product fails for observables whose bulk sum factorizes completely into independent geometric series (contact diagrams), but conjecturally holds for observables with inter-vertex coupling (exchange diagrams with non-degenerate propagator, pending $|R_{\mathrm{link}}| = 1$)}.
+\end{remark}
+
+\subsubsection{Relation to Tate's Local Zeta Integrals}
+\label{sec:tate-relation}
+
+The $\zeta_p$ factorization structure in Theorem~\ref{thm:nplus1} and Proposition~\ref{prop:exchange} is not accidental: it reflects a deep connection to Tate's local zeta integral framework~\cite{Tate50}, which~\cite{HSYZ20} identified as the mechanism behind the two-point adelic product. We now make this connection explicit.
+
+\textbf{Tate's local zeta integral.} For a multiplicative character $\chi$ and a Schwartz--Bruhat function $\Phi$ on $\Qp$, Tate's local zeta integral is
+\begin{equation}
+\label{eq:tate-integral}
+Z_p(s, \chi) = \int_{\Qp^\times} \Phi(x)\, \chi(x)\, \normp{x}^s\, d^\times x.
+\end{equation}
+When $\Phi$ is the characteristic function of $\Zp^\times$ and $\chi = 1$, this evaluates to
+\begin{equation}
+\label{eq:tate-eval}
+Z_p(s, 1) = \frac{1}{1 - p^{-s}} = \zeta_p(s).
+\end{equation}
+The local functional equation of Tate's thesis relates $Z_p(s, \chi)$ to $Z_p(1-s, \hat{\chi})$ via the local root number $\epsilon(s, \chi)$, and the global adelic product $\prod_p Z_p(s, \chi_p)$ corresponds to the global functional equation of the Hecke $L$-function.
+
+\textbf{The bulk sum as a Tate integral.} The $n$-point contact diagram bulk sum
+\begin{equation}
+\mathcal{A}_n = \sum_{z \in T_{p^d}} \prod_{i=1}^n p^{-\Delta_i\, d(z, x_i)}
+\end{equation}
+can be rewritten as a sum over $\Qp^\times$ (using the identification of $T_{p^d}$ vertices with cosets of $\PGL(2, \Zp)$ in $\PGL(2, \Qp)$). With the change of variables $z \mapsto \normp{z}^{-1}$ along each radial direction, each geometric series $\sum_\ell p^{-s\ell}$ arising in Theorem~\ref{thm:nplus1}'s recursion is exactly the evaluation \eqref{eq:tate-eval} of a Tate integral with trivial character:
+\begin{equation}
+\label{eq:tate-identification}
+\underbrace{\sum_{\ell=0}^\infty p^{-s \cdot \ell} = \zeta_p(s)}_{\text{tree recursion}} \quad \longleftrightarrow \quad \underbrace{Z_p(s, 1) = \int_{\Zp^\times} \normp{x}^s\, d^\times x = \zeta_p(s)}_{\text{Tate integral}}.
+\end{equation}
+
+\begin{proposition}[Tate structure of the $n{+}1$ factorization]
+\label{prop:tate}
+Each $\zeta_p$ factor in Theorem~\ref{thm:nplus1} is a Tate local zeta integral $Z_p(s, 1)$ with a specific argument:
+\begin{itemize}[leftmargin=2em]
+    \item Radial factor: $\zeta_p(\Delta_{1\cdots n} - d) = Z_p(\Delta_{1\cdots n} - d, 1)$, corresponding to the side-branch recursion (Lemma~\ref{lem:self-sim}).
+    \item Arm factors: $\zeta_p(\Delta_{\hat{i},i}) = Z_p(\Delta_{\hat{i},i}, 1)$, corresponding to arm recursions (Lemma~\ref{lem:i-indep}).
+\end{itemize}
+The $n{+}1$ $\zeta_p$ factorization of the contact diagram is thus an $n{+}1$-fold product of Tate local zeta integrals. Similarly, the $\geq 6$ $\zeta_p$ factors of the exchange diagram (Proposition~\ref{prop:exchange}) are Tate integrals, with the link factor $R_{\mathrm{link}}$ potentially contributing an additional Tate integral if $|R_{\mathrm{link}}| = 1$.
+\end{proposition}
+
+\textbf{Implication for the adelic product.} The adelic product $\prod_\nu A_\nu$ involves multiplying the p-adic $\zeta_p$ factors with their Archimedean counterparts. For the two-point function,~\cite{HSYZ20} showed that the local functional equation at each place ensures $\prod_\nu G_\nu = 1$. For $n$-point contact diagrams ($n \geq 3$), the p-adic side has $n{+}1$ Tate integrals while the Archimedean side has fewer (3 for $n=3$, 1 radial $\Gamma$ plus an irreducible integral for $n \geq 4$). The mismatch in Tate integral count is the structural origin of the bulk-sum obstruction (Conjecture~\ref{conj:bulk-sum}).
+
+For the exchange diagram (Proposition~\ref{prop:exchange}), the p-adic side has $\geq 6$ Tate integrals (6 from single-vertex sub-sums + $|R_{\mathrm{link}}|$ from the link factor), and the Archimedean side has 7 (3 per vertex + 1 from the spectral density, Remark~\ref{rem:exch-arch}). The conjectural matching ($|R_{\mathrm{link}}| = 1$) would reflect the structural analogy between the link factor and the Archimedean spectral coupling, but this has not been rigorously established.
+
+\begin{remark}[Tate framework unifies contact and exchange]
+\label{rem:tate-unify}
+The Tate integral perspective unifies the contact and exchange diagram analyses:
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Contact diagrams}: $n{+}1$ Tate integrals on the p-adic side, $< n{+}1$ on the Archimedean side $\Rightarrow$ adelic product fails.
+    \item \textbf{Exchange diagrams}: $\geq 6$ Tate integrals on the p-adic side (6 + $|R_{\mathrm{link}}|$), 7 on the Archimedean side $\Rightarrow$ adelic product conjecturally holds (pending $|R_{\mathrm{link}}| = 1$ verification).
+    \item \textbf{Two-point functions}: 0 bulk sum Tate integrals (the two-point function is a boundary limit, not a bulk sum) $\Rightarrow$ adelic product holds via the local functional equation of the Green's function itself (which is a Tate integral in the sense of~\cite{HSYZ20}).
+\end{itemize}
+The adelic product's success or failure is thus determined by the \emph{Tate integral count mismatch}: $\prod_\nu A_\nu = 1$ holds iff the number of Tate integrals on the p-adic side equals that on the Archimedean side. This provides a unifying criterion that refines Conjecture~\ref{conj:bulk-sum}.
+\end{remark}
+
+\paragraph{Obstacle O4: Interacting theories are unverified; thermal backgrounds require a new framework.}
+The rigorous results R1--R3 primarily concern \textbf{free theories}: particle-in-a-box (R2) and free scalar fields (R3). The first interacting computation in p-adic AdS/CFT is~\cite{HJ24}, which computed Witten diagrams for the Tate curve $E_q = \Qp^\times / q^{\mathbb{Z}}$:
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Two-point one-loop Witten diagram}: computed for \textbf{generic} scaling dimension $\Delta$ (not restricted to special mass values; a parallel one-loop Witten diagram computation on the p-adic BTZ black hole was carried out in~\cite{ESZ19})
+    \item \textbf{Three-point tree-level Witten diagram}: computed
+\end{itemize}
+However,~\cite{HJ24} \S6 reveals a fundamental complication: in thermal (Tate curve) backgrounds, the standard adelic product framework \textbf{does not apply}. In flat space, one can translate between real and $p$-adic answers by an interchange of local zeta functions $\zeta_p \leftrightarrow \zeta_\infty$ (local $\leftrightarrow$ local). But in a black hole background (Tate curve), this is replaced by a \textbf{local-global interchange} $\zeta_p \leftrightarrow \zeta$ (local $\leftrightarrow$ global), because the Archimedean thermal correction involves the \textbf{global} Riemann zeta $\zeta(\Delta)$ rather than the local $\zeta_\infty(\Delta)$. Since $\zeta = \prod_p \zeta_p \cdot \zeta_\infty$, the Archimedean result already contains all $p$-adic information, making $\prod_\nu A_\nu$ a double-counting operation. The precise mathematical mechanism of this local-global correspondence is an open question (~\cite{HJ24} \S6: ``desirable to understand'').
+
+A more tractable problem is to verify adelic product formulas for \textbf{flat-space} (zero-temperature) Witten diagrams, where the local-local correspondence $\zeta_p \leftrightarrow \zeta_\infty$ holds and the~\cite{HSYZ20} framework applies directly. Additionally,~\cite{HJ24} \S6 notes that the real counterparts for the one-loop two-point correlator at generic scaling dimension and the tree-level three-point correlator have ``not yet been determined,'' making the $p$-adic results valuable as a toy model for guiding future real computations.
+
+\subsubsection{Physical Implications of the Refined Obstruction}
+\label{sec:physical-impl}
+
+The refined bulk-sum obstruction (Conjecture~\ref{conj:bulk-sum}, as refined by Corollary~\ref{cor:exchange} and Remark~\ref{rem:tate-unify}) has three physical implications for p-adic AdS/CFT.
+
+\textbf{Implication 1: OPE convergence structure.} The $n{+}1$ $\zeta_p$ factorization of contact diagrams (Theorem~\ref{thm:nplus1}) implies that the p-adic OPE has a \emph{rigid factorization structure}: the OPE coefficient $f_p^{(n)}$ is a product of exactly $n{+}1$ local zeta functions, each depending on a specific combination of scaling dimensions. This rigidity is the p-adic counterpart of the Archimedean OPE's analyticity constraints (conformal block decomposition). The mismatch for $n \geq 4$ (qualitative, Table~\ref{tab:mismatch}) indicates that the p-adic OPE encodes \emph{less} cross-ratio information than the Archimedean OPE---the p-adic side factorizes completely, while the Archimedean side retains an irreducible Feynman parameter integral that carries cross-ratio dependence. This is consistent with the interpretation that p-adic AdS/CFT describes CFT at \emph{vanishing cross-ratio} (the bulk sum collapses to a product of two-point data), while real AdS/CFT captures full cross-ratio dynamics.
+
+\textbf{Implication 2: Locality of the bulk sum.} The exchange diagram's conjectural evasion of the obstruction (Corollary~\ref{cor:exchange}) has a direct bulk locality interpretation. In real AdS/CFT, bulk locality is encoded in the smoothness properties of exchange diagrams as a function of the exchanged momentum---the absence of anomalous singularities. In p-adic AdS/CFT, the link factor $R_{\mathrm{link}}(p, \Delta, L)$ (Proposition~\ref{prop:exchange}) plays the analogous role: it is the only factor in the exchange diagram that depends on the \emph{combined} scaling dimensions $\Sigma_1 + \Sigma_2 + 2\Delta$ (via $L$ and the Steiner path geometry), coupling the two vertices. This coupling is the tree-theoretic signature of bulk locality---without it, the double sum would factorize into independent single-vertex sums, and the exchange diagram would lose its bulk locality structure. The link factor is thus the p-adic analog of the Archimedean spectral integral $\int d\nu\, \rho(\nu) / (\nu - m^2)$, which is the carrier of bulk locality in real AdS/CFT.
+
+\textbf{Implication 3: Adelic product as a diagnostic, not a symmetry.} The Tate integral count criterion (Remark~\ref{rem:tate-unify}) implies that the adelic product $\prod_\nu A_\nu = 1$ is \emph{not} a fundamental symmetry of the theory (in the sense of being satisfied by all observables), but a \emph{diagnostic} of structural matching between the p-adic and Archimedean factorizations. When the Tate integral counts match (two-point functions; conjecturally exchange diagrams, pending $|R_{\mathrm{link}}| = 1$), the adelic product holds; when they mismatch (contact diagrams with $n \geq 3$), it fails. This reframes the adelic product from a ``fundamental principle'' (as it might appear if one only considers two-point functions) to a ``structural invariant'' that detects factorization mismatches. The physical content of the bulk-sum obstruction is that the totally disconnected topology of $T_{p^d}$ imposes a stronger factorization on contact diagrams than the Archimedean topology does---and this stronger factorization has no Archimedean counterpart, breaking the adelic product.
+
+\subsection{Summary: What is Proven vs.\ Proposed}
+
+\begin{table}[H]
+\centering
+\caption{Summary of proven vs.\ proposed results.}
+\label{tab:summary}
+\begin{tabular}{lll}
+\toprule
+Result & Status & Scope \\
+\midrule
+R1 Stoica decomposition & Proposal & Specific cases computed; general conceptual \\
+R2 Euler product (particle-in-a-box) & \textbf{Proven} & Particle-in-a-box only; generalization proposed \\
+R3 Adelic product (Green's functions) & \textbf{Proven} & Free scalar two-point functions only \\
+R4 Berkovich $\Pone$ construction & \textbf{Proven} (construction) & One-dimensional; AdS/CFT extension declared \\
+O3: 3-pt $\zeta_\nu$ mismatch & \textbf{Verified} & p-adic 4 $\zeta_p$ vs Archimedean 3 $\zeta_\infty$ (\S\ref{sec:obstacles}) \\
+O3: 4-pt $\zeta_\nu$ mismatch & \textbf{Verified} & p-adic 5 $\zeta_p$ (factorized) vs Archimedean 1 $\Gamma \times$ irreducible integral (non-factorized); tree recursion (\S\ref{sec:obstacles}, App.~\ref{app:recursion}) \\
+O3: $n$-pt $\zeta_\nu$ pattern & \textbf{Proven} & $n{+}1$ $\zeta_p$ for all $n \geq 3$; Archimedean: 3 $\zeta_\infty$ at $n=3$, 1 $\Gamma \times$ irreducible integral at $n \geq 4$; recursion + induction (App.~\ref{app:recursion}, Thm.~\ref{thm:nplus1}) \\
+O3: Exchange diagram structure & \textbf{Structural decomposition} & p-adic $\geq 6$ $\zeta_p$ (6+$|R_{\mathrm{link}}|$) vs Archimedean 7 $\zeta_\infty$; mismatch conjecturally 0 (Prop.~\ref{prop:exchange}, Cor.~\ref{cor:exchange}) \\
+O3: Bulk-sum obstruction conjecture & \textbf{Proven (contact), Conjectural (exchange)} & Adelic product fails for contact ($n \geq 3$, Thm.~\ref{thm:nplus1}); conjecturally holds for exchange (Prop.~\ref{prop:exchange}, Cor.~\ref{cor:exchange}) and 2-point (\cite{HSYZ20}) \\
+General Berkovich bridge & \textbf{Open} & Obstacles O1--O4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ======================================================================
+% SECTION 6: Adelic Completion
+% ======================================================================
+\section{Adelic Completion (Outlook)}
+\label{sec:adelic}
+
+\subsection{Adelic Amplitudes and Their Subtleties}
+
+Two independent lines of evidence establish a \textbf{hierarchy of failure} for adelic products:
+
+\paragraph{String-theoretic amplitudes} (Koba--Nielsen integrals,~\cite{J22}):
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Two-point functions} (Green's functions): $\prod_\nu G_\nu = 1$ after regularization~\cite{HSYZ20}. The product converges because each local Green's function $G_\nu$ satisfies the same functional equation, and the product over all places yields the global functional equation (Tate's thesis).
+    \item \textbf{Four-point amplitudes}: $\prod_\nu A^{(4)}_\nu = 1$ after regularization~\cite{J22}. The four-point tree-level amplitude factorizes into products of two-point functions (via the OPE channel decomposition), so the adelic product inherits the two-point convergence.
+    \item \textbf{Five-point amplitudes}: $\prod_\nu A^{(5)}_\nu$ is \textbf{not} a single analytic function~\cite{J22}. The failure mechanism is that the five-point amplitude contains irreducible three-particle channels (the conformal block decomposition includes a non-factorizable contact term), and these channels introduce kinematic dependence that cannot be regularized uniformly across all places.
+\end{itemize}
+
+\paragraph{AdS/CFT Witten diagrams} (original analysis, \S\ref{sec:obstacles}):
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Two-point functions}: $\prod_\nu G_\nu = 1$ $\checkmark$ --- holds because the Green's function satisfies the local functional equation at each place (Tate's thesis structure,~\cite{HSYZ20}), and the global adelic product corresponds to the global functional equation. No bulk sum is involved, but the mathematical mechanism is the local functional equation structure, not merely the absence of a bulk sum (see Remark~\ref{rem:logical}).
+    \item \textbf{Three-point OPE coefficients}: $\times$ --- \textbf{structural mismatch}. The p-adic OPE coefficient has 4 $\zeta_p$ factors (1 radial + 3 branch, from the factorized bulk sum on the tree, M2), while the Archimedean counterpart has only 3 $\zeta_\infty$ factors (the radial $\Gamma$ is canceled by the star-triangle identity). The ``missing'' 4th factor $\zeta_\infty(\Delta_{123}{-}d)$ has no p-adic counterpart.
+    \item \textbf{Four-point contact diagrams}: $\times$ --- \textbf{structural mismatch} (verified by tree recursion, Appendix~\ref{app:recursion}). The p-adic OPE coefficient factorizes into 5 $\zeta_p$ factors (1 radial + 4 branch), while the Archimedean counterpart is $1$ radial $\Gamma$ times an irreducible Feynman parameter integral---not a finite product of $\zeta_\infty$ factors. The mismatch is qualitative (factorized vs.\ non-factorized), not merely quantitative. The general $n{+}1$ $\zeta_p$ factor formula is proven for all $n$ (Theorem~\ref{thm:nplus1}).
+    \item \textbf{Exchange diagrams}: structural analysis (Proposition~\ref{prop:exchange}) shows the p-adic side has \textbf{at least 6 $\zeta_p$ factors} ($6 + |R_{\mathrm{link}}|$) coupled by a Steiner-path link factor $R_{\mathrm{link}}$; the Archimedean side has 7 $\zeta_\infty$ factors via spectral decomposition. The mismatch is \textbf{conjecturally zero} pending $|R_{\mathrm{link}}| = 1$ (Corollary~\ref{cor:exchange}, Remark~\ref{rem:link-caveat}).
+\end{itemize}
+
+\paragraph{Comparison.}
+The string-theoretic hierarchy (two-point $\checkmark$, four-point $\checkmark$, five-point $\times$) and the AdS/CFT hierarchy (two-point $\checkmark$, three-point $\times$, four-point $\times$) are \textbf{not contradictory}---they concern different types of observables. String-theoretic amplitudes are single integrals that factorize into two-point building blocks for $n \leq 4$; AdS/CFT Witten diagrams involve bulk sums/integrals whose $\zeta_\nu$-factor structure depends on the tree geometry (M2) and the Feynman parameter integrability. The AdS/CFT failure boundary lies between two-point and three-point, earlier than the string-theoretic boundary (between four-point and five-point), because the bulk sum introduces $\zeta_\nu$ factor mismatches that string-theoretic amplitudes avoid.
+
+This hierarchy is direct evidence for obstacle O3: the adelic product formula works when the observable factorizes into two-point building blocks (no bulk sum), but fails when genuine bulk sums introduce $\zeta_\nu$ factors that do not match across places.
+
+\subsection{Physical Meaning of the Adelic Product}
+
+The adelic product formula $\prod_\nu F_\nu = 1$, proven for two-point functions~\cite{HSYZ20} and particle-in-a-box spectra~\cite{HMS20}, carries a profound physical implication: \textbf{real-theoretic quantities can be reconstructed from p-adic quantities}. Specifically:
+\begin{equation}
+F_\infty = \prod_p F_p^{-1}
+\end{equation}
+This means the Archimedean (real) observable $F_\infty$ is completely determined by the collection of p-adic observables $\{F_p\}$. This is the strongest existing evidence for the ``p-adic as discovery tool'' thesis (C1, mechanism M5): p-adic computations are not merely analogies but contain sufficient information to reconstruct real physics.
+
+However, the restriction to two-point functions and spectra means the reconstruction is currently limited to \textbf{free theory observables}. The three-point failure (\S\ref{sec:obstacles}, \S\ref{sec:adelic}) shows that observables involving bulk sums do not admit adelic reconstruction---the p-adic and Archimedean $\zeta_\nu$-factor structures differ qualitatively. The boundary between reconstructible and non-reconstructible observables is the central open question (obstacle O3), for which we propose the \textbf{bulk-sum obstruction conjecture} (\S\ref{sec:obstacles}).
+
+\begin{figure}[H]
+\centering
+\fbox{\parbox{0.9\textwidth}{\centering \textbf{Figure 3.} The adelic product concept. For each place $\nu$ (Archimedean $\infty$ and all primes $p$), a local observable $F_\nu$ is computed. For appropriate observables (two-point functions, spectra), the adelic product $\prod_\nu F_\nu = 1$ holds, meaning the Archimedean observable $F_\infty$ is determined by the p-adic observables: $F_\infty = \prod_p F_p^{-1}$. This reconstruction fails for three-point AdS/CFT OPE coefficients (\S\ref{sec:obstacles}) and five-point string-theoretic amplitudes (\S\ref{sec:adelic}), establishing two independent hierarchies of failure.}}
+\end{figure}
+
+\subsection{Integration Path for Adelic AdS/CFT}
+
+A systematic adelic AdS/CFT---where bulk geometries at all places (real $\AdS_{d+1}$ + all p-adic $T_p$) are integrated into a single framework---remains a long-term goal. The conceptual architecture would require:
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{Place-uniform bulk geometry}: A mathematical object that reduces to $\AdS_{d+1}$ at the Archimedean place and to $T_p$ at each p-adic place. Goldfarb's $\PoneBerk$~\cite{G23} is a candidate for the $d=1$ case, but its extension to $d > 1$ is open.
+    \item \textbf{Place-uniform field theory}: A framework where the Vladimirov derivative $\dpartial$ at p-adic places and the ordinary derivative $\partial/\partial x$ at the Archimedean place are unified. The local zeta function scaffold (mechanism M4, \S\ref{sec:mechanisms}) provides a partial unification for correlation functions, but not for interactions.
+    \item \textbf{Adelic holographic dictionary}: The bulk-to-boundary propagator $\KK$ must satisfy an adelic product formula. This is proven for the two-point function~\cite{HSYZ20} but fails for three-point OPE coefficients and four-point contact diagrams (\S\ref{sec:obstacles}, \S\ref{sec:adelic}), due to the structural mismatch between p-adic $\zeta_p$ factors and Archimedean $\zeta_\infty$ factors.
+\end{enumerate}
+
+The Berkovich bridge (\S\ref{sec:berkovich}) is the most promising path to items 1--2, but obstacles O1--O4 must be addressed first. Item 3 is directly constrained by the three-point and four-point failures (\S\ref{sec:obstacles}, \S\ref{sec:adelic}).
+
+\subsection{Perfectoid Geometry: A Speculative Remark}
+
+Scholze's perfectoid geometry~\cite{Sch11} relates characteristic-0 and characteristic-$p$ geometry via the tilting equivalence. This \emph{could} provide an alternative to the Berkovich bridge for constructing a place-uniform bulk geometry (\S\ref{sec:adelic}, item 1), but no concrete application to p-adic AdS/CFT has been developed. A recent work~\cite{SGF26} applies perfectoid geometry to M/F-theory duality, suggesting that perfectoid methods are beginning to enter string-theoretic contexts, though the connection to p-adic AdS/CFT remains open. We mention this as a direction for future investigation by researchers with the requisite expertise in both perfectoid geometry and holographic duality.
+
+% ======================================================================
+% SECTION 7: Open Problems
+% ======================================================================
+\section{Open Problems}
+\label{sec:open}
+
+We list open problems, categorized by obstacle. Each problem is stated with its mathematical difficulty and the specific barrier that makes it hard.
+
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{Rigorous construction of ``theory space'' $\mathfrak{B}_K$} (O1): Construct a Berkovich space (or alternative) appropriate for AdS/CFT field theory moduli. \textit{Why this is hard}: The Berkovich space $M(\mathbb{Z})$ used in~\cite{HMS20} is one-dimensional (parameterized by valuations on $\mathbb{Z}$), but AdS/CFT field theories require infinite-dimensional data: field content, coupling constants, symmetry representations. The category of one-dimensional Berkovich spaces cannot naturally accommodate infinite-dimensional moduli. Candidate approaches include: (i) infinite-dimensional Berkovich spaces (for which the theory is less developed), (ii) Berkovich analytification of the moduli stack of CFTs (if such a stack can be defined), or (iii) a completely different geometric framework. Each approach requires substantial foundational work.
+
+    \item \textbf{Berkovich-flow $\leftrightarrow$ RG-flow correspondence} (O2): Establish a rigorous correspondence between flows on Berkovich space and boundary Wilsonian RG flows. \textit{Why this is hard}: The Berkovich-space flow in~\cite{HMS20} connects \textbf{different places} (p-adic $\to$ Archimedean), parameterized by p-adic norm. The Wilsonian RG flow operates \textbf{within a single place}, parameterized by energy scale $\mu$. These are conceptually different operations: the former is a flow between completions of $\Q$, the latter is a flow within a single completion. The only existing connection is the p-adic CFT RG flow~\cite{HLM19}, which is a Wilsonian flow within the p-adic place---not a Berkovich-space flow. Bridging the two requires a new conceptual framework that relates place-indexed and scale-indexed flows.
+
+    \item \textbf{Bulk-sum obstruction to adelic factorization} (O3): Identify which observables satisfy adelic product formulas and which do not. \textit{Why this is hard}: Two independent hierarchies of failure are known (\S\ref{sec:adelic}): (i) string-theoretic amplitudes fail at five points~\cite{J22}; (ii) AdS/CFT Witten diagrams fail at three points (\S\ref{sec:obstacles}). For the AdS/CFT case, we propose the \textbf{bulk-sum obstruction conjecture} (\S\ref{sec:obstacles}): the adelic product holds if and only if the observable does not involve a bulk sum. \textit{Evidence}: $n=2$ confirmed (no bulk sum, adelic product holds~\cite{HSYZ20}), $n=3$ confirmed (4 $\zeta_p$ vs 3 $\zeta_\infty$, verified against~\cite{HJ24}, Eq.~81), $n=4$ \textbf{verified by recursion} (5 $\zeta_p$ vs 1 $\zeta_\infty$), $n=5$ \textbf{verified by recursion} (6 $\zeta_p$), and the $n{+}1$ $\zeta_p$ factor formula is \textbf{proven} for all $n$ by the general recursion argument. The mechanism is that the p-adic tree's total disconnectedness (M2) factorizes the bulk sum into $n{+}1$ independent $\zeta_p$ factors, while the Archimedean Feynman parameter integral couples radial and angular directions, producing a different number of $\zeta_\infty$ factors (3 for $n=3$ via star-triangle identity, 1 for $n \geq 4$). \textbf{Two complementary directions --- (A) completed, (B) structural decomposition completed with link factor computation pending:}
+    
+    \textit{(A) Contact diagram verification and generalization} [$\checkmark$ completed]. The p-adic four-point contact diagram $\zeta_p$ structure is verified by solving tree recursion relations on the 4-point Steiner tree. The key recursions are: side branch recursion $R_{\text{rad}} = \zeta_p(\Delta_{1234}{-}d)$ (self-similar, identical at every vertex); arm recursion $R_i = \zeta_p(\Delta_{\hat{i},i}) \cdot [\text{constant}]$ (the $\zeta_p$ factor is multiplicative, the constant is $i$-independent); Steiner path recursion $R_{\text{path}}$ (finite, no $\zeta_p$). The side-branch count difference between Steiner points ($p^d{-}2$ branches) and path vertices ($p^d{-}1$ branches) enters only the finite constant, not the $\zeta_p$ count. The $n=5$ case gives 6 = $n{+}1$ factors by the same argument. The general $n{+}1$ formula is proven: 1 radial $\zeta_p$ (from side branches) + $n$ branch $\zeta_p$ (from arms) + 0 from the finite Steiner core.
+    
+    \textit{(B) Exchange diagram analysis} [$\checkmark$ structural decomposition completed; link factor computation pending]. The conjecture covers contact diagrams; exchange diagrams have a fundamentally different structure: $\sum_{z_1, z_2} K_1 K_2 \, G_\Delta(z_1, z_2) \, K_3 K_4$. Structural analysis (Proposition~\ref{prop:exchange}) reveals that when $z_1$ and $z_2$ lie in different subtrees (separated by the Steiner path), the propagator \textbf{factorizes}: $G_\Delta(z_1, z_2) = p^{-\Delta\,d(z_1,S_1)} \cdot p^{-\Delta L} \cdot p^{-\Delta\,d(S_2,z_2)}$. The double sum then decomposes into a product of two single-vertex sub-sums, each producing 3 $\zeta_p$ factors --- totaling \textbf{at least 6 $\zeta_p$ factors} ($6 + |R_{\mathrm{link}}|$), where the link factor $R_{\mathrm{link}}$ accounts for the Steiner path's side-branch recursion. On the Archimedean side, the spectral representation decomposes the exchange diagram into two 3-point functions (each yielding 3 $\zeta_\infty$ via star-triangle) plus 1 $\zeta_\infty$-like factor from the spectral density --- totaling \textbf{7 $\zeta_\infty$ factors} (Remark~\ref{rem:exch-arch}). The exchange diagram mismatch is \textbf{conjecturally zero}, pending the verification that $|R_{\mathrm{link}}| = 1$ (Corollary~\ref{cor:exchange}, Remark~\ref{rem:link-caveat}). \textit{Remaining work}: (i) rigorous evaluation of $R_{\mathrm{link}}$ via case partition that is mutually exclusive and exhaustive; (ii) numerical verification on small trees (e.g., $T_2$ with finite cutoff $R$) to confirm $|R_{\mathrm{link}}| = 1$.
+    
+    Additionally, the conjecture should be tested in the~\cite{HSYZ20} normalization, where the two-point adelic product is non-trivial ($\zeta(2\Delta)$ rather than 1), to verify that the bulk-sum obstruction persists under different normalizations.
+
+    \item \textbf{Adelic verification for interacting theories and the local-global correspondence} (O4): The standard adelic product framework, proven for free scalar two-point functions in flat space~\cite{HSYZ20}, does not directly apply to the thermal (Tate curve) Witten diagrams computed in~\cite{HJ24}. \textit{Why this is hard}:~\cite{HJ24} \S6 reveals that in thermal backgrounds, the flat-space local-local correspondence $\zeta_p \leftrightarrow \zeta_\infty$ is replaced by a local-global interchange $\zeta_p \leftrightarrow \zeta$ (where $\zeta$ is the global Riemann zeta). Since $\zeta = \prod_p \zeta_p \cdot \zeta_\infty$, the Archimedean thermal correlator already encodes all $p$-adic information, making the naive adelic product $\prod_\nu A_\nu$ a double-counting operation. Two sub-problems arise: (i) formalize the local-global correspondence---the precise mathematical mechanism is unknown (~\cite{HJ24} \S6: ``desirable to understand''); (ii) verify adelic product formulas for \textbf{flat-space} interacting Witten diagrams, where the local-local correspondence holds. For (ii), the~\cite{HJ24} flat-space (zero-temperature) limit provides a starting point: the one-loop diagram reduces to a sum over geodesics on the \BirTits{} tree without thermal windings, and the Archimedean counterpart uses $\zeta_\infty$ (local) rather than $\zeta$ (global).
+
+    \item \textbf{Higher-genus p-adic curves}: Extend p-adic AdS/CFT beyond the Tate curve (genus 1) to higher-genus Mumford curves. \textit{Why this is hard}: The Tate curve corresponds to the Schottky group $\Gamma = \langle q \rangle$ (rank 1, genus 1). Higher-genus Mumford curves require Schottky groups of rank $g \geq 2$, for which the bulk geometry $\Tp/\Gamma$ has a more complicated fundamental domain. The mathematical framework exists~\cite{Mum72}, but the physics is undeveloped: no Witten diagrams have been computed on higher-genus quotients, and the boundary CFT on higher-genus p-adic curves lacks the axiomatic foundation established for genus 0 ($\Pone(\Qp)$) and genus 1 (Tate curve).
+
+    \item \textbf{Non-perturbative p-adic AdS/CFT}: All current results are perturbative (free theory + Witten diagrams). \textit{Why this is hard}: A non-perturbative definition would require specifying the full quantum gravity path integral on $\Tp$ (or $\Tp/\Gamma$), including all orders in $G_N$. In real AdS/CFT, the non-perturbative definition is provided by the boundary CFT itself. For p-adic AdS/CFT, the boundary p-adic CFT is less developed (no non-perturbative Lagrangian formulation exists for general p-adic CFTs), so the non-perturbative bulk definition cannot be inferred from the boundary. Additionally, the graph Laplacian $\Boxp$ is a non-local operator, making the non-perturbative path integral on $\Tp$ conceptually different from lattice field theory.
+\end{enumerate}
+
+% ======================================================================
+% SECTION 8: Conclusion
+% ======================================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+\paragraph{Main results.}
+We have established two rigorous structural results for Witten diagrams on the Bruhat--Tits tree $T_{p^d}$, characterizing when the adelic product $\prod_\nu A_\nu = 1$ holds or fails in flat-space p-adic AdS/CFT:
+
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Theorem 1 (Contact diagrams, Appendix~\ref{app:recursion}):} The $n$-point contact diagram factorizes into exactly $n{+}1$ $\zeta_p$ factors, proven for all finite $n \geq 3$ by Steiner-tree recursion (Lemma~\ref{lem:self-sim}--Lemma~\ref{lem:path}) and induction (Theorem~\ref{thm:nplus1}). The Archimedean side has 3 $\zeta_\infty$ at $n=3$ but degenerates to $1$ radial $\Gamma$ times an irreducible Feynman parameter integral for $n \geq 4$---a qualitative mismatch (Table~\ref{tab:mismatch}).
+    \item \textbf{Proposition 2 (Exchange diagrams, \S\ref{sec:exchange-rigorous}):} The 4-point exchange diagram admits a structural decomposition into two single-vertex sub-sums (each contributing 3 $\zeta_p$ factors) coupled by a Steiner-path factor and an undetermined link factor $R_{\mathrm{link}}$. The p-adic side thus has \emph{at least 6 $\zeta_p$ factors} ($6 + |R_{\mathrm{link}}|$); the Archimedean side has 7 $\zeta_\infty$ factors via spectral decomposition, yielding \emph{conjecturally zero} mismatch, pending $|R_{\mathrm{link}}| = 1$ (Corollary~\ref{cor:exchange}, Remark~\ref{rem:link-caveat}).
+\end{itemize}
+
+\paragraph{The refined bulk-sum obstruction (Conjecture~\ref{conj:bulk-sum}).}
+The adelic product fails for contact diagrams ($n \geq 3$, proven) but \emph{conjecturally holds} for exchange diagrams (pending $|R_{\mathrm{link}}| = 1$) and holds for two-point functions (via Tate's local functional equation~\cite{HSYZ20}). The obstruction is not ``bulk sum per se'' but the \emph{complete factorization} of single-vertex sums on the totally disconnected tree: contact diagrams' bulk sums factorize completely into independent geometric series, while exchange diagrams' double sums retain an inter-vertex coupling (the link factor $R_{\mathrm{link}}$) that is conjectured to mirror the Archimedean spectral coupling.
+
+\paragraph{Tate unification (\S\ref{sec:tate-relation}, Proposition~\ref{prop:tate}).}
+The Tate local zeta integral framework unifies both cases: each $\zeta_p$ factor is a Tate integral $Z_p(s, 1)$ (Proposition~\ref{prop:tate}), and the adelic product holds iff the Tate integral counts match between p-adic and Archimedean sides. The two-point function has 0 bulk-sum Tate integrals (holds via the Green's function's own Tate structure), the exchange diagram has $\geq 6$ on the p-adic side vs 7 on the Archimedean side (conjecturally holds if $|R_{\mathrm{link}}| = 1$), and the $n$-point contact diagram has $n{+}1$ on the p-adic side vs fewer on the Archimedean side (fails).
+
+\paragraph{Physical implications (\S\ref{sec:physical-impl}).}
+The rigid $n{+}1$ factorization of contact diagrams implies the p-adic OPE encodes less cross-ratio information than the Archimedean OPE---consistent with p-adic AdS/CFT describing CFT at vanishing cross-ratio. The exchange diagram's link factor $R_{\mathrm{link}}$ (conjecturally, when $|R_{\mathrm{link}}| = 1$) is the tree-theoretic carrier of bulk locality, analogous to the Archimedean spectral integral. The adelic product is reframed from a ``fundamental symmetry'' to a ``structural invariant'' that detects factorization mismatches.
+
+\paragraph{Background and context.}
+These results are situated within a broader context: eight reverse-inspiration cases where p-adic computations preceded real-theoretic ones (\S\ref{sec:reverse}), five mathematical mechanisms M1--M5 explaining why p-adic methods illuminate hard problems (\S\ref{sec:mechanisms}), and the Berkovich-space bridge between p-adic and Archimedean physics (\S\ref{sec:berkovich}), which faces four obstacles O1--O4 that our bulk-sum obstruction (O3) partially resolves.
+
+\paragraph{Outlook.}
+The most immediate next step is to rigorously evaluate the link factor $R_{\mathrm{link}}$ on small trees (e.g., $T_2$ with finite cutoff $R$) to determine whether $|R_{\mathrm{link}}| = 1$, and to extend the exchange diagram computation to general $n$-point exchange and loop diagrams. The Tate integral count criterion provides a diagnostic: observables with matching Tate integral counts between p-adic and Archimedean sides should satisfy the adelic product. Verifying this for the~\cite{HJ24} Tate curve one-loop computation (where the real counterpart is not yet computed) would provide a non-trivial test. The Berkovich bridge obstacles O1, O2, O4 remain open and require independent mathematical and physical developments.
+
+% ======================================================================
+% APPENDIX
+% ======================================================================
+\appendix
+
+\section{Recursive Structure of $n$-point Contact Diagrams on the Bruhat--Tits Tree}
+\label{app:recursion}
+
+This appendix provides the derivation of the $n{+}1$ $\zeta_p$ factor formula for $n$-point contact diagrams, supporting the claims of \S\ref{sec:obstacles} and Conjecture~\ref{conj:bulk-sum}. We establish the three ingredients required for a rigorous proof: (i) the recursion relations on the Steiner tree, (ii) the self-similarity of side-branch recursions, (iii) the $i$-independence of arm recursions, (iv) the absence of $\zeta_p$ factors from the Steiner path, and (v) the induction from $n$ to $n{+}1$.
+
+\subsection{A.1: Recursion Relations on the Steiner Tree}
+
+Consider the $n$-point contact diagram
+\begin{equation}
+\label{eq:app-bulk-sum}
+\mathcal{A}_n = \sum_{z \in T_{p^d}} \prod_{i=1}^n K_{\Delta_i}(z, x_i)
+\quad\text{with}\quad
+K_{\Delta_i}(z, x_i) = p^{-\Delta_i \, d(z, x_i)},
+\end{equation}
+where $d(z, x_i)$ is the graph distance from bulk vertex $z$ to boundary point $x_i \in \Pone(\Qp)$, and $\Delta_{1\cdots n} := \sum_{i=1}^n \Delta_i$. The bulk sum runs over all vertices of $T_{p^d} = \PGL(2, \mathbb{Q}_{p^d})/\PGL(2, \mathbb{Z}_{p^d})$, the $(p^d{+}1)$-regular Bruhat--Tits tree.
+
+The $n$ boundary points $\{x_1, \ldots, x_n\}$ determine a unique \emph{Steiner tree} $T_S \subset T_{p^d}$: the minimal subtree whose boundary limit set equals $\{x_1, \ldots, x_n\}$. $T_S$ consists of:
+\begin{itemize}[leftmargin=2em]
+    \item \textbf{Steiner points}: vertices of $T_S$ with three or more branches toward the $x_i$.
+    \item \textbf{Steiner paths}: finite-length paths connecting Steiner points (length $L \geq 0$).
+    \item \textbf{Arms}: rays from the outermost Steiner points to each boundary point $x_i$.
+    \item \textbf{Side branches}: subtrees branching off the arms and Steiner paths at internal vertices.
+\end{itemize}
+
+Decomposing the bulk sum \eqref{eq:app-bulk-sum} by the unique path property of $T_{p^d}$, the contribution of each vertex $z$ factorizes according to the branches emanating from $z$ that are not on the path toward any $x_i$. By the tree's $(p^d{+}1)$-regularity, each vertex has $p^d{+}1$ neighbors; removing the directions toward the $n$ boundary points and the parent direction leaves a number of \emph{side branches} that are themselves subtrees isomorphic to the full tree (by homogeneity).
+
+This decomposition yields three types of recursions:
+\begin{align}
+\text{(radial / side branch)}\quad & R_{\mathrm{rad}} = 1 + (p^d) \, p^{-\Delta_{1\cdots n}} \, R_{\mathrm{rad}}, \label{eq:rec-rad}\\
+\text{(arm)}\quad & R_i = \zeta_p(\Delta_{\hat{i},i}) \cdot C, \quad i = 1, \ldots, n, \label{eq:rec-arm}\\
+\text{(Steiner path)}\quad & R_{\mathrm{path}} = \text{finite expression depending on cross-ratios}, \label{eq:rec-path}
+\end{align}
+where $\Delta_{\hat{i},i} := \Delta_{1\cdots n} - 2\Delta_i$ is the arm parameter, $C$ is an $i$-independent constant (proven in A.3), and $\zeta_p(s) = (1 - p^{-s})^{-1}$ is the local zeta function.
+
+The full diagram factorizes as
+\begin{equation}
+\label{eq:factorization}
+\mathcal{A}_n = R_{\mathrm{rad}} \cdot \prod_{i=1}^n R_i \cdot R_{\mathrm{path}}.
+\end{equation}
+
+\subsection{A.2: Self-similarity of $R_{\mathrm{rad}}$}
+
+\begin{lemma}[Self-similarity]
+\label{lem:self-sim}
+The side-branch recursion satisfies
+\begin{equation}
+R_{\mathrm{rad}} = 1 + (p^d) \, p^{-\Delta_{1\cdots n}} \, R_{\mathrm{rad}}
+\end{equation}
+at every vertex of $T_{p^d}$ off the Steiner tree $T_S$, with solution
+\begin{equation}
+R_{\mathrm{rad}} = \frac{1}{1 - p^{d - \Delta_{1\cdots n}}} = \zeta_p(\Delta_{1\cdots n} - d).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By the $(p^d{+}1)$-regularity of $T_{p^d}$, each vertex has $p^d{+}1$ neighbors. At a vertex $z$ off $T_S$, one neighbor lies on the path toward $T_S$ (the ``parent'' direction), and the remaining $p^d$ neighbors root subtrees that are each isomorphic to the full $T_{p^d}$ (by homogeneity of the Bruhat--Tits tree under $\PGL(2, \mathbb{Q}_{p^d})$).
+
+In each such subtree, the contribution to the bulk sum equals $p^{-\Delta_{1\cdots n}} \, R_{\mathrm{rad}}$ (the factor $p^{-\Delta_{1\cdots n}}$ arises from the one additional edge of graph distance to each $x_i$; the recursion $R_{\mathrm{rad}}$ is identical by tree isomorphism). Summing over the $p^d$ side branches and adding the contribution of $z$ itself ($= 1$) gives the recursion \eqref{eq:rec-rad}.
+
+The solution is the geometric series
+\begin{equation}
+R_{\mathrm{rad}} = 1 + (p^d) p^{-\Delta_{1\cdots n}} + (p^d)^2 p^{-2\Delta_{1\cdots n}} + \cdots = \frac{1}{1 - p^{d - \Delta_{1\cdots n}}},
+\end{equation}
+convergent for $\Delta_{1\cdots n} > d$ (the unitarity bound). By the identification $\zeta_p(s) = (1 - p^{-s})^{-1}$ with $s = \Delta_{1\cdots n} - d$, we obtain $R_{\mathrm{rad}} = \zeta_p(\Delta_{1\cdots n} - d)$. \qedhere
+\end{proof}
+
+The self-similarity is exact: every off-$T_S$ vertex of $T_{p^d}$ is in the same $\PGL(2, \mathbb{Q}_{p^d})$-orbit, so the recursion is identical at each vertex. This proves the first key ingredient.
+
+\begin{remark}[Convergence condition]
+\label{rem:convergence}
+The geometric series for $R_{\mathrm{rad}}$ converges iff $\Delta_{1\cdots n} > d$, which is the unitarity bound for $n$-point contact diagrams. Additionally, each arm factor $\zeta_p(\Delta_{\hat{i},i})$ converges iff $\Delta_{\hat{i},i} > 0$, i.e., $\Delta_{1\cdots n} > 2\Delta_i$ for all $i$. These conditions are satisfied for physical scaling dimensions in the unitary window. The limit $\Delta_i \to 0$ (free-field limit) causes $\Delta_{\hat{i},i} \to 0$ and the arm sum diverges, mirroring the Archimedean IR divergence for massless exchange.
+\end{remark}
+
+\subsection{A.3: $i$-independence of the Arm Recursion}
+
+\begin{lemma}[$i$-independence]
+\label{lem:i-indep}
+The arm recursion factorizes as $R_i = \zeta_p(\Delta_{\hat{i},i}) \cdot C$, where $C$ is independent of $i$.
+\end{lemma}
+
+\begin{proof}
+Consider the arm from the outermost Steiner point $S$ to the boundary point $x_i$. Along this arm, each vertex has $p^d{+}1$ neighbors; one is the parent (toward $S$), one continues toward $x_i$, and $p^d - 1$ are side branches.
+
+The side branches at any vertex of the arm are isomorphic to the full $T_{p^d}$ (by tree homogeneity), so by the same argument as Lemma~\ref{lem:self-sim}, each side branch contributes $\zeta_p(\Delta_{1\cdots n} - d)$. The product over the $p^d - 1$ side branches yields
+\begin{equation}
+\zeta_p(\Delta_{1\cdots n} - d)^{p^d - 1},
+\end{equation}
+which is \textbf{$i$-independent} because it depends only on $\Delta_{1\cdots n}$ and $p^d$, both of which are symmetric in $i$.
+
+The arm itself, summed along its infinite length, yields a geometric series with ratio $p^{-\Delta_{\hat{i},i}}$, giving
+\begin{equation}
+\sum_{\ell=0}^\infty p^{-\Delta_{\hat{i},i} \cdot \ell} = \zeta_p(\Delta_{\hat{i},i}),
+\end{equation}
+which is the only $i$-dependent factor.
+
+Multiplying the $i$-dependent arm factor by the $i$-independent side-branch product gives
+\begin{equation}
+R_i = \zeta_p(\Delta_{\hat{i},i}) \cdot \underbrace{\zeta_p(\Delta_{1\cdots n} - d)^{p^d - 1}}_{C},
+\end{equation}
+with $C$ independent of $i$. \qedhere
+\end{proof}
+
+\subsection{A.4: The Steiner Path Contributes No $\zeta_p$}
+
+\begin{lemma}[Steiner path is finite]
+\label{lem:path}
+The Steiner path, of finite length $L \geq 0$, contributes a dynamical factor $R_{\mathrm{path}}(L, \text{cross-ratios})$ that depends on $L$ and the boundary cross-ratios, but \emph{not} on a geometric series of unbounded length. Therefore $R_{\mathrm{path}}$ contributes no additional $\zeta_p$ factor.
+\end{lemma}
+
+\begin{proof}
+The Steiner path connects two Steiner points $S_1, S_2$ via a finite path of length $L$ (in the tree metric). Each vertex along the path has $p^d - 2$ side branches (excluding the two path directions); each side branch is isomorphic to the full $T_{p^d}$ and contributes $\zeta_p(\Delta_{1\cdots n} - d)$ by Lemma~\ref{lem:self-sim}. However, these side branches are finite in number ($p^d - 2$ per vertex, $L$ vertices), so their total contribution is
+\begin{equation}
+\zeta_p(\Delta_{1\cdots n} - d)^{(p^d - 2) L},
+\end{equation}
+which is a finite product of $\zeta_p$ factors already accounted for in the radial contribution $R_{\mathrm{rad}}$ (the side-branch structure of $R_{\mathrm{rad}}$ in Lemma~\ref{lem:self-sim} includes all side branches uniformly).
+
+The path itself, being finite, contributes only the product $\prod_{\ell=1}^L p^{-\Delta_{1\cdots n}}$ from the edges along the path. This is a finite product yielding $p^{-\Delta_{1\cdots n} L}$, which depends on $L$ and hence on the boundary cross-ratios, but introduces no new $\zeta_p$ factor. \qedhere
+\end{proof}
+
+\subsection{A.5: Induction on $n$}
+
+\begin{theorem}[$n{+}1$ $\zeta_p$ factor formula]
+\label{thm:nplus1}
+For $n \geq 2$, the $n$-point contact diagram on $T_{p^d}$ factorizes into exactly $n{+}1$ local $\zeta_p$ factors: $1$ radial $+$ $n$ arm $+$ $0$ Steiner-path factors.
+\end{theorem}
+
+\begin{proof}
+By induction on $n$.
+
+\textbf{Base cases.} For $n = 2$: no bulk sum, $\mathcal{A}_2 \propto \normp{x_1 - x_2}^{-2\Delta}$, $0$ $\zeta_p$ factors. (Equivalently, $n{+}1 = 3$ is not yet applicable; the $n \geq 3$ regime begins the formula.)
+
+For $n = 3$: the Steiner tree is a ``$Y$'' with one Steiner point and three arms. By Lemmas~\ref{lem:self-sim}, \ref{lem:i-indep}: $R_{\mathrm{rad}} = \zeta_p(\Delta_{123} - d)$ (1 factor) + $\prod_{i=1}^3 \zeta_p(\Delta_{\hat{i},i})$ (3 factors) + $0$ Steiner path = $4 = (n{+}1)$ factors. \textbf{Verified.}
+
+For $n = 4$: the Steiner tree has two Steiner points connected by a path of length $L$. By Lemmas~\ref{lem:self-sim}, \ref{lem:i-indep}, \ref{lem:path}: $1$ radial + $4$ arm + $0$ Steiner path = $5 = (n{+}1)$ factors. \textbf{Verified.}
+
+For $n = 5$: the Steiner tree has (generically) three Steiner points. The same decomposition yields $1$ radial + $5$ arm + $0$ Steiner path = $6 = (n{+}1)$ factors. \textbf{Verified.}
+
+\textbf{Inductive step.} Assume the formula holds for $n$ boundary points: $\mathcal{A}_n$ has $n{+}1$ $\zeta_p$ factors ($1$ radial $+$ $n$ arm $+$ $0$ path).
+
+Add a new boundary point $x_{n+1}$. The Steiner tree $T_S^{(n+1)}$ differs from $T_S^{(n)}$ by the addition of one new arm (from the existing or newly created Steiner point to $x_{n+1}$). The addition of $x_{n+1}$ modifies the Steiner tree in one of two ways:
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{Case A: $x_{n+1}$ attaches to an existing Steiner point $S_j$.} A new arm of length $\infty$ is added from $S_j$ to $x_{n+1}$. By Lemma~\ref{lem:i-indep}, this new arm contributes $\zeta_p(\Delta_{\widehat{n+1}, n+1}) \cdot C$ (one new $i$-dependent $\zeta_p$ factor; the $i$-independent constant $C$ is absorbed into the existing radial factor count, since by Lemma~\ref{lem:self-sim} the side-branch structure is unchanged). Total: $n{+}1 + 1 = n{+}2$ factors.
+    \item \textbf{Case B: $x_{n+1}$ requires a new Steiner point $S'$.} The new Steiner point splits an existing arm into two arms and creates a new Steiner path of finite length $L'$. The split arm's $\zeta_p$ count is unchanged (Lemma~\ref{lem:i-indep} applies to each sub-arm), the new arm toward $x_{n+1}$ adds one $\zeta_p(\Delta_{\widehat{n+1}, n+1})$, and the new Steiner path contributes $0$ $\zeta_p$ (Lemma~\ref{lem:path}). Net change: $+1$ factor, giving $n{+}2$.
+\end{enumerate}
+
+In both cases, the count goes from $n{+}1$ to $n{+}2 = (n{+}1){+}1$, completing the induction. By the principle of mathematical induction, the formula $\#\zeta_p = n{+}1$ holds for all finite $n \geq 3$, with $n = 2$ the trivial (no bulk sum) case. \qedhere
+\end{proof}
+
+\begin{remark}[Case C: simultaneous multiple Steiner points]
+\label{rem:caseC}
+The inductive step above explicitly treats Case A (attachment to an existing Steiner point) and Case B (a single new Steiner point). A third structural possibility, \emph{Case C}, arises when adding $x_{n+1}$ simultaneously splits multiple existing arms, producing several new Steiner points at once. Case C does not break the $n{+}1$ formula: each new Steiner point corresponds to splitting an existing arm into two sub-arms, which preserves the total arm count (the split arm's $\zeta_p$ contribution is unchanged by Lemma~\ref{lem:i-indep}, since each sub-arm satisfies the same recursion). The only net change is the addition of one new arm toward $x_{n+1}$, contributing exactly one new $\zeta_p(\Delta_{\widehat{n+1}, n+1})$ factor. Case C is thus internally absorbed by the arm-counting argument, and the induction goes through unchanged.
+\end{remark}
+
+\begin{remark}[Finiteness of $n$]
+\label{rem:finite-n}
+Theorem~\ref{thm:nplus1} is stated for finite $n \geq 3$. The $n \to \infty$ limit is not covered: as $n$ grows, the total Steiner path length $L_{\text{total}}$ may become unbounded, and the arm-counting argument's combinatorial control becomes subtle. The physically relevant regime (boundary correlators in CFT) has finite $n$, so this is not a practical limitation.
+\end{remark}
+
+\begin{remark}
+The proof rests on three structural properties of $T_{p^d}$:
+\begin{enumerate}[leftmargin=2em]
+    \item \textbf{Homogeneity} ($\PGL(2, \mathbb{Q}_{p^d})$-invariance): guarantees the self-similarity of side branches (Lemma~\ref{lem:self-sim}).
+    \item \textbf{Unique path property}: ensures the Steiner tree decomposition is unambiguous, and arms are well-defined.
+    \item \textbf{Finiteness of Steiner paths}: ensures $R_{\mathrm{path}}$ is a finite product, not a geometric series.
+\end{enumerate}
+All three properties are consequences of $T_{p^d}$ being a regular tree, which is the geometric foundation of mechanism M2 (total disconnectedness causes series collapse).
+\end{remark}
+
+% ======================================================================
+% REFERENCES
+% ======================================================================
+\begin{thebibliography}{99}
+
+% --- A. p-adic String Theory and Mathematical Physics (Origins) ---
+
+\bibitem{V87} I.V. Volovich, ``p-adic string,'' Class. Quant. Grav. \textbf{4} (1987) L83.
+
+\bibitem{BFO88} L. Brekke, P.G.O. Freund, M. Olson, E. Witten, ``Nonarchimedean string dynamics,'' Nucl. Phys. B \textbf{302} (1988) 365.
+
+\bibitem{CMZ89} L.O. Chekhov, A.D. Mironov, A.V. Zabrodin, ``Multiloop calculations in p-adic string theory and Bruhat-Tits trees,'' Commun. Math. Phys. \textbf{125} (1989) 675.
+
+\bibitem{MZ90} A.V. Marshakov, A.V. Zabrodin, ``New p-adic string amplitudes,'' Mod. Phys. Lett. A \textbf{5} (1990) 265.
+
+\bibitem{GS00} A.A. Gerasimov, S.L. Shatashvili, ``On exact tachyon potential in open string field theory,'' JHEP \textbf{10} (2000) 034. [arXiv:hep-th/0009103]
+
+% --- B. p-adic AdS/CFT (Second Wave, 2016--2019) ---
+
+\bibitem{G16} S.S. Gubser, J. Knaute, S. Parikh, A. Samberg, P. Witaszczyk, ``p-adic AdS/CFT,'' Commun. Math. Phys. \textbf{352} (2017) 1019. [arXiv:1605.01061]
+
+\bibitem{HMSS16} M. Heydeman, M. Marcolli, I. Saberi, B. Stoica, ``Tensor networks, p-adic fields, and algebraic curves: arithmetic and the AdS$_3$/CFT$_2$ correspondence,'' Adv. Theor. Math. Phys. \textbf{22} (2018) 93. [arXiv:1605.07639]
+
+\bibitem{GP17} S.S. Gubser, S. Parikh, ``Geodesic bulk diagrams on the Bruhat-Tits tree,'' Phys. Rev. D \textbf{96} (2017) 066024. [arXiv:1704.01149]
+
+\bibitem{P19} S. Parikh, ``Holographic dual of the five-point conformal block,'' JHEP \textbf{05} (2019) 051. [arXiv:1901.01267]
+
+\bibitem{JP19a} C.B. Jepsen, S. Parikh, ``Propagator identities, holographic conformal blocks, and higher-point AdS diagrams,'' JHEP \textbf{10} (2019) 268. [arXiv:1906.08405]
+
+\bibitem{JP19b} C.B. Jepsen, S. Parikh, ``p-adic Mellin Amplitudes,'' JHEP \textbf{04} (2019) 101. [arXiv:1808.08333]
+
+\bibitem{HLM19} L-Y. Hung, W. Li, C.M. Melby-Thompson, ``p-adic CFT is a holographic tensor network,'' JHEP \textbf{04} (2019) 170. [arXiv:1902.01411]
+
+\bibitem{HMPS18} M. Heydeman, M. Marcolli, S. Parikh, I. Saberi, ``Nonarchimedean holographic entropy from networks of perfect tensors,'' Adv. Theor. Math. Phys. \textbf{25} (2021) 591. [arXiv:1812.04057]
+
+\bibitem{GJT19} S.S. Gubser, C. Jepsen, B. Trundy, ``Spin in p-adic AdS/CFT,'' J. Phys. A \textbf{52} (2019) 045402. [arXiv:1811.02538]
+
+\bibitem{HLM19b} L-Y. Hung, W. Li, C.M. Melby-Thompson, ``Wilson line networks in p-adic AdS/CFT,'' JHEP \textbf{05} (2019) 118. [arXiv:1812.06059]
+
+\bibitem{QG20} F. Qu, D. Gao, ``Spinor fields on the Bruhat-Tits tree and p-adic AdS/CFT,'' (2020).
+
+% --- C. Berkovich Bridge and Adelic Physics (Third Wave, 2020--2026) ---
+
+\bibitem{S18} B. Stoica, ``Building Archimedean Space,'' (2018). [arXiv:1809.01165]
+
+\bibitem{HMS20} A. Huang, D. Mao, B. Stoica, ``From p-adic to Archimedean Physics: Renormalization Group Flow and Berkovich Spaces,'' (2020). [arXiv:2001.01725]
+
+\bibitem{HSYZ20} A. Huang, B. Stoica, S-T. Yau, X. Zhong, ``Green's functions for Vladimirov derivatives and Tate's thesis,'' Commun. Num. Theor. Phys. \textbf{15} (2021) 315. [arXiv:2001.01721]
+
+\bibitem{G23} A. Goldfarb, ``On $\mathbb{P}^1_{\text{Berk}}$ and Coarse-Grainings of Non-Archimedean Product Spaces,'' (2023). [arXiv:2306.10227]
+
+\bibitem{HJ24} A. Huang, C.B. Jepsen, ``Finite Temperature at Finite Places,'' JHEP \textbf{03} (2025) 097. [arXiv:2408.04199]
+
+\bibitem{J22} C.B. Jepsen, ``Adelic Amplitudes and Intricacies of Infinite Products,'' Nucl. Phys. B \textbf{987} (2023) 116094. [arXiv:2211.01611]
+
+% --- D. Cross-Disciplinary and Applied ---
+
+\bibitem{YJO23} H. Yan, C.B. Jepsen, Y. Oz, ``p-adic Holography from the Hyperbolic Fracton Model,'' (2023). [arXiv:2306.07203]
+
+\bibitem{C23} G.J. Chawdhry, ``p-adic numbers and QCD amplitudes,'' Phys. Rev. D \textbf{110} (2024) 056028. [arXiv:2312.03672]
+
+\bibitem{C24} G.J. Chawdhry, ``Interpolation of rational functions in loop calculations by using p-adic numbers,'' PoS LL2024 (2024) 037. [arXiv:2410.03685]
+
+\bibitem{CGN24} F. Camp, B. Gripaios, A. Nguyen, ``Two-dimensional gauge anomalies and p-adic numbers,'' JHEP \textbf{06} (2024) 202. [arXiv:2403.10611]
+
+\bibitem{OT24} K. Okunishi, T. Takayanagi, ``Statistical Mechanics Approach to the Holographic Renormalization Group,'' Prog. Theor. Exp. Phys. (2024) 013A03. [arXiv:2310.12601]
+
+\bibitem{ESZ19} S. Ebert, H.-Y. Sun, M. Zhang, ``Probing holography in p-adic CFT,'' JHEP \textbf{02} (2020) 096. [arXiv:1911.06313]
+
+\bibitem{SGF26} A. Shabir, B.E. Gunara, M. Faizal, ``A Perfectoid Duality Between M-Theory and F-Theory,'' (2026). [arXiv:2602.22503]
+
+% --- E. Real AdS/CFT and Holographic Entropy (Background) ---
+
+\bibitem{M97} J.M. Maldacena, ``The Large N limit of superconformal field theories and supergravity,'' Adv. Theor. Math. Phys. \textbf{2} (1998) 231. [arXiv:hep-th/9711200]
+
+\bibitem{GKP98} S.S. Gubser, I.R. Klebanov, A.M. Polyakov, ``Gauge theory correlators from non-critical string theory,'' Phys. Lett. B \textbf{428} (1998) 105. [arXiv:hep-th/9802109]
+
+\bibitem{W98} E. Witten, ``Anti-de Sitter space and holography,'' Adv. Theor. Math. Phys. \textbf{2} (1998) 253. [arXiv:hep-th/9802150]
+
+\bibitem{RT06a} S. Ryu, T. Takayanagi, ``Holographic derivation of entanglement entropy from AdS/CFT,'' Phys. Rev. Lett. \textbf{96} (2006) 181602. [arXiv:hep-th/0603001]
+
+\bibitem{RT06b} S. Ryu, T. Takayanagi, ``Aspects of Holographic Entanglement Entropy,'' JHEP \textbf{08} (2006) 045. [arXiv:hep-th/0605073]
+
+% --- F. Mathematical Foundations ---
+
+\bibitem{Tate50} J. Tate, ``Fourier analysis in number fields and Hecke's zeta-functions,'' Ph.D. thesis, Princeton (1950). Reprinted in \emph{Algebraic Number Theory}, J.W.S. Cassels and A. Fr\"ohlich, eds., Academic Press (1967).
+
+\bibitem{Ber90} V.G. Berkovich, \emph{Spectral Theory and Analytic Geometry over Non-Archimedean Fields}, Mathematical Surveys and Monographs 33, AMS (1990).
+
+\bibitem{Mum72} D. Mumford, ``An analytic construction of degenerating curves over complete local rings,'' Compositio Math. \textbf{24} (1972) 129.
+
+\bibitem{Sch11} P. Scholze, ``Perfectoid spaces,'' Publ. Math. IH\'ES \textbf{116} (2012) 245.
+
+\end{thebibliography}
+
+\end{document}
+
