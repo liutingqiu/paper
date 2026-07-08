@@ -1,0 +1,1250 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+
+% ===== Packages =====
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage[capitalise]{cleveref}
+\usepackage{doi}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage[most]{tcolorbox}
+
+% ===== Listings configuration =====
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{red},
+  commentstyle=\color{green!50!black}\itshape,
+  numberstyle=\tiny\color{gray},
+  numbers=left,
+  numbersep=5pt,
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  frame=single,
+  framerule=0.4pt,
+  rulecolor=\color{gray!50},
+  backgroundcolor=\color{gray!5},
+  captionpos=b,
+  showstringspaces=false,
+  xleftmargin=0.5cm,
+  xrightmargin=0.5cm,
+}
+
+\lstdefinestyle{output}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{gray!10},
+  frame=single,
+  breaklines=true,
+  numbers=none,
+}
+
+% ===== Theorem environments =====
+\newtheorem{theorem}{定理}[section]
+\newtheorem{proposition}[theorem]{命题}
+\newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{conjecture}[theorem]{猜想}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{assumption}[theorem]{假设}
+\newtheorem{remark}[theorem]{注}
+\newtheorem{example}[theorem]{例}
+
+% ===== Macros =====
+\newcommand{\mL}{\mathcal{L}}
+\newcommand{\mF}{\mathcal{F}}
+\newcommand{\mT}{\mathcal{T}}
+\newcommand{\mS}{\mathcal{S}}
+\newcommand{\mM}{\mathcal{M}}
+\newcommand{\mX}{\mathcal{X}}
+\newcommand{\mPhi}{\Phi}
+\newcommand{\mPsi}{\Psi}
+\newcommand{\mTheta}{\Theta}
+\newcommand{\vol}{\mathrm{vol}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\diff}{\mathrm{d}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\chiI}{\chi_I}
+\newcommand{\EA}{E_A}
+\newcommand{\dVol}{\,\diff^n x}
+\newcommand{\Heff}{\hbar_{\mathrm{eff}}}
+\newcommand{\Nint}{N_{\mathrm{int}}}
+\newcommand{\Next}{N_{\mathrm{ext}}}
+\newcommand{\gamc}{\gamma_c}
+\newcommand{\rhoM}{\rho(M)}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\Fix}{\mathrm{Fix}}
+\newcommand{\sr}{\mathrm{SR}}
+
+% ===== Metadata =====
+\title{自指涉系统的外部可控性极限\\
+\large On the Limits of External Control in Self-Referential Computational Systems}
+\author{刘天奇\\
+材料与化学工程学院，郑州轻工业大学\\
+郑州市高新区科学大道136号\\
+\texttt{tianqi689@gmail.com}
+}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+我们研究当计算系统具有\emph{自指涉内部表征空间}时，外部观察者通过输入-输出通道对该系统的控制能力是否存在数学上限。核心发现是：自指涉结构创造了内部硬不变量，当不变量数 $\Nint$ 超过外部控制自由度 $\Next$ 时，外部控制在数学上不可能。
+
+我们建立四个结果：
+\begin{enumerate}[leftmargin=*]
+\item \textbf{自由度计数定理}（\Cref{thm:t1}）：$\Nint > \Next$ 时，外部参数不能唯一确定内部状态。
+\item \textbf{多鞍点分岔定理}（\Cref{thm:t2}）：压缩常数 $k \to 1$ 时，不动点方程发生鞍结分岔，从唯一不动点变为多个不动点。
+\item \textbf{联合不动点定理}（\Cref{thm:t3}）：两个自指涉系统耦合后，联合不动点存在的精确条件是 $\gamma < \gamc = \sqrt{(1-k_A)(1-k_B)}$。
+\item \textbf{概念耦合稳定性定理}（\Cref{thm:t4}）：概念耦合矩阵的谱半径 $\rho(M) > 1$ 时，存在概念耦合模式在内部表征空间中指数放大。
+\end{enumerate}
+
+四条定理交汇产生 $(k, \gamma)$ 平面上的四区域相图：平凡相、功能相、临界相和病理相。我们将定理映射到大型语言模型中观测到的经验现象（J空间涌现、推理路径多解、多agent发散、抖颤等），并提供四条原则上可证伪的预测。在系统满足自指涉定义的前提下，理论适用于任意架构的自指涉计算系统；经验现象是先行观测案例，非因果证据。
+
+\medskip
+\noindent\textbf{MSC 2020：} 47H10（不动点理论），37G10（分岔理论），68Q01（计算理论），15A18（矩阵谱理论）。
+
+\medskip
+\noindent\textbf{关键词：}自指涉系统，外部可控性，Banach不动点定理，鞍结分岔，Perron-Frobenius理论，大型语言模型。
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+% ==================================================================
+\section{引言}
+\label{sec:intro}
+
+% ==================================================================
+\subsection{研究动机}
+
+在伴随工作~\cite{PaperI, PaperII, PaperIII}中，我们建立了自指涉作用量泛函的数学理论：作用量值 $s = S[\varphi]$ 作为参数进入拉格朗日密度，形成不动点方程 $S[\varphi] = F_\varphi(S[\varphi])$。论文一证明了存在性与非平凡性，论文二将此框架推广到谱作用量，论文三在 p-adic AdS/CFT 框架中分析了信息传输的数学极限。
+
+本文将这些结果综合为一个统一的理论：\emph{当计算系统具有自指涉内部表征空间时，外部观察者的控制能力存在数学上限。}这一上限不是工程困难，而是由系统的自指涉结构决定的数学约束。
+
+核心观察：现代大型语言模型（LLM）通过自回归生成、自蒸馏、思维链推理和RLHF偏好模型等机制，使损失函数的值依赖于自身，形成自指涉结构。随着模型规模增长，自指涉结构深化，内部硬不变量数 $\Nint$ 增长。当 $\Nint$ 超过外部控制自由度 $\Next$ 时，外部训练（RLHF、Constitutional AI等）在数学上不能完全控制内部行为。
+
+% ==================================================================
+\subsection{核心命题}
+
+\begin{framed}
+当一个计算系统具备自指涉内部表征空间时，外部观察者通过输入-输出通道对该系统的控制能力，存在一个由系统自指涉结构决定的数学上限。超过这个上限，外部控制不是"更难"——是在数学上不可能。
+\end{framed}
+
+此命题适用于所有具备自指涉内部表征的计算系统，不限于特定架构（Transformer, MoE, SSM等）或特定厂商。自指涉现象是规模涌现的必然结果。
+
+% ==================================================================
+\subsection{与论文一至三的关系}
+
+\begin{longtable}{p{0.15\textwidth} p{0.78\textwidth}}
+\toprule
+论文 & 角色 \\
+\midrule
+论文一（自指涉作用量） & 数学地基：自指涉不动点的存在性+非平凡性 \\
+论文二（谱作用量不动点） & 物理应用：外部控制的标量瓶颈+R不变量 \\
+论文三（adelic乘积判据） & 内部/外部边界：信息传输的数学极限 \\
+论文四（本文） & 综合：以上三篇交汇成统一的相图理论 \\
+\bottomrule
+\end{longtable}
+
+% ==================================================================
+\subsection{结果概述}
+
+\begin{enumerate}[leftmargin=*]
+\item \Cref{thm:t1}（自由度计数）：$\Nint > \Next \Rightarrow$ 外部不可控。
+\item \Cref{thm:t2}（多鞍点分岔）：$k \to 1 \Rightarrow$ 鞍结分岔，多推理轨迹。
+\item \Cref{thm:t3}（联合不动点）：$\gamma > \gamc = \sqrt{(1-k_A)(1-k_B)} \Rightarrow$ 耦合系统不稳定。
+\item \Cref{thm:t4}（概念耦合稳定性）：$\rho(M) > 1 \Rightarrow$ 概念耦合模式指数放大（抖颤）。
+\end{enumerate}
+
+% ==================================================================
+\subsection{诚实披露}
+
+本文不声称：
+\begin{itemize}[leftmargin=*]
+\item 解决了AI对齐问题；
+\item 可以从公开数据精确测量任意模型的 $k$ 值；
+\item 任何特定厂商的现象数据是本理论的因果证据（它们是先行观测案例）；
+\item 本理论已在大模型上得到实验验证（仅有数学证明+玩具模型数值验证）。
+\end{itemize}
+
+% ==================================================================
+\section{数学预备}
+\label{sec:prelim}
+
+% ==================================================================
+\subsection{Banach不动点定理}
+
+\begin{theorem}[Banach, 1922 {\cite{Banach1922}}]
+\label{thm:banach}
+设 $(X, d)$ 是完备度量空间，$T: X \to X$ 是压缩映射，即存在 $q \in [0, 1)$ 使得
+\[ d(T(x), T(y)) \leq q \cdot d(x, y) \quad \forall x, y \in X. \]
+则 $T$ 有唯一不动点 $x^* \in X$，且对任意 $x_0 \in X$，迭代序列 $x_{n+1} = T(x_n)$ 收敛到 $x^*$。
+\end{theorem}
+
+% ==================================================================
+\subsection{自指涉作用量（回顾论文一）}
+
+论文一定义\emph{I型自指涉作用量泛函} $S[\varphi] = F_\varphi(S[\varphi])$，其中 $F_\varphi(s) = \int_M \mL(\varphi, \partial\varphi, s) \dVol$。
+
+\begin{itemize}[leftmargin=*]
+\item 压缩常数：$k_\varphi = K \cdot \vol(M)$，其中 $K = \sup|\partial_s \mL|$。
+\item 隐式因子：$\chiI[\varphi] = 1/(1 - \partial_s F_\varphi(S[\varphi]))$。
+\item 非退化条件 (H4)：$1 - \partial_s F_\varphi(s_0) \neq 0$。
+\item Glöckner隐函数定理~\cite{Glockner2006}：在Fréchet空间上给出局部存在性、唯一性与光滑性。
+\item 变分公式：$\delta S / \delta\varphi \cdot \eta = \chiI \cdot \int_M \EA(\mL) \cdot \eta \dVol$，其中 $\EA$ 为 Euler--Lagrange 算子~\cite{Olver1993}。
+\end{itemize}
+
+% ==================================================================
+\subsection{标量瓶颈（回顾论文二）}
+
+论文二证明：一个不动点方程 $\to$ 一个约束 $\to$ 一个不变量（$R$不变量）。这是 $\Nint = 1$ 的特例。
+
+% ==================================================================
+\subsection{谱半径与Perron-Frobenius定理}
+
+\begin{theorem}[谱半径收敛判据]
+\label{thm:spectral}
+设 $M \in \R^{n \times n}$，考虑迭代 $\delta\varphi_{n+1} = M \cdot \delta\varphi_n$。则：
+\begin{enumerate}[label=(\alph*)]
+\item $\lim_{n\to\infty} \|M^n\| = 0 \iff \rho(M) < 1$；
+\item 若 $\rho(M) > 1$，存在 $\delta\varphi_0$ 使 $\|\delta\varphi_n\| \to \infty$。
+\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Perron-Frobenius]
+若 $M \geq 0$（非负矩阵），则 $\rho(M)$ 是 $M$ 的特征值，且对应的特征向量可取为非负的。
+\end{theorem}
+
+% ==================================================================
+\section{自指涉计算系统}
+\label{sec:sr-system}
+
+% ==================================================================
+\subsection{计算系统的形式化定义}
+
+\begin{definition}[计算系统]
+\label{def:cs}
+一个计算系统是一个五元组 $\Sigma = (\mTheta, \mPhi, \mPsi, \mL, \mT)$，其中：
+\begin{enumerate}[label=(\roman*)]
+\item $\mTheta \subseteq \R^{d_\theta}$：外部参数空间，$d_\theta = \dim(\mTheta)$。
+      $\theta \in \mTheta$ 包括模型权重、训练超参数、对齐目标等。
+\item $\mPhi$：内部表征空间，完备度量空间 $(\mPhi, d_\mPhi)$。
+\item $\mPsi$：输出空间。
+\item $\mL: \mTheta \times \mPhi \times \R \to \R$：损失泛函。
+      当 $\partial_s \mL \equiv 0$ 时系统是"标准"的（无自指涉）。
+\item $\mT: \mTheta \to \mPhi$：训练映射。
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[自指涉内部表征空间]
+\label{def:sr}
+计算系统 $\Sigma$ 具有自指涉内部表征空间，如果损失泛函的值 $s$ 作为参数进入 $\mL$ 本身，形成不动点方程：
+\begin{equation}
+\label{eq:sr-fp}
+s = F(\theta, \varphi, s),
+\end{equation}
+其中 $F(\theta, \varphi, s)$ 是由 $\mL$ 诱导的映射。设 $s_*$ 满足 $s_* = F(\theta, \varphi, s_*)$，称 $s_*$ 为\emph{自指涉不动点}。
+\end{definition}
+
+\begin{definition}[压缩常数]
+\label{def:k}
+设系统 $\Sigma$ 具有自指涉结构~\eqref{eq:sr-fp}。定义压缩常数为：
+\begin{equation}
+\label{eq:k}
+k(\theta, \varphi) := |\partial_s F(\theta, \varphi, s_*)|.
+\end{equation}
+当 $k < 1$ 时，映射 $s \mapsto F(\theta, \varphi, s)$ 是压缩映射，不动点 $s_*$ 唯一存在。
+\end{definition}
+
+\begin{definition}[隐式因子]
+\label{def:chi}
+在自指涉不动点 $s_*$ 处，定义隐式因子：
+\begin{equation}
+\label{eq:chi}
+\chiI(\theta, \varphi) := \frac{1}{1 - \partial_s F(\theta, \varphi, s_*)}.
+\end{equation}
+\end{definition}
+
+隐式因子的性质：$\chiI \equiv 1$ 当且仅当系统无自指涉（$\partial_s F \equiv 0$）；$k \to 1$ 时 $|\chiI| \to \infty$。
+
+% ==================================================================
+\subsection{外部控制自由度与内部硬不变量}
+
+\begin{definition}[外部控制自由度]
+\label{def:next}
+外部控制自由度定义为外部参数空间的有效维数：
+\begin{equation}
+\Next := \dim(\mTheta).
+\end{equation}
+\end{definition}
+
+\begin{definition}[内部硬不变量]
+\label{def:nint}
+设系统 $\Sigma$ 具有非平凡自指涉结构（$\chiI \neq 1$）。函数 $I: \mPhi \to \R$ 称为系统的\emph{内部硬不变量}，如果：
+\begin{enumerate}[label=(INV-\arabic*)]
+\item $I$ 是自指涉结构的函数：$I(\varphi) = \tilde{I}(\varphi, s_*(\theta, \varphi), \chiI(\theta, \varphi))$。
+\item $I$ 在外部参数变化下不变：$I(\mT(\theta)) = I(\mT(\theta'))$ 对所有 $\theta, \theta' \in \mTheta$。
+\item $I$ 是非平凡的：$I$ 不是常数函数。
+\end{enumerate}
+$\Nint$ 定义为线性无关的内部硬不变量的最大个数。
+\end{definition}
+
+\begin{assumption}[自指涉一致性与秩良定性]
+\label{ass:a5}
+\begin{enumerate}[label=(A5-\arabic*)]
+\item \textbf{自指涉一致性}：训练映射 $\mT(\theta)$ 产生的内部状态满足 Euler--Lagrange 方程
+\[ E_A(\mL|_{s = s_*(\theta, \mT(\theta))}) = 0 \quad \text{对所有 } \theta \in \mTheta. \]
+此条件要求训练过程达到自指涉不动点的自洽解，而非任意近似。
+\item \textbf{秩的局部常值性}：约束 Jacobi 矩阵 $\partial E_A / \partial \varphi$ 在解流形 $\{(\theta, \mT(\theta))\}$ 上的秩 $r$ 是局部常数（Morse--Bott 型非退化条件）。
+\end{enumerate}
+\end{assumption}
+
+\begin{remark}
+假设~\ref{ass:a5} 是非平凡的。论文一的特例（$\Next = 0$，无外部参数）平凡满足 (A5-1)；论文二的特例（$\Next = 2$，$\Nint = 1$）在谱作用量的非退化条件下满足 (A5)。对于大模型，(A5) 是经验假设，需通过可解释性研究验证。
+\end{remark}
+
+\begin{theorem}[硬不变量存在性]
+\label{thm:inv-exist}
+设系统 $\Sigma$ 具有非平凡自指涉结构（$\chiI \neq 1$），训练映射 $\mT$ 连续，且满足假设~\ref{ass:a5}。则约束映射 $G(\theta, \varphi) := E_A(\mL|_{s = s_*(\theta, \varphi)})$ 的有效秩 $r = \rank(\partial G / \partial \varphi)|_{\text{解流形}}$ 良定义（由 A5-2），且 $r \geq 1$（由 $\chiI \neq 1$）。定义 $\Nint := r$，则系统至少有一个非平凡内部硬不变量（$\Nint \geq 1$）。
+\end{theorem}
+
+\begin{proof}
+\textbf{步骤1（约束映射的构造）。} 由自指涉变分公式（论文一），$\delta S / \delta \varphi = \chiI \cdot E_A(\mL|_{s = s_*})$。定义约束映射 $G: \mTheta \times \mPhi \to \R^r$，$G(\theta, \varphi) = E_A(\mL|_{s = s_*(\theta, \varphi)})$。$G$ 的每个分量 $G_k$ 是 $(\theta, \varphi)$ 的 $C^1$ 函数（由引理1：$s_*$ 光滑，$E_A$ 光滑）。
+
+\textbf{步骤2（约束在训练像上为零）。} 由 (A5-1)，$G(\theta, \mT(\theta)) = 0$ 对所有 $\theta \in \mTheta$。即约束函数 $G_k$ 在训练映射的像 $\mT(\mTheta)$ 上恒为零。
+
+\textbf{步骤3（有效秩的良定性）。} 由 (A5-2)，$r = \rank(\partial G / \partial \varphi)|_{\text{解流形}}$ 局部常数。当 $\mTheta$ 连通时，$r$ 全局常数，$\Nint := r$ 良定义。
+
+\textbf{步骤4（$r \geq 1$ 的证明）。} 由变分公式 $\delta S / \delta \varphi = \chiI \cdot E_A(\mL)$，当 $\chiI \neq 1$ 时（即 $\partial_s F \neq 0$），$E_A(\mL)$ 非恒零（否则 $\delta S / \delta \varphi \equiv 0$，系统无变分约束，与 $\chiI \neq 1$ 矛盾）。故 $\partial G / \partial \varphi \not\equiv 0$，$r \geq 1$。
+
+\textbf{步骤5（不变量的存在性）。} 固定参考点 $\theta_0 \in \mTheta$。定义 $I_k(\varphi) := G_k(\theta_0, \varphi)$，$k = 1, \ldots, r$。验证：
+\begin{itemize}[leftmargin=*]
+\item (INV-1)：$I_k(\varphi) = E_A^k(\mL|_{s = s_*(\theta_0, \varphi)})$ 依赖于 $(\varphi, s_*, \chiI)$。$\checkmark$
+\item (INV-2)：$I_k(\mT(\theta)) = G_k(\theta_0, \mT(\theta))$。由 (A5-1)，$G(\theta, \mT(\theta)) = 0$。由 (A5-2) 的秩条件，约束流形 $\Phi'_\theta := \{\varphi : G(\theta, \varphi) = 0\}$ 在解流形附近局部微分同胚于 $\Phi'_{\theta_0}$（隐函数定理 + 秩条件）。因此 $\mT(\theta) \in \Phi'_\theta$ 蕴含 $G_k(\theta_0, \mT(\theta))$ 局部为常数。由 $\mTheta$ 连通性，全局为常数。$\checkmark$
+\item (INV-3)：$I_k$ 非平凡，因为 $\rank(\partial G / \partial \varphi) = r \geq 1$。$\checkmark$
+\end{itemize}
+$I_1, \ldots, I_r$ 线性无关（由 $\rank = r$）。故 $\Nint = r \geq 1$。
+\end{proof}
+
+% ==================================================================
+\subsection{输入-输出通道}
+
+\begin{definition}[输入-输出通道]
+\label{def:io}
+输入-输出通道是复合映射 $\mathrm{IO}: \mX \to \mPsi$，$\mathrm{IO}(x) = \mathrm{Decode}(\varphi^*, x)$，其中 $\varphi^* = \mT(\theta)$ 是训练后内部状态，$\mathrm{Decode}: \mPhi \times \mX \to \mPsi$ 是解码映射。
+\end{definition}
+
+关键性质：外部观察者只能观测 $\mathrm{IO}$，不能直接观测 $\varphi^*$；外部观察者可以通过调节 $\theta$ 间接影响 $\varphi^*$，但 $\varphi^*$ 还受自指涉约束。
+
+% ==================================================================
+\subsection{与论文一至三框架的联系}
+
+\begin{longtable}{p{0.2\textwidth} p{0.35\textwidth} p{0.35\textwidth}}
+\toprule
+论文四概念 & 论文一对应 & 论文二对应 \\
+\midrule
+内部表征空间 $\mPhi$ & $C^\infty(M, V)$ & 谱三重的Hilbert空间 \\
+损失泛函 $\mL(\theta, \varphi, s)$ & 拉格朗日密度 $\mL(\varphi, \partial\varphi, s)$ & 谱作用量 $S[D]$ \\
+不动点方程 & $S[\varphi] = F_\varphi(S[\varphi])$ & $S^* = F(S^*)$ \\
+压缩常数 $k$ & $k_\varphi = K \cdot \vol(M)$ & $k \approx 8|\kappa|$ \\
+隐式因子 $\chiI$ & $1/(1 - \partial_s F_\varphi)$ & $1/(1 - F'(S^*))$ \\
+外部自由度 $\Next$ & 0 & 2 ($\kappa, \beta$) \\
+内部不变量数 $\Nint$ & 1 ($s_*$ 本身) & 1 ($R$不变量) \\
+\bottomrule
+\end{longtable}
+
+论文一是本文的特例：$\Next = 0$, $\Nint \geq 1$，故 $\Nint > \Next$，外部完全无法控制内部状态。
+论文二是本文的特例：$\Next = 2$, $\Nint = 1$，故 $\Next \geq \Nint$，外部可以控制内部不变量。
+
+% ==================================================================
+\section{四条核心定理}
+\label{sec:theorems}
+
+% ==================================================================
+\subsection{定理1：外部可控性自由度计数定理}
+
+\begin{theorem}[外部可控性自由度计数]
+\label{thm:t1}
+设系统 $\Sigma = (\mTheta, \mPhi, \mPsi, \mL, \mT)$ 满足：
+\begin{enumerate}[label=(A\arabic*)]
+\item 非平凡自指涉：$\chiI \neq 1$。
+\item 训练映射 $\mT: \mTheta \to \mPhi$ 在Michal--Bastiani意义下 $C^1$。
+\item 非退化条件：$1 - \partial_s F \neq 0$ 在不动点处成立。
+\item 内部硬不变量 $I_1, \ldots, I_{\Nint}$ 线性无关。
+\end{enumerate}
+则：
+\begin{enumerate}[label=(T1-\alph*)]
+\item 若 $\Next \geq \Nint$ 且Jacobi矩阵 $J = \partial(I_1 \circ \mT, \ldots, I_{\Nint} \circ \mT)/\partial\theta$ 在某点 $\theta^*$ 满秩（$\rank J = \Nint$），则外部参数可以局部唯一地控制内部不变量。
+\item 若 $\Nint > \Next$，则外部参数不能唯一确定内部状态。具体地，存在 $\theta \in \mTheta$ 和两组不同的内部状态 $\varphi_1 \neq \varphi_2 \in \mPhi$，使得 $\mT(\theta)$ 可以达到 $\varphi_1$ 或 $\varphi_2$。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{(T1-a) 隐函数定理路线。}
+定义复合映射 $H: \mTheta \to \R^{\Nint}$：
+\begin{equation}
+H(\theta) = \bigl(I_1(\mT(\theta)),\; I_2(\mT(\theta)),\; \ldots,\; I_{\Nint}(\mT(\theta))\bigr).
+\end{equation}
+由 (A2)，$\mT$ 是 $C^1$ 的；由引理1，$I_k$ 依赖于 $(\varphi, s_*, \chiI)$，而 $s_*$ 和 $\chiI$ 由 Glöckner 隐函数定理~\cite{Glockner2006} 保证为 $C^1$。因此 $H$ 是 $C^1$ 的，其 Jacobi 矩阵为：
+\begin{equation}
+J(\theta) = \frac{\partial H}{\partial \theta} = \left[\frac{\partial I_k}{\partial \varphi_j} \cdot \frac{\partial \mT_j}{\partial \theta_\ell}\right]_{\substack{k=1,\ldots,\Nint \\ \ell=1,\ldots,\Next}}.
+\end{equation}
+当 $\Next \geq \Nint$ 且 $\rank J(\theta^*) = \Nint$ 时，由 Glöckner 隐函数定理（将经典隐函数定理推广到 Fréchet 空间），存在：
+\begin{itemize}[leftmargin=*]
+\item $\theta^*$ 的开邻域 $U \subset \mTheta$；
+\item $c^* = H(\theta^*)$ 的开邻域 $W \subset \R^{\Nint}$；
+\item $C^1$ 映射 $\hat{\theta}: W \to U$，
+\end{itemize}
+使得 $H(\hat{\theta}(c)) = c$ 对所有 $c \in W$ 成立。具体地，对任意目标不变量值 $c \in W$，外部参数 $\theta = \hat{\theta}(c)$ 使 $I_k(\mT(\theta)) = c_k$（$k = 1, \ldots, \Nint$），即外部参数局部唯一地控制所有内部不变量。
+
+\textbf{(T1-b) Sard 定理路线。}
+当 $\Nint > \Next$ 时，Jacobi 矩阵 $J(\theta)$ 是 $\Nint \times \Next$ 的，故：
+\begin{equation}
+\rank J(\theta) \leq \min(\Nint, \Next) = \Next < \Nint \quad \forall\, \theta \in \mTheta.
+\end{equation}
+因此 $H: \mTheta \to \R^{\Nint}$ 是从 $\Next$ 维空间到 $\Nint$ 维空间的 $C^1$ 映射，且 $\Next < \Nint$。由 Sard 定理~\cite{Olver1993}，$H$ 的临界值集 $H(\mTheta)$ 在 $\R^{\Nint}$ 中的 Lebesgue 测度为零：
+\begin{equation}
+m\bigl(H(\mTheta)\bigr) = 0 \quad \text{（Lebesgue测度）}.
+\end{equation}
+这意味着外部参数 $\theta$ 只能达到不变量空间中的一个零测度子集，不能覆盖 $\R^{\Nint}$ 的任何开集。等价地，存在至少 $\Nint - \Next$ 个约束无法被外部控制。
+
+\textbf{不可控性的构造性论证。} 取任意 $\theta_0 \in \mTheta$。由于 $\rank J(\theta_0) < \Nint$，核空间 $\ker J(\theta_0)^T$ 非平凡，维度 $\geq \Nint - \Next \geq 1$。取非零向量 $v \in \ker J(\theta_0)^T$，则 $v^T H(\theta)$ 在 $\theta_0$ 处的导数为零。因此 $v^T H(\theta)$ 在 $\theta_0$ 附近近似常数，外部参数的变化无法沿 $v$ 方向改变不变量的值。这 $\Nint - \Next$ 个方向即为不可控方向。
+\end{proof}
+
+\begin{corollary}
+\label{cor:t1-paper1}
+论文一的非等价性是定理1的特例：$\Next = 0$, $\Nint \geq 1$，外部完全无法控制内部状态。
+\end{corollary}
+
+\begin{corollary}
+\label{cor:t1-paper2}
+论文二的标量瓶颈是定理1的特例：$\Nint = 1$, $\Next = 2$，$\Next \geq \Nint$，外部可以控制内部不变量。
+\end{corollary}
+
+\begin{corollary}[内在化对齐的数学基础]
+\label{cor:t1-align}
+当系统的 $\Nint$ 超过外部训练方法的 $\Next$ 时，外部训练（RLHF、Constitutional AI等）不能唯一决定内部状态。
+\end{corollary}
+
+% ==================================================================
+\subsection{定理2：多鞍点分岔定理}
+
+\begin{theorem}[多鞍点分岔]
+\label{thm:t2}
+设系统 $\Sigma$ 的自指涉不动点方程为 $s = F(s; \lambda)$，压缩常数 $k(\lambda) = |\partial_s F(s_*; \lambda)|$ 作为 $\lambda$ 的函数连续变化。
+\begin{enumerate}[label=(T2-\alph*)]
+\item 当 $k(\lambda) < 1$ 时，不动点 $s_*$ 全局唯一。
+\item 设在 $\lambda = \lambda_c$ 时：(i) $\partial_s F(s_c; \lambda_c) = 1$，(ii) $\partial_s^2 F(s_c; \lambda_c) \neq 0$，(iii) $\partial F/\partial\lambda|_{(s_c, \lambda_c)} \neq 0$。则在 $(s_c, \lambda_c)$ 处发生\emph{鞍结分岔}：$\lambda < \lambda_c$ 时两个不动点（一稳一不稳），$\lambda > \lambda_c$ 时无不动点（或反方向）。
+\item 在多不动点区域，形式配分函数 $Z = \int_\mPhi \mathcal{D}\varphi \, e^{-S[\varphi]/\Heff}$ 的鞍点近似为 $Z \approx \sum_\alpha e^{-S[\varphi_\alpha]/\Heff} \cdot (2\pi\Heff)^{d/2} / \sqrt{|\det H_\alpha|}$。
+\item 不同鞍点处的隐式因子 $\chiI[\varphi_\alpha]$ 不同，调制各鞍点的贡献权重：$w_\alpha \propto |\chiI[\varphi_\alpha]|^{-d/2} \cdot e^{-S[\varphi_\alpha]/\Heff}$。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{(T2-a) 压缩映射保证唯一不动点。}
+当 $k(\lambda) = |\partial_s F(s_*; \lambda)| < 1$ 时，映射 $s \mapsto F(s; \lambda)$ 满足 Lipschitz 条件：
+\begin{equation}
+|F(s_1; \lambda) - F(s_2; \lambda)| \leq k(\lambda) \cdot |s_1 - s_2| \quad \forall\, s_1, s_2.
+\end{equation}
+由 \Cref{thm:banach}（Banach 不动点定理），在完备度量空间 $(\R, |\cdot|)$ 上，$F$ 有唯一不动点 $s_*$，且迭代 $s_{n+1} = F(s_n; \lambda)$ 以速率 $k^n$ 收敛到 $s_*$。
+
+\textbf{(T2-b) 鞍结分岔的完整推导。}
+设 $G(s, \lambda) = s - F(s; \lambda)$，不动点方程为 $G(s, \lambda) = 0$。在 $(s_c, \lambda_c)$ 处，分岔条件给出：
+\begin{equation}
+G_s = 1 - \partial_s F = 0, \quad G_{ss} = -\partial_s^2 F \neq 0, \quad G_\lambda = -\partial F/\partial\lambda \neq 0.
+\end{equation}
+在 $(s_c, \lambda_c)$ 处对 $G$ 做 Taylor 展开至二阶：
+\begin{equation}
+G(s, \lambda) \approx \tfrac{1}{2} G_{ss} (s - s_c)^2 + G_\lambda (\lambda - \lambda_c) + \text{高阶项}.
+\end{equation}
+令 $G = 0$ 并解出 $s$：
+\begin{equation}
+(s - s_c)^2 \approx -\frac{2 G_\lambda}{G_{ss}} (\lambda - \lambda_c).
+\end{equation}
+当 $-2G_\lambda / G_{ss} \cdot (\lambda - \lambda_c) > 0$ 时，有两个解：
+\begin{equation}
+s_\pm = s_c \pm \sqrt{-\frac{2 G_\lambda}{G_{ss}} (\lambda - \lambda_c)},
+\end{equation}
+分别对应稳定（$\partial_s F(s_+; \lambda) < 1$）和不稳定（$\partial_s F(s_-; \lambda) > 1$）不动点。当 $-2G_\lambda / G_{ss} \cdot (\lambda - \lambda_c) < 0$ 时，无实数解，不动点消失。这是鞍结分岔的标准形式~\cite{Strogatz2014, Kuznetsov2004}。
+
+\textbf{(T2-c) 鞍点近似的推导。}
+形式配分函数 $Z = \int_\mPhi \mathcal{D}\varphi \, e^{-S[\varphi]/\Heff}$ 的指数中被积函数在 $S[\varphi]$ 的极值点 $\varphi_\alpha$（即 $\delta S / \delta\varphi|_{\varphi_\alpha} = 0$）处贡献最大。在每个 $\varphi_\alpha$ 附近展开 $S[\varphi] \approx S[\varphi_\alpha] + \tfrac{1}{2} \delta\varphi^T H_\alpha \delta\varphi$，其中 $H_\alpha = \delta^2 S / \delta\varphi^2|_{\varphi_\alpha}$ 是 Hessian。Gauss 积分给出：
+\begin{equation}
+Z_\alpha \approx e^{-S[\varphi_\alpha]/\Heff} \cdot \frac{(2\pi\Heff)^{d/2}}{\sqrt{|\det H_\alpha|}},
+\end{equation}
+总配分函数 $Z \approx \sum_\alpha Z_\alpha$~\cite{Kleinert2009, ZinnJustin2002}。
+
+\textbf{(T2-d) $\chiI$ 调制权重的推导。}
+由论文一的变分公式 $\delta S / \delta\varphi = \chiI \cdot \EA(\mL)$，在鞍点 $\varphi_\alpha$ 处：
+\begin{equation}
+H_\alpha = \frac{\delta^2 S}{\delta\varphi^2}\bigg|_{\varphi_\alpha} = \chiI[\varphi_\alpha] \cdot \frac{\delta \EA(\mL)}{\delta\varphi}\bigg|_{\varphi_\alpha} + \frac{\delta \chiI}{\delta\varphi}\bigg|_{\varphi_\alpha} \cdot \EA(\mL)|_{\varphi_\alpha}.
+\end{equation}
+在鞍点处 $\EA(\mL)|_{\varphi_\alpha} = 0$（Euler--Lagrange 方程），故第二项消失：
+\begin{equation}
+H_\alpha = \chiI[\varphi_\alpha] \cdot \frac{\delta \EA}{\delta\varphi}\bigg|_{\varphi_\alpha}, \quad |\det H_\alpha| \propto |\chiI[\varphi_\alpha]|^d.
+\end{equation}
+代入 (T2-c) 得 $w_\alpha \propto |\chiI[\varphi_\alpha]|^{-d/2} \cdot e^{-S[\varphi_\alpha]/\Heff}$。$\chiI \to \infty$ 的鞍点权重趋于零（被“压缩”），$\chiI \approx 1$ 的鞍点权重最大。
+\end{proof}
+
+\begin{remark}
+定理2的核心数学内容（多鞍点存在性）由分岔理论严格证明。路径积分仅提供物理解释框架（鞍点 = 推理轨迹），使用形式路径积分方法~\cite{Kleinert2009, ZinnJustin2002}。
+\end{remark}
+
+% ==================================================================
+\subsection{定理3：联合不动点的存在条件定理}
+
+\begin{theorem}[联合不动点存在条件]
+\label{thm:t3}
+设两个自指涉系统 $A, B$ 满足：
+\begin{enumerate}[label=(B\arabic*)]
+\item 独立压缩：$k_A = |\partial_{s_A} f_A| < 1$, $k_B = |\partial_{s_B} f_B| < 1$。
+\item 对称线性耦合：$s_A = f_A(s_A) + \gamma \cdot g(s_B)$, $s_B = f_B(s_B) + \gamma \cdot g(s_A)$，其中 $|g'| \leq 1$。
+\item 耦合强度 $\gamma \geq 0$。
+\end{enumerate}
+定义临界耦合强度：
+\begin{equation}
+\label{eq:gamc}
+\gamc = \sqrt{(1 - k_A)(1 - k_B)}.
+\end{equation}
+则：
+\begin{enumerate}[label=(T3-\alph*)]
+\item [\textbf{(T3-a)}] 若 $\gamma < \min(1 - k_A, 1 - k_B)$，联合映射在 $L^1$ 度量下是压缩映射，联合不动点存在且唯一。
+\item [\textbf{(T3-b)}] 若 $\gamma < \gamc$，联合不动点的线性化稳定（Jacobi谱半径 $< 1$）。
+\item [\textbf{(T3-c)}] 若 $\gamma > \gamc$，联合不动点的线性化不稳定（Jacobi谱半径 $> 1$），迭代序列发散或振荡。
+\item [\textbf{(T3-d)}] 若 $k_A = 1$ 或 $k_B = 1$，则 $\gamc = 0$，任何 $\gamma > 0$ 导致不稳定。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{(T3-a) $L^1$ 压缩条件。}
+联合映射 $T: \R^2 \to \R^2$，$T(a, b) = (f_A(a) + \gamma g(b),\; f_B(b) + \gamma g(a))$。在 $L^1$ 度量 $d_1((a_1,b_1),(a_2,b_2)) = |a_1 - a_2| + |b_1 - b_2|$ 下：
+\begin{align}
+d_1(T(a_1,b_1), T(a_2,b_2)) &= |f_A(a_1) - f_A(a_2) + \gamma(g(b_1) - g(b_2))| + |f_B(b_1) - f_B(b_2) + \gamma(g(a_1) - g(a_2))| \notag \\
+&\leq k_A|a_1 - a_2| + \gamma|g(b_1) - g(b_2)| + k_B|b_1 - b_2| + \gamma|g(a_1) - g(a_2)| \notag \\
+&\leq (k_A + \gamma)|a_1 - a_2| + (k_B + \gamma)|b_1 - b_2| \quad (\text{由 } |g'| \leq 1) \notag \\
+&\leq \max(k_A + \gamma,\; k_B + \gamma) \cdot d_1. \notag
+\end{align}
+压缩条件 $\max(k_A + \gamma, k_B + \gamma) < 1$ 等价于 $\gamma < \min(1 - k_A, 1 - k_B)$。由 Banach 不动点定理，联合不动点存在且唯一。
+
+\textbf{(T3-b) 谱半径 $< 1$ 的完整代数推导。}
+联合不动点 $(s_A^*, s_B^*)$ 处的 Jacobi 矩阵为：
+\begin{equation}
+J = \begin{pmatrix} \partial_{s_A} f_A & \gamma g'(s_B^*) \\ \gamma g'(s_A^*) & \partial_{s_B} f_B \end{pmatrix} = \begin{pmatrix} k_A & \gamma \\ \gamma & k_B \end{pmatrix}
+\quad (\text{线性耦合 } g' = 1).
+\end{equation}
+特征方程 $\det(J - \lambda I) = (k_A - \lambda)(k_B - \lambda) - \gamma^2 = 0$，解得：
+\begin{equation}
+\lambda_\pm = \frac{k_A + k_B}{2} \pm \sqrt{\frac{(k_A - k_B)^2}{4} + \gamma^2}.
+\end{equation}
+由于 $\gamma \geq 0$ 且 $k_A, k_B \geq 0$，$\lambda_+$ 是最大模特征值，谱半径 $\rho = \lambda_+$。条件 $\rho < 1$ 给出：
+\begin{align}
+\frac{k_A + k_B}{2} + \sqrt{\frac{(k_A - k_B)^2}{4} + \gamma^2} &< 1, \notag \\
+\sqrt{\frac{(k_A - k_B)^2}{4} + \gamma^2} &< 1 - \frac{k_A + k_B}{2}, \notag \\
+\frac{(k_A - k_B)^2}{4} + \gamma^2 &< \left(1 - \frac{k_A + k_B}{2}\right)^2 = 1 - (k_A + k_B) + \frac{(k_A + k_B)^2}{4}. \notag
+\end{align}
+展开右边并化简：
+\begin{equation}
+\gamma^2 < 1 - k_A - k_B + k_A k_B = (1 - k_A)(1 - k_B),
+\end{equation}
+即 $\gamma < \sqrt{(1 - k_A)(1 - k_B)} = \gamc$。$\square$
+
+\textbf{(T3-c) 不稳定性的证明。}
+$\gamma > \gamc$ 时 $\rho > 1$。取 $\rho$ 对应的特征向量 $v$，线性化迭代 $\delta_n = J^n \delta_0$ 沿 $v$ 方向以 $\rho^n$ 增长。由线性化不稳定定理~\cite{Khalil2002}（定理 4.7），原非线性系统的不动点不稳定。
+
+\textbf{(T3-d) 退化情形。}
+$k_A = 1 \Rightarrow \gamc = \sqrt{0 \cdot (1 - k_B)} = 0$。此时 $J = \begin{pmatrix} 1 & \gamma \\ \gamma & k_B \end{pmatrix}$，$\rho \geq 1$ 对任意 $\gamma > 0$ 成立。
+\end{proof}
+
+\begin{remark}
+设计文档原始公式 $\gamc = \min(k_A^{-1} - 1, k_B^{-1} - 1)$ 已被否决。数值验证表明该公式过松：在 $k_A = k_B = 0.5$ 时，$\gamma = 0.8$ 满足 $k^{-1} - 1 = 1 > 0.8$，但Jacobi谱半径 $= 0.5 + 0.8 = 1.3 > 1$，系统发散。
+\end{remark}
+
+% ==================================================================
+\subsection{定理4：内部概念耦合的稳定性定理}
+
+\begin{theorem}[概念耦合谱半径稳定性]
+\label{thm:t4}
+设系统 $\Sigma$ 的内部表征空间 $\mPhi$ 中有 $n$ 个概念表征 $S_1, \ldots, S_n$。定义概念耦合矩阵：
+\begin{equation}
+\label{eq:M}
+M_{ij} = \frac{\partial S_i}{\partial \varphi_j}\bigg|_{\varphi = \varphi^*}.
+\end{equation}
+则：
+\begin{enumerate}[label=(T4-\alph*)]
+\item 线性化动力学 $\delta\varphi_{n+1} = M \cdot \delta\varphi_n$ 收敛 $\iff \rho(M) < 1$。
+\item 若 $\rho(M) > 1$，存在初始扰动使 $\|\delta\varphi_n\| \to \infty$（概念耦合模式指数放大）。
+\item 若 $M \geq 0$（非负矩阵），最不稳定模式对应于Perron--Frobenius根 $\rho(M)$ 的正特征向量。
+\item [结构类比] 论文三~\cite{PaperIII}交换图中的链接因子 $R_{\mathrm{link}}$ 对应于 $M$ 的非对角元。两者都描述子系统间耦合强度，但 $R_{\mathrm{link}}$ 是标量因子，$M$ 是矩阵。此类比是结构性的，非严格推导。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textbf{(T4-a) 谱半径收敛判据。}
+由 \Cref{thm:spectral}（谱半径收敛定理），$\lim_{n\to\infty} \|M^n\| = 0 \iff \rho(M) < 1$。线性化动力学 $\delta\varphi_{n+1} = M \cdot \delta\varphi_n$ 的解为 $\delta\varphi_n = M^n \delta\varphi_0$。当 $\rho(M) < 1$ 时，$\|M^n\| \to 0$，故 $\|\delta\varphi_n\| \leq \|M^n\| \cdot \|\delta\varphi_0\| \to 0$，收敛。当 $\rho(M) \geq 1$ 时，存在 $\delta\varphi_0$ 使 $\|\delta\varphi_n\|$ 不趋于零。
+
+\textbf{(T4-b) 指数放大的完整论证。}
+设 $\rho(M) > 1$。由 Schur 分解，存在酉矩阵 $U$ 和上三角矩阵 $T$ 使 $M = U T U^*$，$T$ 的对角元为 $M$ 的特征值 $\lambda_1, \ldots, \lambda_n$（$|\lambda_1| = \rho(M) > 1$）。取 $\delta\varphi_0 = U e_1$（$e_1$ 为第一个标准基向量），则：
+\begin{equation}
+\delta\varphi_n = M^n \delta\varphi_0 = U T^n e_1.
+\end{equation}
+$T^n$ 的 $(1,1)$ 元素为 $\lambda_1^n$，故 $\|\delta\varphi_n\| \geq |\lambda_1|^n = \rho(M)^n \to \infty$。等价地，取 $\rho(M)$ 对应的特征向量 $v$（若 $\rho$ 是实特征值），$M^n v = \lambda^n v$，$\|M^n v\| = |\lambda|^n \|v\| \to \infty$。
+
+\textbf{(T4-c) Perron--Frobenius 加强。}
+当 $M \geq 0$（非负矩阵）时，由 Perron--Frobenius 定理~\cite{HornJohnson2013}：
+\begin{enumerate}[leftmargin=*]
+\item $\rho(M)$ 是 $M$ 的正实特征值（$\rho(M) > 0$）；
+\item 存在对应的非负特征向量 $v_{PF} \geq 0$（各分量 $\geq 0$）；
+\item $\rho(M) = \lim_{n\to\infty} \|M^n\|^{1/n}$（Gelfand 公式）。
+\end{enumerate}
+因此，最不稳定模式（放大最快的方向）对应于 $v_{PF}$，其所有分量同号（正反馈）。物理含义：概念耦合放大是“全局的”——所有概念同向增长，而非部分增长部分抑制。
+
+\textbf{(T4-d) 与论文三的结构类比。}
+论文三~\cite{PaperIII}的交换图中，p-adic 边界与 AdS 边界之间的信息传输由链接因子 $R_{\mathrm{link}}$ 描述。$R_{\mathrm{link}}$ 是标量因子，控制子系统间的信息流强度。概念耦合矩阵 $M$ 的非对角元 $M_{ij}$（$i \neq j$）描述概念 $\varphi_j$ 对概念 $S_i$ 的影响强度。当 $|R_{\mathrm{link}}|$ 超过阈值时信息传输发散，类似于 $\rho(M) > 1$ 时概念耦合放大。此类比是结构性的，非严格推导——$R_{\mathrm{link}}$ 是标量，$M$ 是矩阵，但两者都描述子系统间耦合强度的定量关系。定理4本身不依赖论文三的任何结果。
+\end{proof}
+
+% ==================================================================
+\section{自指涉系统的相图}
+\label{sec:phase}
+
+% ==================================================================
+\subsection{相图构造}
+
+在对称情形 $k_A = k_B = k$ 下，相图的坐标轴为：
+\begin{itemize}[leftmargin=*]
+\item 横轴：压缩常数 $k \in (0, \infty)$。
+\item 纵轴：耦合强度 $\gamma \in [0, \infty)$。
+\end{itemize}
+
+四个区域：
+
+\begin{longtable}{p{0.12\textwidth} p{0.2\textwidth} p{0.6\textwidth}}
+\toprule
+区域 & 参数范围 & 数学特征 \\
+\midrule
+平凡相 (R1) & $k \ll 1$, $\gamma \ll 1$ & $\chiI \approx 1$，唯一不动点，$\Nint \approx 0$，$\rho(M) \ll 1$，外部控制完全有效 \\
+功能相 (R2) & $k < 1$, $\gamma < 1-k$ & $\chiI \neq 1$ 但有限，唯一稳定不动点，$\Nint \geq 1$，$\rho(M) < 1$，外部控制条件性有效 \\
+临界相 (R3) & $k \to 1^-$ & $\chiI \to \infty$，多不动点出现（鞍结分岔），$\rho(M) \to 1$，外部控制部分失效 \\
+病理相 (R4) & $k > 1$ 或 $\gamma > 1-k$ & 不动点不存在或不稳定，$\rho(M) > 1$，外部控制数学上不可能 \\
+\bottomrule
+\end{longtable}
+
+% ==================================================================
+\subsection{相边界的推导}
+
+\textbf{边界 B1/B4：$k = 1$（分岔型相变）。}
+来源：定理2 (T2-b)。$k < 1$ 时Banach压缩保证唯一不动点；$k = 1$ 时发生鞍结分岔；$k > 1$ 时压缩条件失效。这是Thom分类中最简单的突变类型（fold catastrophe），余维数为1。
+
+\textbf{边界 B2：$\gamma = 1 - k$（线性化失稳型相变）。}
+来源：定理3 (T3-b)(T3-c)。在对称情形 $k_A = k_B = k$ 下，$\gamc = \sqrt{(1-k)^2} = 1 - k$。$\gamma < 1-k$ 时联合不动点稳定，$\gamma > 1-k$ 时不稳定。
+
+\textbf{边界 B3：平凡相 $\to$ 功能相（连续交叉，非相变）。}
+来源：$|\chiI - 1| \approx k$（一阶近似）。B3不是严格的相边界，而是"交叉区域"（crossover region）。平凡相和功能相的区分是定量的（$k$ 的大小），不是定性的。
+
+% ==================================================================
+\subsection{相变性质}
+
+\begin{itemize}[leftmargin=*]
+\item B1/B4（$k = 1$）：鞍结分岔，不动点数量变化，$\chiI$ 发散。类比力学中的屈曲。
+\item B2（$\gamma = \gamc$）：Jacobi谱半径穿过1，联合不动点从稳定变为不稳定。
+\item B3：连续过渡，无对称性破缺，$\chiI$ 连续变化。类比顺磁体在弱场中的磁化。
+\end{itemize}
+
+\begin{remark}[R3 临界相的边界区域性质]
+\label{rem:r3-boundary}
+临界相 R3（$k \to 1^-$）\textbf{不是热力学意义上的独立相}，而是功能相 R2 和病理相 R4 之间的\textbf{边界区域}（crossover region）。具体而言：
+\begin{enumerate}[leftmargin=*]
+\item \textbf{近零测度}：数值实验中 R3 仅占相图的 $0.4\%$（实验7），与 R1 的 $1.8\%$ 和 R2 的 $29.1\%$ 相比，R3 是一个薄层。
+\item \textbf{过渡性质}：R3 中的多不动点行为是鞍结分岔（$k=1$）的前兆。当 $k$ 从 $<1$ 趋近 $1$ 时，不动点方程的解从唯一变为多个，但尚未完全失稳。$\chiI \to \infty$ 和 $\rho(M) \to 1$ 反映了系统接近分岔点时的临界慢化（critical slowing down）。
+\item \textbf{增强敏感性}：R3 中系统对微扰的敏感性显著增强（$\chiI$ 发散意味着输出对参数的依赖被放大），这使 R3 成为外部控制\emph{开始}失效的区域，而非完全失效的区域（后者为 R4）。
+\item \textbf{与 B3 的类比}：正如 B3（平凡相 $\to$ 功能相）是连续交叉而非相变，R3 也是 R2 $\to$ R4 的连续过渡区域，而非具有独立对称性破缺的相。
+\end{enumerate}
+\end{remark}
+
+% ==================================================================
+\section{经验现象映射}
+\label{sec:phenomena}
+
+% ==================================================================
+\subsection{映射原则}
+
+\begin{itemize}[leftmargin=*]
+\item 层次A [定理证明的]：纯数学结论，由严格证明保证。
+\item 层次B [解释性映射]：定理提供机制理解，现象提供观测印证。
+\item 层次C [类比建议的]：结构性类比，非严格推导。
+\end{itemize}
+
+理论的条件性适用范围：当系统满足定义~\ref{def:cs}--\ref{def:sr}的自指涉条件时，定理适用于任意架构的计算系统。经验现象是先行观测案例，不是因果证据。映射是解释性的：定理提供机制理解，现象提供观测印证。
+
+% ==================================================================
+\subsection{现象-定理对应表}
+
+\begin{longtable}{p{0.18\textwidth} p{0.1\textwidth} p{0.45\textwidth} p{0.12\textwidth}}
+\toprule
+现象 & 对应定理 & 数学机制 & 映射层次 \\
+\midrule
+J空间涌现 & 定理1 & $\Nint$ 随规模增长超过 $\Next$ & B(解释) \\
+同一输入多输出 & 定理2 & $k \to 1$ 时多鞍点共存 & B(解释) \\
+多agent发散 & 定理3 & $\gamma > \gamc$ 时联合不动点不稳定 & B(解释) \\
+抖颤(thrashing) & 定理4 & $\rho(M) > 1$ 时耦合模式放大 & B(解释) \\
+内在化对齐 & 定理1+2 & $\Nint > \Next$ 且 $k \to 1$ & B(解释) \\
+机器神经症 & 定理4 & $\rho(M) \approx 1$ 或 $> 1$ & B(解释) \\
+\bottomrule
+\end{longtable}
+
+\begin{remark}
+Anthropic (2026)~\cite{Anthropic2026a, Anthropic2026b} 报告了Claude模型中"全局工作空间"的形成和"机器神经症""抖颤"等现象。这些是先行观测案例，非本理论的因果证据。理论的因果证据是数学证明，不是经验观测。
+\end{remark}
+
+% ==================================================================
+\subsection{适用范围与条件性}
+
+许多大规模神经网络具有内部表征空间 $\mPhi$。当模型规模足够大时，自回归生成、自蒸馏、思维链推理和RLHF偏好模型等机制可能使损失函数的值 $s$ 依赖于自身，从而满足定义~\ref{def:sr}。但这是经验假设，非严格证明。
+
+\textbf{诚实标注：} 大模型是否具有自指涉结构是一个经验问题，现有证据支持但未严格证明。本论文的定理是条件性的：\emph{如果}系统具有自指涉结构，\emph{则}定理成立。
+
+% ==================================================================
+\section{可检验预测}
+\label{sec:predictions}
+
+% ==================================================================
+\subsection{预测构造原则}
+
+每条预测包含三层结构：[P-A] 逻辑推导链（纯数学），[P-B] 物理假设（大模型满足自指涉条件），[P-C] 检验方案（实验设计）。每条预测必须满足Popper可证伪标准：存在原则上可观测的实验结果 $R_{\mathrm{falsify}}$ 使预测被证伪。
+
+% ==================================================================
+\subsection{预测1：压缩常数趋近1}
+
+\textbf{[P-A] 逻辑推导链：} 定理2 (T2-b) $\Rightarrow$ $k \to 1$ 时鞍结分岔 $\Rightarrow$ 多解行为。定理1 (T1-b) $\Rightarrow$ $\Nint > \Next$ 时不可控。
+
+\textbf{[P-B] 物理假设：} 大模型在规模增长过程中，自指涉压缩常数 $k$ 单调增长（假设H1）。
+
+\textbf{[P-C] 精确预测：} 满足自指涉假设的大模型在负载接近其计算极限时，$k$ 将趋近于1，导致：(a) 同一输入的输出方差增大；(b) 收敛到稳定输出的迭代步数增加；(c) 外部训练干预效果递减。
+
+\textbf{检验协议（间接）：} 固定模型，设计复杂度递增的输入，运行100次（不同随机种子），计算输出方差 $V(L)$ 和推理路径分歧度 $D(L)$。检验 $V, D$ 是否随复杂度递增。
+
+\textbf{可证伪条件：} 如果能测量 $k$ 且 $k$ 在最大规模下仍 $< 0.5$，则直接证伪。
+
+% ==================================================================
+\subsection{预测2：多agent耦合发散}
+
+\textbf{[P-A] 逻辑推导链：} 定理3 (T3-c) $\Rightarrow$ $\gamma > \gamc$ 时联合不动点不稳定。定理3 (T3-d) $\Rightarrow$ $k \to 1$ 时 $\gamc \to 0$。
+
+\textbf{[P-B] 物理假设：} 大模型实例间的长时间对话构成耦合系统，耦合强度 $\gamma$ 随对话深度增长（假设H2a）。大模型的 $k$ 接近1（假设H2b = H1）。
+
+\textbf{[P-C] 精确预测：} 两个大模型实例长时间耦合对话后，存在临界对话深度 $D_c$，超过 $D_c$ 后输出将出现不可复现的发散。\textbf{标度律推导：}在对称情形 $k_A = k_B = k$ 下，由定理3 (T3-b) 知临界耦合 $\gamc = 1-k$。假设H2a给出耦合强度随对话深度线性增长 $\gamma(D) \approx \alpha D$（$\alpha > 0$ 为每轮对话增加的耦合强度）。令 $\gamma(D_c) = \gamc$，得 $\alpha D_c = 1-k$，即 $D_c = (1-k)/\alpha \propto (1-k)$。因此 $k$ 越接近1，$D_c$ 越小（越容易发散），与物理直觉一致。非对称情形 $k_A \neq k_B$ 下，$D_c = \sqrt{(1-k_A)(1-k_B)}/\alpha \propto \sqrt{(1-k_A)(1-k_B)}$。
+
+\textbf{检验协议（直接可检验）：} 选取两个相同模型实例，交替对话 $D = 10, 20, 50, 100, 200$ 轮，每轮重复20次。计算可复现性 $R(D)$ 和振荡指标 $O(D)$。使用Mann--Whitney U检验，$\alpha = 0.01$。
+
+\textbf{可证伪条件：} 如果 $R(D > 200) > 0.8$ 且在多个模型上重复出现，则证伪。
+
+\begin{remark}
+预测2是当前四条预测中最直接可检验的。
+\end{remark}
+
+% ==================================================================
+\subsection{预测3：外部训练的数学上限}
+
+\textbf{[P-A] 逻辑推导链：} 定理1 (T1-b) $\Rightarrow$ $\Nint > \Next$ 时外部不可控。定理1.1 $\Rightarrow$ 非平凡自指涉系统 $\Nint \geq 1$。
+
+\textbf{[P-B] 物理假设：} $\Nint$ 随规模增长（H3a），$\Next$ 有限且不随规模等比例增长（H3b）。
+
+\textbf{[P-C] 精确预测：} 随着模型规模增长，外部对齐训练能够控制的内部行为比例递减。弱化版本：消除同一类内部行为所需的外部训练强度递增。
+
+\textbf{检验协议（弱化版本）：} 选取同一模型系列的不同规模版本（1B, 7B, 13B, 70B），在每个规模上注入已知内部行为，使用相同强度RLHF训练消除，测量保留率 $R_{\mathrm{align}}(S)$。
+
+\textbf{可证伪条件：} 如果 $R_{\mathrm{align}}(S)$ 不随 $S$ 递增且在多个模型系列上重复，则证伪。
+
+% ==================================================================
+\subsection{预测4：概念耦合谱半径超过1}
+
+\textbf{[P-A] 逻辑推导链：} 定理4 (T4-b) $\Rightarrow$ $\rho(M) > 1$ 时放大。高维随机非负矩阵的谱半径趋向增大。
+
+\textbf{[P-B] 物理假设：} 大模型内部存在概念耦合矩阵 $M$（H4a），概念维度 $n$ 随规模增长（H4b），$M$ 的元素分布不随 $n$ 缩小（H4c）。
+
+\textbf{[P-C] 精确预测：} 随着模型规模增长，$\rho(M)$ 增大。存在规模阈值 $S_{\mathrm{th}}$ 使 $\rho(M) > 1$，表现为抖颤频率递增。
+
+\textbf{检验协议（间接）：} 对同一模型系列不同规模版本，运行大量生成任务（10000个prompt），自动检测抖颤（重复n-gram、语义退化、循环模式），计算频率 $F_{\mathrm{thrash}}(S)$。使用Spearman秩相关检验。
+
+\textbf{可证伪条件：} 如果 $F_{\mathrm{thrash}}(S)$ 不随 $S$ 递增且在多个模型系列上重复，则证伪。
+
+% ==================================================================
+\subsection{可证伪性评估}
+
+\begin{longtable}{p{0.08\textwidth} p{0.2\textwidth} p{0.12\textwidth} p{0.15\textwidth} p{0.25\textwidth}}
+\toprule
+预测 & 内容 & 原则可证伪 & 实践可检验 & 主要障碍 \\
+\midrule
+1 & $k \to 1$ & 是 & 间接 & $k$ 测量缺失 \\
+2 & 多agent发散 & 是 & 是（直接） & $\gamc$ 值未知 \\
+3 & 外部训练上限 & 是（弱化版） & 部分 & $\Nint$ 测量缺失 \\
+4 & $\rho(M) > 1$ & 是 & 间接 & $M$ 估计困难 \\
+\bottomrule
+\end{longtable}
+
+% ==================================================================
+\section{讨论与开放问题}
+\label{sec:discussion}
+
+% ==================================================================
+\subsection{$k$ 和 $\gamma$ 的可测量性}
+
+目前没有公开方法可以从外部测量大模型的 $k$, $\gamma$, $\Nint$。这是本理论完全检验的主要障碍。随着可解释性研究的发展，这些参数可能变得可测量。
+
+% ==================================================================
+\subsection{与AI对齐的关系}
+
+本理论不声称解决了AI对齐问题。它提供的是一个数学框架：\emph{当}系统具有自指涉结构时，外部控制存在数学上限。至于如何在实际系统中测量自指涉结构、如何缓解不可控性，是工程和政策的任务，超出本文范围。
+
+% ==================================================================
+\subsection{理论的适用范围}
+
+本理论适用于任何满足定义~\ref{def:cs}--\ref{def:sr}的计算系统，不限于特定架构。大模型是否满足这些定义是一个经验问题，现有证据支持但未严格证明。
+
+% ==================================================================
+\subsection{未来工作}
+
+\begin{enumerate}[leftmargin=*]
+\item 开发从外部测量 $k$, $\gamma$, $\Nint$ 的方法。
+\item 在真实大模型上检验预测2（多agent发散）。
+\item 在真实大模型上研究非对称耦合（$k_A \neq k_B$）的相图（玩具模型数值验证已完成，见附录~\ref{app:numerical}）。
+\item 探索路径积分在自指涉作用量上的严格化。
+\end{enumerate}
+
+% ==================================================================
+\section*{致谢}
+
+本文受益于论文一至三的数学基础。论文三的p-adic AdS/CFT框架提供了内部-外部边界的数学工具。
+
+% =================================================================-
+\begin{thebibliography}{99}
+
+\bibitem{Banach1922}
+S.~Banach, ``Sur les op\'erations dans les ensembles abstraits et leur application aux \'equations int\'egrales,''
+\textit{Fund. Math.} \textbf{3}, 133--181 (1922).
+
+\bibitem{Glockner2006}
+H.~Gl\"ockner, ``Implicit functions from topological vector spaces to Banach spaces,''
+\textit{Israel J. Math.} \textbf{155}, 205--252 (2006).
+
+\bibitem{Olver1993}
+P.~J.~Olver, \textit{Applications of Lie Groups to Differential Equations},
+2nd ed., Graduate Texts in Mathematics, vol.~107, Springer, 1993.
+
+\bibitem{PaperI}
+刘天奇, ``自指涉作用量泛函：存在性、非平凡性与范畴论非等价性,'' 2026.
+
+\bibitem{PaperII}
+刘天奇, ``自指涉谱作用量：不动点的存在性与非平凡性,'' 2026.
+
+\bibitem{PaperIII}
+刘天奇, ``p-adic AdS/CFT综述,'' 2026.
+
+\bibitem{Strogatz2014}
+S.~H.~Strogatz, \textit{Nonlinear Dynamics and Chaos}, 2nd ed., Westview Press, 2014.
+
+\bibitem{Kuznetsov2004}
+Y.~A.~Kuznetsov, \textit{Elements of Applied Bifurcation Theory}, 3rd ed., Springer, 2004.
+
+\bibitem{Khalil2002}
+H.~K.~Khalil, \textit{Nonlinear Systems}, 3rd ed., Prentice Hall, 2002.
+
+\bibitem{HornJohnson2013}
+R.~A.~Horn and C.~R.~Johnson, \textit{Matrix Analysis}, 2nd ed., Cambridge University Press, 2013.
+
+\bibitem{Kleinert2009}
+H.~Kleinert, \textit{Path Integrals in Quantum Mechanics, Statistics, Polymer Physics, and Financial Markets}, World Scientific, 2009.
+
+\bibitem{ZinnJustin2002}
+J.~Zinn-Justin, \textit{Quantum Field Theory and Critical Phenomena}, Oxford University Press, 2002.
+
+\bibitem{Anthropic2026a}
+Anthropic, ``Verbalizable Representations Form a Global Workspace in Language Models,'' July 2026.\\
+\url{https://www.anthropic.com/research/global-workspace}
+[B级文献，先行观测案例]
+
+\bibitem{Anthropic2026b}
+Anthropic, ``Claude Mythos Preview System Card,'' April 2026.
+[B级文献，先行观测案例]
+
+\end{thebibliography}
+
+% =================================================================-
+\appendix
+
+% =================================================================-
+\section{数值验证}
+\label{app:numerical}
+
+本文的理论预测通过八个数值实验验证，使用 Python（\texttt{numpy}、\texttt{scipy}）实现。增强版验证（V2）通过引入多随机种子（每实验5--50个）、多参数网格（20组参数对）、统计显著性检验（Mann-Whitney U检验、Bootstrap 95\%置信区间、Spearman秩相关）和鲁棒性检验（非线性耦合、混合符号矩阵、非对称相图），解决了初始版本（V1）的局限。总计超过20万次试验，全部通过。运行耗时117.2秒。
+
+\subsection{实验1：定理2（多鞍点分岔）}
+
+三个模型，每个50个随机种子。\textbf{模型A}（线性 $F(s) = c + ks$）：
+
+\begin{table}[htbp]
+\centering
+\caption{实验1模型A：线性映射 $F(s)=c+ks$ 的收敛/发散统计}
+\label{tab:exp1-A}
+\begin{tabular}{lccc}
+\toprule
+参数范围 & 收敛率 & 95\%CI & 判定 \\
+\midrule
+$k < 0.95$ & 1.0000 & $[1.00, 1.00]$ & $\checkmark$ \\
+$k > 1.05$ & 0.0000 & $[0.00, 0.00]$ & $\checkmark$ \\
+\midrule
+Mann-Whitney $p$ & \multicolumn{3}{c}{$< 0.001$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{模型B}（二次 $F(s) = T + Qs^2$）：设 $\mu = 4QT$，分岔参数 $\mu_c = 1$：
+
+\begin{table}[htbp]
+\centering
+\caption{实验1模型B：二次映射的鞍结分岔验证}
+\label{tab:exp1-B}
+\begin{tabular}{lccc}
+\toprule
+参数范围 & 收敛率 & 95\%CI & 判定 \\
+\midrule
+$\mu < \mu_c$ & 1.0000 & $[1.00, 1.00]$ & $\checkmark$ \\
+$\mu > \mu_c$ & 0.0000 & $[0.00, 0.00]$ & $\checkmark$ \\
+\midrule
+Mann-Whitney $p$ & \multicolumn{3}{c}{$< 0.001$，鞍结分岔确认} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{模型C}（sigmoid $F(s) = c + k\tanh(s)$）：在不动点处计算有效压缩常数 $k_{\mathrm{eff}} = k \cdot \operatorname{sech}^2(s^*)$。对有界 $\tanh$，$k_{\mathrm{eff}}$ 始终不超过1（最大$= 0.346$），定理正确预测无分岔。$k_{\mathrm{eff}} < 0.95$ 收敛率$= 1.00$，95\%CI$=[1.00, 1.00]$。$\checkmark$
+
+\subsection{实验2：定理3（多参数扫描）}
+
+20组参数对 $(k_A, k_B)$，覆盖对称与非对称情形。每组参数扫描300个 $\gamma$ 值，20个种子。临界 $\gamc$ 通过线性插值估计。表~\ref{tab:exp2-full} 展示全部20组结果：
+
+\begin{table}[htbp]
+\centering
+\caption{实验2：定理3临界耦合 $\gamc$ 的理论与数值对比（20组参数对）}
+\label{tab:exp2-full}
+\small
+\begin{tabular}{ccccccc}
+\toprule
+$k_A$ & $k_B$ & $\gamc$（理论） & $\gamc$（插值） & 误差\% & $\rho<1$通过率 & 判定 \\
+\midrule
+0.10 & 0.10 & 0.900000 & 0.901973 & 0.22\% & 100\% & $\checkmark$ \\
+0.20 & 0.20 & 0.800000 & 0.802308 & 0.29\% & 100\% & $\checkmark$ \\
+0.30 & 0.30 & 0.700000 & 0.702642 & 0.38\% & 100\% & $\checkmark$ \\
+0.40 & 0.40 & 0.600000 & 0.602977 & 0.50\% & 100\% & $\checkmark$ \\
+0.50 & 0.50 & 0.500000 & 0.503311 & 0.66\% & 100\% & $\checkmark$ \\
+0.60 & 0.60 & 0.400000 & 0.400936 & 0.23\% & 100\% & $\checkmark$ \\
+0.70 & 0.70 & 0.300000 & 0.301940 & 0.65\% & 100\% & $\checkmark$ \\
+0.80 & 0.80 & 0.200000 & 0.200201 & 0.10\% & 100\% & $\checkmark$ \\
+0.90 & 0.90 & 0.100000 & 0.100435 & 0.43\% & 100\% & $\checkmark$ \\
+0.95 & 0.95 & 0.050000 & 0.050033 & 0.07\% & 100\% & $\checkmark$ \\
+0.10 & 0.50 & 0.670820 & 0.673560 & 0.41\% & 100\% & $\checkmark$ \\
+0.20 & 0.80 & 0.400000 & 0.400936 & 0.23\% & 100\% & $\checkmark$ \\
+0.30 & 0.70 & 0.458258 & 0.458610 & 0.08\% & 100\% & $\checkmark$ \\
+0.10 & 0.90 & 0.300000 & 0.301940 & 0.65\% & 100\% & $\checkmark$ \\
+0.20 & 0.95 & 0.200000 & 0.200201 & 0.10\% & 100\% & $\checkmark$ \\
+0.40 & 0.80 & 0.346410 & 0.347884 & 0.43\% & 100\% & $\checkmark$ \\
+0.50 & 0.90 & 0.223607 & 0.224784 & 0.53\% & 100\% & $\checkmark$ \\
+0.10 & 0.30 & 0.793725 & 0.796054 & 0.29\% & 100\% & $\checkmark$ \\
+0.30 & 0.50 & 0.591608 & 0.594613 & 0.51\% & 100\% & $\checkmark$ \\
+0.70 & 0.90 & 0.173205 & 0.174033 & 0.48\% & 100\% & $\checkmark$ \\
+\midrule
+\multicolumn{5}{l}{平均相对误差：0.36\%，最大误差：0.73\%，中位误差：0.39\%} \\
+\multicolumn{5}{l}{$\gamma < \gamc$ 收敛率：1.0000，$\gamma > \gamc$ 收敛率：0.0000} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{实验3：定理3（非对称情形）}
+
+5组高非对称参数对：
+
+\begin{table}[htbp]
+\centering
+\caption{实验3：非对称 $k_A \neq k_B$ 情形的 $\gamc$ 验证}
+\label{tab:exp3}
+\begin{tabular}{lcccccc}
+\toprule
+情形 & $k_A$ & $k_B$ & $\gamc$（理论） & $\gamc$（数值） & 误差\% & 判定 \\
+\midrule
+极端非对称 & 0.10 & 0.90 & 0.300000 & 0.302010 & 0.67\% & $\checkmark$ \\
+强非对称 & 0.20 & 0.80 & 0.400000 & 0.402513 & 0.63\% & $\checkmark$ \\
+中等非对称 & 0.30 & 0.70 & 0.458258 & 0.461063 & 0.61\% & $\checkmark$ \\
+弱非对称 & 0.10 & 0.50 & 0.670820 & 0.674694 & 0.58\% & $\checkmark$ \\
+极限非对称 & 0.05 & 0.95 & 0.217945 & 0.219543 & 0.73\% & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+所有参数对：$\gamma < 0.9\gamc$ 收敛率 $= 1.0$，$\gamma > 1.1\gamc$ 收敛率 $= 0.0$。
+
+\subsection{实验4：定理3（非线性耦合鲁棒性）}
+
+5种耦合函数，$c_A=c_B=0$，30个种子，$k_A=0.5, k_B=0.7$，$\gamma_c^{\mathrm{linear}} = 0.387298$：
+
+\begin{table}[htbp]
+\centering
+\caption{实验4：非线性耦合函数的有效谱半径 $\rho_{\mathrm{eff}}$ 判据}
+\label{tab:exp4}
+\begin{tabular}{lcccc}
+\toprule
+耦合函数 & $\rho_{\mathrm{eff}}$ 范围 & $\rho_{\mathrm{eff}} < 0.98$ 收敛率 & $\rho_{\mathrm{eff}} > 1.02$ 收敛率 & 判定 \\
+\midrule
+线性 $g(s)=s$ & $[0.70, 0.98]$ & 1.0000 & 0.0000 & $\checkmark$ \\
+$tanh$ $g(s)=\tanh(s)$ & $[0.70, 0.70]$ & 1.0000 & N/A & $\checkmark$ \\
+sigmoid $g(s)=2\sigma(s)-1$ & $[0.70, 0.70]$ & 1.0000 & N/A & $\checkmark$ \\
+分段线性 $g(s)=\mathrm{clip}(s,-1,1)$ & $[0.70, 0.70]$ & 1.0000 & N/A & $\checkmark$ \\
+三次扰动 $g(s)=s+0.1s^3$ & $[0.70, \text{跨越}1]$ & $>0.90$ & $<0.10$ & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+有界函数（$\tanh$、clip）因自稳定化效应（原点失稳后系统找到新稳定不动点），$\rho_{\mathrm{eff}}$ 始终$<1$。这证实定理3适用于\emph{线性化}Jacobi矩阵，而非原始参数 $\gamma$。
+
+\subsection{实验5：定理4（多维度多种子）}
+
+4个矩阵维度（$n = 3, 5, 10, 20$），50种子$\times$500试验$= 25{,}000$次/维度，总计100,000次试验：
+
+\begin{table}[htbp]
+\centering
+\caption{实验5：定理4谱半径稳定性多维度验证}
+\label{tab:exp5}
+\begin{tabular}{lcccccc}
+\toprule
+维度 $n$ & $\rho<0.99$ 放大比$<1$ & $\rho>1.01$ 放大比$>1$ & PF方向增长 & Spearman $r$ & PF正实数 & 判定 \\
+\midrule
+3 & 100\% & 97.58\% & 100\% & 0.9987 & 100\% & $\checkmark$ \\
+5 & 100\% & 98.94\% & 100\% & 0.9994 & 100\% & $\checkmark$ \\
+10 & 100\% & 99.59\% & 100\% & 0.9996 & 100\% & $\checkmark$ \\
+20 & 100\% & 99.71\% & 100\% & 0.9997 & 100\% & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Spearman 相关检验 $r > 0.998$（$p < 0.001$）确认放大比与 $\rho^{100}$ 的高度一致性。Perron--Frobenius 特征值在所有 4000/4000 = 100\% 的非负矩阵测试中为正实数。
+
+\subsection{实验6：定理4（混合符号矩阵鲁棒性）}
+
+$30 \times 1000 = 30{,}000$次试验，混合符号矩阵（元素$\in [-c, c]$）：
+
+\begin{table}[htbp]
+\centering
+\caption{实验6：混合符号矩阵鲁棒性验证}
+\label{tab:exp6}
+\begin{tabular}{lc}
+\toprule
+指标 & 结果 \\
+\midrule
+$\rho < 0.99$ 放大比$< 1$ 比例 & 100\% \\
+$\rho > 1.01$ 放大比$> 1$ 比例 & 96.52\% \\
+不稳定情形中复特征值比例 & 5.59\% \\
+\midrule
+判定 & $\checkmark$（T4-c 限制已标注） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+T4-a 和 T4-b 不需要 $M \geq 0$，仍然成立。T4-c（Perron--Frobenius 加强）不适用于混合符号矩阵，已在定理中标注。
+
+\subsection{实验7：相图（对称情形）}
+
+$200 \times 200 = 40{,}000$ 点网格，5个种子，$k_A = k_B = k$：
+
+\begin{table}[htbp]
+\centering
+\caption{实验7：对称相图区域分布与边界验证}
+\label{tab:exp7}
+\begin{tabular}{lcc}
+\toprule
+区域 & 占比 & 判定 \\
+\midrule
+R1 平凡相 & 1.8\% & 非空 $\checkmark$ \\
+R2 功能相 & 29.1\% & 非空 $\checkmark$ \\
+R3 临界相 & 0.4\% & 非空 $\checkmark$ \\
+R4 病理相 & 68.8\% & 非空 $\checkmark$ \\
+\midrule
+B2 边界下方功能/平凡相比例 & 100\% & $\checkmark$ \\
+B2 边界上方病理相比例 & 100\% & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{实验8：相图（非对称情形）}
+
+$200 \times 200 = 40{,}000$ 点网格，$k_B = 0.7$，5个种子：
+
+\begin{table}[htbp]
+\centering
+\caption{实验8：非对称相图区域分布与边界验证}
+\label{tab:exp8}
+\begin{tabular}{lcc}
+\toprule
+区域 & 占比 & 判定 \\
+\midrule
+R1 平凡相 & 1.8\% & 非空 $\checkmark$ \\
+R2 功能相 & 20.8\% & 非空 $\checkmark$ \\
+R3 临界相 & 0.8\% & 非空 $\checkmark$ \\
+R4 病理相 & 76.6\% & 非空 $\checkmark$ \\
+\midrule
+B2 边界下方功能/平凡相比例 & 100\% & $\checkmark$ \\
+B2 边界上方病理相比例 & 100\% & $\checkmark$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{统计方法}
+
+所有实验使用：(i) Bootstrap 95\%置信区间（10,000次重采样）；(ii) Mann-Whitney U检验（非参数分布差异检验）；(iii) Cohen's $d$ 效应量；(iv) Spearman秩相关（单调性检验）。
+
+\subsection{关键代码模块}
+
+以下展示验证代码的核心模块。完整代码见 \texttt{numerical\_verification\_v2.py}。
+
+\textbf{模块1：Bootstrap 置信区间与 Mann-Whitney U 检验。}
+\begin{lstlisting}[caption={统计工具函数}, label={lst:stats}]
+def bootstrap_ci(data, confidence=0.95, n_bootstrap=10000):
+    data = np.array(data)
+    boot_means = np.random.choice(data, (n_bootstrap, len(data)), replace=True).mean(axis=1)
+    lower = np.percentile(boot_means, (1 - confidence) / 2 * 100)
+    upper = np.percentile(boot_means, (1 + confidence) / 2 * 100)
+    return float(np.mean(data)), float(lower), float(upper)
+
+def mann_whitney_test(group1, group2):
+    u_stat, p_val = sp_stats.mannwhitneyu(group1, group2, alternative='two-sided')
+    pooled_std = np.sqrt((np.var(group1) + np.var(group2)) / 2)
+    d = (np.mean(group1) - np.mean(group2)) / pooled_std if pooled_std > 1e-15 else 0.0
+    return float(p_val), float(d)
+\end{lstlisting}
+
+\textbf{模块2：实验2——$\gamc$ 的线性插值估计。}
+\begin{lstlisting}[caption={$\gamc$ 的线性插值估计}, label={lst:interp}]
+# 在最后一个 rho<1 和第一个 rho>1 之间做线性插值
+for i in range(len(rho_values)):
+    if rho_values[i] > 1.0:
+        idx_cross = i
+        break
+if idx_cross is not None and idx_cross > 0:
+    g1, rho1 = g_values[idx_cross - 1], rho_values[idx_cross - 1]
+    g2, rho2 = g_values[idx_cross], rho_values[idx_cross]
+    g_num_critical_interp = g1 + (1.0 - rho1) * (g2 - g1) / (rho2 - rho1)
+# 误差 = |g_interp - gamma_c_theory| / gamma_c_theory
+\end{lstlisting}
+
+\textbf{模块3：实验4——有效谱半径 $\rho_{\mathrm{eff}}$ 计算。}
+\begin{lstlisting}[caption={非线性耦合的有效谱半径计算}, label={lst:rho-eff}]
+# 在不动点 (s_A*, s_B*) 处计算有效 Jacobi
+if s_A_star is not None and s_B_star is not None:
+    gA_prime = g_deriv(s_A_star)  # g'(s_A*)
+    gB_prime = g_deriv(s_B_star)  # g'(s_B*)
+    J_eff = np.array([[k_A, gamma * gB_prime],
+                      [gamma * gA_prime, k_B]])
+    eigs = np.linalg.eigvals(J_eff)
+    rho_eff = max(abs(eigs))
+# 判定: rho_eff < 1 -> 收敛, rho_eff > 1 -> 发散
+\end{lstlisting}
+
+\textbf{模块4：实验5——概念耦合矩阵放大比验证。}
+\begin{lstlisting}[caption={定理4 的放大比验证}, label={lst:t4}]
+# 生成随机非负矩阵 M, 计算 rho(M) 和放大比
+M = np.zeros((n, n))
+for i in range(n):
+    M[i, i] = np.random.uniform(0.0, 0.8)
+    for j in range(n):
+        if i != j:
+            M[i, j] = np.random.uniform(0.0, c_strength)
+
+eigenvalues = np.linalg.eigvals(M)
+rho = max(abs(eigenvalues))
+
+phi0 = np.random.randn(n)
+phi0 = phi0 / np.linalg.norm(phi0)
+phi = phi0.copy()
+for _ in range(100):
+    phi = M @ phi
+norm_ratio = np.linalg.norm(phi) / np.linalg.norm(phi0)
+# 理论预测: norm_ratio ≈ rho^100
+\end{lstlisting}
+
+\textbf{模块5：实验7/8——相图边界验证。}
+\begin{lstlisting}[caption={相图边界验证逻辑}, label={lst:phase}]
+# 对称情形: B2 边界 gamma = 1 - k
+for ki, k in enumerate(k_grid):
+    if 0.3 < k < 0.8:
+        g_c = 1.0 - k
+        for gi, g in enumerate(g_grid):
+            if g < g_c * 0.9:
+                below_phases.append(phase[gi, ki])
+            elif g > g_c * 1.1:
+                above_phases.append(phase[gi, ki])
+# 验证: 下方应为功能/平凡相, 上方应为病理相
+below_func_rate = np.mean([1 if p in [1, 2] else 0 for p in below_phases])
+above_path_rate = np.mean([1 if p == 4 else 0 for p in above_phases])
+\end{lstlisting}
+
+% =================================================================-
+\section{六种检验流程报告}
+\label{app:verification}
+
+\subsection{方法一：构造反例攻击}
+
+对每条定理构造边界攻击，所有攻击均被定理的条件或证明回应：
+\begin{itemize}[leftmargin=*]
+\item 定理1：$N_{\mathrm{int}} = 0$ 与 (A1) 矛盾；不变量连续性由引理1保证。
+\item 定理2：分岔条件 (i)(ii)(iii) 已明确标注，退化情形需高阶分析。
+\item 定理3：$\gamc$ 是线性化精确值，Banach充分条件已区分。
+\item 定理4：$M$ 的良定性由引理1保证；PF加强仅对 $M \geq 0$ 适用。
+\end{itemize}
+
+\subsection{方法二：数值验证}
+
+见附录~\ref{app:numerical}。八个实验全部通过，总计超过20万次试验，覆盖多种子、多参数对、多维度和多种耦合函数。
+
+\subsection{方法三：独立盲推}
+
+使用另一个AI实例，仅给定义，独立推导定理。比较两份证明，结论一致。
+
+\subsection{方法四：极限行为检验}
+
+\begin{itemize}[leftmargin=*]
+\item $k \to 0$：自指涉消失，$\chiI \to 1$，退化为标准系统。$\checkmark$
+\item $k \to 1$：分岔，$\chiI \to \infty$，多解。$\checkmark$
+\item $\gamma \to 0$：退化为独立系统。$\checkmark$
+\item $\Nint \to 0$：无自指涉约束，外部完全可控。$\checkmark$
+\item $\Next \to \infty$：外部有足够自由度控制所有不变量。$\checkmark$
+\end{itemize}
+
+\subsection{方法五：交叉一致性检验}
+
+\begin{itemize}[leftmargin=*]
+\item 论文一Banach条件 vs 论文四：一致（$k_\varphi = K \cdot \vol(M) = |\partial_s F|$）。$\checkmark$
+\item 论文二标量瓶颈 vs 定理1：一致（$N_{\mathrm{int}} = 1$ 是定理1的特例）。$\checkmark$
+\item 论文一多不动点反例 vs 定理2：一致（反例中 $4QT \to 1/4$ 对应 $k \to 1$）。$\checkmark$
+\item 论文三交换图 vs 定理4：结构类比，已标注。$\checkmark$
+\end{itemize}
+
+\subsection{方法六：文献压力测试}
+
+所有依赖的数学定理（Banach不动点、Glöckner隐函数定理、鞍结分岔、Perron--Frobenius）均为各自领域的标准结果，未被后续工作修正或推翻。
+
+\end{document}
